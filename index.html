@@ -82,16 +82,16 @@
       font-weight: 800; font-size: 1.3rem; cursor: pointer;
     }
 
-    /* UI PRINCIPALE */
+    /* UI PRINCIPALE - Aggiunto padding di protezione per non far toccare i bordi */
     .main-ui { 
       display: none; width: 100%; height: 100%; flex-direction: column; 
-      padding: 20px; justify-content: space-between; align-items: center; 
+      padding: 20px 25px; justify-content: space-between; align-items: center; 
       background-color: #ffffff;
     }
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD - STILI DI BASE (MODALITÀ BIANCA) */
+    /* CARD - DIMENSIONI ORIGINALI INVARIATE */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -139,7 +139,7 @@
       border-color: #ffffff;
     }
 
-    /* SELETTORE COLORI (PALLINE) */
+    /* SELETTORE COLORI */
     .color-picker {
       display: flex;
       gap: 12px;
@@ -167,7 +167,7 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* AUTOMATICO PER CHI USA IL TELEFONO IN MODALITÀ SCURA (PAGINA GENERALE) */
+    /* AUTOMATICO PER CHI USA IL TELEFONO IN MODALITÀ SCURA */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -217,7 +217,7 @@
           </div>
         </div>
 
-        <!-- SELETTORE CON PALLINA BIANCA E NERA -->
+        <!-- SELETTORE PALLINE -->
         <div class="color-picker">
           <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
           <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
@@ -276,7 +276,6 @@
       reader.readAsDataURL(file);
     }
 
-    // CAMBIO TEMA BIANCO / NERO
     function setCardTheme(theme) {
       const card = document.getElementById('main-card');
       const dots = document.querySelectorAll('.color-dot');
