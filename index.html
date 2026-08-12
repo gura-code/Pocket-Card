@@ -91,9 +91,11 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD - STILI DI BASE (MODALITÀ BIANCA) */
+    /* CARD - DIMENSIONI MODIFICATE PER NON TOCCARE I BORDI */
     .card { 
-      width: 320px; height: 180px; 
+      width: 320px; 
+      max-width: 85vw; 
+      height: 180px; 
       background-color: #ffffff; 
       border: 3px solid #000000; 
       border-radius: 20px; 
@@ -101,6 +103,7 @@
       align-items: center;
       box-sizing: border-box;
       transition: all 0.2s ease;
+      margin: 0 auto;
     }
 
     .card-photo-box { height: 100%; max-width: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
