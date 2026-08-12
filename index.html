@@ -11,35 +11,32 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { width: 100vw; height: 100dvh; overflow: hidden; background: #f0f0f0; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
-    /* TELEFONO CONTAINER */
     .phone-wrapper { width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
     @media (min-width: 500px) { .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
 
-    /* SPLASH SCREEN INVERTITO - SFONDO BIANCO */
-    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #ffffff; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; overflow: hidden; }
+    /* SPLASH SCREEN BIANCO */
+    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #ffffff; display: flex; z-index: 100; overflow: hidden; }
     
-    .bg-scrolling { position: absolute; top: 0; left: 0; width: 100%; height: 200%; display: flex; opacity: 0.15; /* Leggermente più visibile sul bianco */ pointer-events: none; }
-    .col { flex: 1; display: flex; flex-direction: column; animation: scroll-up 20s linear infinite; }
-    .col.reverse { animation: scroll-down 20s linear infinite; }
+    .bg-scrolling { display: flex; width: 100%; height: 100%; opacity: 0.8; pointer-events: none; }
+    .col { flex: 1; display: flex; flex-direction: column; }
     
-    /* STICKER CON BORDI NERI */
-    .sticker { width: 80px; height: 80px; margin: 15px; border: 1px solid #000000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000000; font-size: 0.6rem; flex-shrink: 0; background: rgba(0,0,0,0.02); }
+    /* ANIMAZIONI LOOP INFINITO */
+    .up { animation: scrollUp 20s linear infinite; }
+    .down { animation: scrollDown 20s linear infinite; }
     
-    @keyframes scroll-up { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-    @keyframes scroll-down { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+    @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
 
-    /* OVERLAY CON TESTO E PULSANTE NERI */
-    .content-overlay { z-index: 10; text-align: center; background: rgba(255,255,255,0.85); padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .logo-main { font-size: 2.2rem; font-weight: 800; color: #000000; margin-bottom: 20px; letter-spacing: 2px; }
-    .btn-start { background: #000000; color: #ffffff; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 1.1rem; transition: background 0.2s; }
-    .btn-start:hover { background: #333333; }
+    .sticker { width: 80px; height: 80px; margin: 15px auto; border: 1px solid #000; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #000; font-size: 0.6rem; flex-shrink: 0; background: #fff; }
 
-    /* --- MANTENIAMO TUTTO IL RESTO UGUALE (già a base bianca) --- */
+    .content-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; background: rgba(255,255,255,0.7); }
+    .logo-main { font-size: 2.2rem; font-weight: 800; color: #000; margin-bottom: 20px; letter-spacing: 2px; }
+    .btn-start { background: #000; color: #fff; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
+
+    /* --- MANTENIAMO IL RESTO UGUALE --- */
     .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; align-items: center; }
     .app-header { font-size: 1.2rem; font-weight: 800; text-align: center; color: #000; margin-top: 10px; }
     .card-canvas-area { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
-    
-    /* CARTA - Dimensioni e stile non toccati */
     .card { width: 320px; height: 180px; background: #ffffff; border: 3px solid #000000; border-radius: 18px; padding: 12px; display: flex; gap: 12px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); align-items: center; box-sizing: border-box; }
     .card-photo-box { height: 100%; max-width: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
     .placeholder-box { width: 100px; height: 100%; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 0.75rem; font-weight: 700; color: #666; text-align: center; padding: 8px; }
@@ -50,8 +47,6 @@
     .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
     .card-review { font-size: 0.75rem; color: #333; font-style: italic; line-height: 1.2; word-break: break-word; }
-    
-    /* Bottoni e layout principali */
     .btn-download { width: 100%; background: #000; color: #fff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; margin-bottom: 10px; }
   </style>
 </head>
@@ -60,17 +55,26 @@
   <div class="phone-wrapper">
     <div id="splash">
       <div class="bg-scrolling">
-        <!-- Colonna 1 -->
-        <div class="col">
-          <div class="sticker">Sticker 1</div><div class="sticker">Sticker 2</div><div class="sticker">Sticker 3</div><div class="sticker">Sticker 4</div><div class="sticker">Sticker 5</div><div class="sticker">Sticker 6</div>
+        <!-- Colonna 1 (Sale) -->
+        <div class="col up">
+          <!-- Gruppo 1 -->
+          <div class="sticker">1</div><div class="sticker">2</div><div class="sticker">3</div><div class="sticker">4</div><div class="sticker">5</div><div class="sticker">6</div>
+          <!-- Gruppo 1 Copia (per il loop infinito) -->
+          <div class="sticker">1</div><div class="sticker">2</div><div class="sticker">3</div><div class="sticker">4</div><div class="sticker">5</div><div class="sticker">6</div>
         </div>
-        <!-- Colonna 2 -->
-        <div class="col reverse">
-          <div class="sticker">Sticker 7</div><div class="sticker">Sticker 8</div><div class="sticker">Sticker 9</div><div class="sticker">Sticker 10</div><div class="sticker">Sticker 11</div><div class="sticker">Sticker 12</div>
+        <!-- Colonna 2 (Scende) -->
+        <div class="col down">
+          <!-- Gruppo 2 -->
+          <div class="sticker">7</div><div class="sticker">8</div><div class="sticker">9</div><div class="sticker">10</div><div class="sticker">11</div><div class="sticker">12</div>
+          <!-- Gruppo 2 Copia -->
+          <div class="sticker">7</div><div class="sticker">8</div><div class="sticker">9</div><div class="sticker">10</div><div class="sticker">11</div><div class="sticker">12</div>
         </div>
-        <!-- Colonna 3 -->
-        <div class="col">
-          <div class="sticker">Sticker 13</div><div class="sticker">Sticker 14</div><div class="sticker">Sticker 15</div><div class="sticker">Sticker 16</div><div class="sticker">Sticker 17</div><div class="sticker">Sticker 18</div>
+        <!-- Colonna 3 (Sale) -->
+        <div class="col up">
+          <!-- Gruppo 3 -->
+          <div class="sticker">13</div><div class="sticker">14</div><div class="sticker">15</div><div class="sticker">16</div><div class="sticker">17</div><div class="sticker">18</div>
+          <!-- Gruppo 3 Copia -->
+          <div class="sticker">13</div><div class="sticker">14</div><div class="sticker">15</div><div class="sticker">16</div><div class="sticker">17</div><div class="sticker">18</div>
         </div>
       </div>
       <div class="content-overlay">
