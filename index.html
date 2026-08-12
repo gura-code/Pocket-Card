@@ -3,501 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Anime ID Maker - Kawaii Edition</title>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Fredoka:wght@700&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Media Collection Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100vw; height: 100dvh; overflow: hidden; background: #fce4ec; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
-    html, body {
-      width: 100vw;
-      height: 100dvh;
-      overflow: hidden;
-      background: #fce4ec;
-      font-family: 'Quicksand', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* CONTENITORE FORMATO TELEFONO (Stile Bento Cake Game) */
     .phone-wrapper {
-      width: 100vw;
-      height: 100dvh;
-      background: #fff0f3;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      width: 100vw; height: 100dvh; background: #fff0f3; position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
-
     @media (min-width: 500px) {
-      .phone-wrapper {
-        width: 380px;
-        height: 780px;
-        border-radius: 40px;
-        border: 8px solid #ffccd5;
-        box-shadow: 0 20px 40px rgba(255, 133, 162, 0.3);
-      }
+      .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #ffccd5; box-shadow: 0 20px 40px rgba(255, 133, 162, 0.3); }
     }
 
-    .screen {
-      width: 100%;
-      height: 100%;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      padding: 20px 15px;
-    }
+    .screen { width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; padding: 20px 15px; }
+    .screen.active { display: flex; animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-    .screen.active {
-      display: flex;
-      animation: fadeIn 0.3s ease-in-out;
-    }
+    .btn-main { background: #ff85a2; color: white; border: none; padding: 12px 35px; font-weight: 800; border-radius: 30px; cursor: pointer; margin-top: 15px; width: 100%; max-width: 280px; text-align: center; }
 
-    #screen-final {
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 30px;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .logo-placeholder {
-      width: 100%;
-      height: 120px;
-      margin-top: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .logo-box-temp {
-      width: 220px;
-      height: 80px;
-      border: 2px dashed #ff85a2;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ff85a2;
-      font-weight: 800;
-      font-size: 1.3rem;
-    }
-
-    .loading-container {
-      width: 80%;
-      text-align: center;
-      margin-top: auto;
-      margin-bottom: 50px;
-    }
-
-    .loading-bar-bg {
-      width: 100%;
-      height: 16px;
-      background: #ffe3e8;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 2px solid #ff85a2;
-      margin-top: 10px;
-    }
-
-    .loading-bar-fill {
-      width: 0%;
-      height: 100%;
-      background: #ff85a2;
-      transition: width 0.1s linear;
-    }
-
-    .btn-main {
-      background: #ff85a2;
-      color: white;
-      border: none;
-      padding: 12px 35px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      border-radius: 30px;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 133, 162, 0.4);
-      margin-top: 15px;
-      transition: all 0.3s ease;
-      flex-shrink: 0;
-      width: 100%;
-      max-width: 280px;
-      text-align: center;
-    }
-
-    .btn-main:active { transform: scale(0.95); }
-
-    .header-game {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 5px;
-    }
-
-    .header-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #ff85a2;
-      text-align: center;
-    }
-
-    /* AREA CARTA ORIZZONTALE (Ispirata al Bento Canvas) */
-    .card-canvas-area {
-      width: 100%;
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px 0;
-      flex-shrink: 0;
-    }
-
+    /* CARTA MEDIA */
+    .card-canvas-area { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; }
     .anime-card-horizontal {
-      width: 310px;
-      height: 185px;
-      background: #ffffff;
-      border: 3px solid #ffccd5;
-      border-radius: 18px;
-      padding: 12px;
-      display: flex;
-      gap: 12px;
-      box-shadow: 0 8px 20px rgba(255, 133, 162, 0.15);
-      position: relative;
-      background-size: cover;
-      background-position: center;
+      width: 310px; height: 185px; background: #ffffff; border: 3px solid #ffccd5; border-radius: 18px; padding: 12px; display: flex; gap: 12px; box-shadow: 0 8px 20px rgba(255, 133, 162, 0.15);
     }
+    .card-photo-box { width: 110px; height: 100%; border: 2px dashed #ff85a2; border-radius: 12px; background: #fff0f3; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; flex-shrink: 0; }
+    .card-photo-box img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .card-title { font-size: 1.1rem; font-weight: 800; color: #444; }
+    .card-voto { font-size: 0.85rem; font-weight: 800; color: #ff85a2; }
+    .card-review { font-size: 0.7rem; color: #666; font-style: italic; line-height: 1.2; height: 60px; overflow: hidden; }
 
-    .card-photo-box {
-      width: 110px;
-      height: 100%;
-      border: 2px dashed #ff85a2;
-      border-radius: 12px;
-      background: #fff0f3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      overflow: hidden;
-      flex-shrink: 0;
-    }
-
-    .card-photo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: none;
-    }
-
-    .card-info-box {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card-title-text {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #ff85a2;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .card-name-text {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #444;
-      border-bottom: 1px solid #ffe3e8;
-      padding-bottom: 2px;
-    }
-
-    .card-details-text {
-      font-size: 0.65rem;
-      color: #666;
-      line-height: 1.3;
-      font-weight: 600;
-    }
-
-    .controls-wrapper {
-      width: 100%;
-      background: white;
-      border-radius: 20px;
-      padding: 15px 12px;
-      box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
-      margin-bottom: 10px;
-    }
-
-    .category-tabs {
-      display: flex;
-      justify-content: space-between;
-      gap: 5px;
-      margin-bottom: 12px;
-      border-bottom: 2px solid #ffe3e8;
-      padding-bottom: 8px;
-    }
-
-    .tab-btn {
-      background: none;
-      border: none;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #aaa;
-      cursor: pointer;
-      padding: 5px 8px;
-      border-radius: 10px;
-    }
-
-    .tab-btn.active {
-      background: #ffe3e8;
-      color: #ff6584;
-    }
-
-    .options-grid {
-      display: none;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      max-height: 160px;
-      overflow-y: auto;
-    }
-
-    .options-grid.active { display: grid; }
-
-    .opt-card {
-      background: #fff0f3;
-      border: 2px solid #ffccd5;
-      border-radius: 12px;
-      padding: 8px 4px;
-      text-align: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #ff6584;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .input-box {
-      width: 100%;
-      max-width: 300px;
-      padding: 10px;
-      border: 2px solid #ffccd5;
-      border-radius: 15px;
-      margin: 5px 0;
-      font-size: 0.85rem;
-      outline: none;
-      text-align: center;
-      font-family: inherit;
-    }
-
-    #ticket-to-download {
-      background: #ffffff;
-      padding: 15px;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 320px;
-      box-shadow: 0 10px 25px rgba(255, 133, 162, 0.15);
-      margin: 15px 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    /* INPUTS */
+    .input-box { width: 100%; padding: 10px; border: 2px solid #ffccd5; border-radius: 12px; margin-bottom: 8px; outline: none; }
+    .controls-wrapper { width: 100%; background: white; border-radius: 20px; padding: 15px; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
+    .opt-card { background: #fff0f3; border: 2px solid #ffccd5; border-radius: 12px; padding: 8px; text-align: center; font-size: 0.75rem; font-weight: 700; color: #ff6584; cursor: pointer; }
   </style>
 </head>
 <body>
 
   <div class="phone-wrapper">
+    <!-- GIOCO -->
+    <div id="screen-game" class="screen active">
+      <div style="font-weight: 800; color: #ff85a2; margin-bottom: 10px;">Crea la tua Collezione</div>
 
-    <!-- SCHERMATA 1: START -->
-    <div id="screen-start" class="screen active">
-      <div class="logo-placeholder">
-        <div class="logo-box-temp">Anime ID Studio</div>
-      </div>
-
-      <div class="loading-container">
-        <span id="loading-text" style="font-size: 0.85rem; color: #ff85a2; font-weight: 700;">Caricamento...</span>
-        <div class="loading-bar-bg">
-          <div id="loading-fill" class="loading-bar-fill"></div>
-        </div>
-        <button id="play-btn" class="btn-main" style="display:none;" onclick="goToScreen('screen-game')">Crea la tua Carta</button>
-      </div>
-    </div>
-
-    <!-- SCHERMATA 2: GIOCO (CREATORE CARTA) -->
-    <div id="screen-game" class="screen">
-      <div class="header-game">
-        <span class="header-title">Crea ID Card</span>
-        <button id="btn-next-step" class="btn-main" style="padding: 6px 14px; font-size: 0.8rem; margin:0; width:auto;" onclick="goToScreen('screen-details')">Procedi</button>
-      </div>
-
-      <!-- AREA CARTA ORIZZONTALE -->
       <div class="card-canvas-area">
         <div class="anime-card-horizontal" id="main-card">
-          
           <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
-            <span id="photo-placeholder" style="font-size: 0.7rem; color: #ff85a2; text-align: center; padding: 5px;">📷 Carica Foto</span>
+            <span id="placeholder" style="font-size:0.7rem; color:#ff85a2;">Poster 📷</span>
             <img id="card-photo-img" alt="Foto">
           </div>
-
           <div class="card-info-box">
-            <div class="card-title-text" id="card-title">GILDA AVVENTURIERI</div>
-            <div class="card-name-text" id="card-name">Nome PG</div>
-            <div class="card-details-text">
-              <strong>RUOLO:</strong> <span id="card-role">Guerriero</span><br>
-              <strong>ID:</strong> <span id="card-id">#8492</span><br>
-              <strong>LIV:</strong> <span id="card-level">99</span>
-            </div>
+            <div class="card-title" id="card-title">Titolo Opera</div>
+            <div class="card-voto" id="card-voto">Voto: ★★★★☆</div>
+            <div class="card-review" id="card-review">La tua opinione qui...</div>
           </div>
-
         </div>
       </div>
-
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
 
-      <!-- CONTROLLI TAB -->
       <div class="controls-wrapper">
-        <div class="category-tabs">
-          <button class="tab-btn active" onclick="switchTab(0)">1. Testo</button>
-          <button class="tab-btn" onclick="switchTab(1)">2. Colore</button>
-          <button class="tab-btn" onclick="switchTab(2)">3. Stile</button>
+        <input type="text" class="input-box" placeholder="Titolo Anime/Film" oninput="update('card-title', this.value)">
+        <input type="text" class="input-box" placeholder="Voto (es. 5/5)" oninput="update('card-voto', 'Voto: ' + this.value)">
+        <textarea class="input-box" placeholder="Cosa ne pensi?" oninput="update('card-review', this.value)" style="height: 60px; resize:none;"></textarea>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="opt-card" onclick="setTheme('#ffffff', '#444')">Light Mode</div>
+          <div class="opt-card" onclick="setTheme('#222', '#fff')">Dark Mode</div>
         </div>
-
-        <!-- TAB 1: DATI TESTO -->
-        <div class="options-grid active" id="cat-0" style="display:flex; flex-direction:column; gap:5px;">
-          <input type="text" class="input-box" placeholder="Titolo (es. Gilda)" oninput="updateText('card-title', this.value)">
-          <input type="text" class="input-box" placeholder="Nome Personaggio" oninput="updateText('card-name', this.value)">
-          <input type="text" class="input-box" placeholder="Ruolo / Classe" oninput="updateText('card-role', this.value)">
-        </div>
-
-        <!-- TAB 2: COLORI -->
-        <div class="options-grid" id="cat-1">
-          <div class="opt-card" onclick="setCardColor('#ffffff')">Rosa Chiaro</div>
-          <div class="opt-card" onclick="setCardColor('#f0f8ff')">Azzurro Soft</div>
-          <div class="opt-card" onclick="setCardColor('#fbf7ee')">Avorio</div>
-          <div class="opt-card" onclick="setCardColor('#f3e5f5')">Lilla</div>
-          <div class="opt-card" onclick="setCardColor('#e8f5e9')">Mentina</div>
-          <div class="opt-card" onclick="setCardColor('#222222', '#fff')">Dark Mode</div>
-        </div>
-
-        <!-- TAB 3: STILE BORDO -->
-        <div class="options-grid" id="cat-2">
-          <div class="opt-card" onclick="setBorder('#ffccd5')">Bordo Rosa</div>
-          <div class="opt-card" onclick="setBorder('#81d4fa')">Bordo Blu</div>
-          <div class="opt-card" onclick="setBorder('#ffd54f')">Bordo Oro</div>
-        </div>
+        <button class="btn-main" onclick="downloadCard()">Scarica Immagine</button>
       </div>
     </div>
-
-    <!-- SCHERMATA 3: CONFERMA -->
-    <div id="screen-details" class="screen" style="justify-content: center;">
-      <h2 style="color: #ff85a2; text-align: center; font-size: 1.3rem;">Anteprima Finale</h2>
-      <p style="color: #888; font-size: 0.8rem; margin: 5px 0 15px 0;">La tua carta orizzontale è pronta!</p>
-
-      <button class="btn-main" onclick="goToScreen('screen-final')">Genera Sticker Card</button>
-    </div>
-
-    <!-- SCHERMATA 4: SCARICA CARTA -->
-    <div id="screen-final" class="screen">
-      <span class="header-title" style="margin-bottom: 10px;">La Tua Carta ID</span>
-      
-      <div id="ticket-to-download">
-        <div id="card-clone-container"></div>
-      </div>
-
-      <button class="btn-main" style="background:#ff4d8d; margin-bottom: 10px;" onclick="downloadCard()">Scarica Immagine HD</button>
-      <button style="background:none; border:none; color:#888; font-weight:700; cursor:pointer; padding: 5px;" onclick="goToScreen('screen-game')">Modifica Carta</button>
-    </div>
-
   </div>
 
   <script>
-    // CARICAMENTO INIZIALE
-    window.addEventListener('load', () => {
-      let progress = 0;
-      const fill = document.getElementById('loading-fill');
-      const text = document.getElementById('loading-text');
-      const playBtn = document.getElementById('play-btn');
-
-      const interval = setInterval(() => {
-        progress += 10;
-        fill.style.width = progress + '%';
-
-        if (progress >= 100) {
-          clearInterval(interval);
-          text.style.display = 'none';
-          document.querySelector('.loading-bar-bg').style.display = 'none';
-          playBtn.style.display = 'inline-block';
-        }
-      }, 30);
-    });
-
-    function goToScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
-
-      if(screenId === 'screen-final') {
-        const cardOriginal = document.getElementById('main-card');
-        const container = document.getElementById('card-clone-container');
-        container.innerHTML = '';
-        container.appendChild(cardOriginal.cloneNode(true));
-      }
-    }
-
-    function switchTab(index) {
-      document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
-      document.querySelectorAll('.options-grid').forEach((grid, i) => {
-        grid.classList.toggle('active', i === index);
-        if(i === index && i === 0) grid.style.display = 'flex';
-      });
-    }
-
-    function updateText(id, val) {
-      if(val.trim() !== '') {
-        document.getElementById(id).innerText = val;
-      }
-    }
-
+    function update(id, val) { document.getElementById(id).innerText = val; }
+    
     function loadPhoto(e) {
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = document.getElementById('card-photo-img');
         img.src = event.target.result;
         img.style.display = 'block';
-        document.getElementById('photo-placeholder').style.display = 'none';
+        document.getElementById('placeholder').style.display = 'none';
       }
       reader.readAsDataURL(e.target.files[0]);
     }
 
-    function setCardColor(bg, textColor = '#444') {
+    function setTheme(bg, text) {
       const card = document.getElementById('main-card');
       card.style.background = bg;
-      document.getElementById('card-name').style.color = textColor;
-    }
-
-    function setBorder(color) {
-      document.getElementById('main-card').style.borderColor = color;
+      document.getElementById('card-title').style.color = text;
+      document.getElementById('card-voto').style.color = (text === '#fff') ? '#ff85a2' : '#ff85a2';
+      document.getElementById('card-review').style.color = (text === '#fff') ? '#ddd' : '#666';
     }
 
     function downloadCard() {
-      const card = document.querySelector('#card-clone-container .anime-card-horizontal');
-      html2canvas(card, { scale: 3 }).then(canvas => {
+      html2canvas(document.getElementById('main-card'), { scale: 3 }).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'anime-id-card.png';
+        link.download = 'mia-collezione.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
@@ -505,3 +111,4 @@
   </script>
 </body>
 </html>
+
