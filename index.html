@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crea la tua Carta Personale</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f1ea; color: #4a3e3d; display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; }
+    
+    h1 { margin-bottom: 20px; font-size: 1.8rem; color: #5a4634; text-align: center; }
+
+    .container { display: flex; flex-wrap: wrap; gap: 30px; max-width: 900px; width: 100%; justify-content: center; align-items: flex-start; }
+
+    /* FORM DI INPUT */
+    .form-container { background: #ffffff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex: 1; min-width: 300px; border: 1px solid #e0d8cc; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #6b5744; }
+    input[type="text"], input[type="date"], input[type="file"] { width: 100%; padding: 10px; border: 2px solid #e6dfd5; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+    input[type="text"]:focus, input[type="date"]:focus { border-color: #a88b70; }
+
+    /* ANTEPRIMA CARTA */
+    .card-preview { flex: 1; min-width: 300px; display: flex; justify-content: center; }
+    .card { width: 320px; height: 480px; background: linear-gradient(135deg, #fffcf7, #f5ebd9); border: 3px solid #b89b7d; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
+    .card-header { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #8c7355; margin-bottom: 15px; }
+    
+    .avatar-container { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #b89b7d; overflow: hidden; background-color: #e6dfd5; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .avatar-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .avatar-placeholder { color: #a89a8b; font-size: 2.5rem; }
+
+    .card-info { width: 100%; text-align: center; }
+    .card-name { font-size: 1.4rem; font-weight: bold; color: #4a3e3d; margin-bottom: 4px; word-wrap: break-word; }
+    .card-role { font-size: 0.95rem; color: #8c7355; font-weight: 600; margin-bottom: 15px; word-wrap: break-word; }
+    
+    .card-details { background: rgba(255, 255, 255, 0.6); padding: 12px; border-radius: 12px; font-size: 0.85rem; border: 1px solid #eae1d3; text-align: left; }
+    .card-details p { margin-bottom: 6px; }
+    .card-details p:last-child { margin-bottom: 0; }
+    .card-details span { font-weight: bold; color: #6b5744; }
+
+    .card-footer { position: absolute; bottom: 15px; font-size: 0.7rem; color: #b8a999; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+
+  <h1>📇 Crea la Tua Carta Personale</h1>
+
+  <div class="container">
+    <!-- Form Opzioni -->
+    <div class="form-container">
+      <div class="form-group">
+        <label for="input-photo">Foto Profilo</label>
+        <input type="file" id="input-photo" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label for="input-name">Nome e Cognome</label>
+        <input type="text" id="input-name" placeholder="Es. Nome Cognome">
+      </div>
+      <div class="form-group">
+        <label for="input-role">Titolo / Ruolo</label>
+        <input type="text" id="input-role" placeholder="Es. Membro del Club, Visitatore...">
+      </div>
+      <div class="form-group">
+        <label for="input-date">Data di Registrazione</label>
+        <input type="date" id="input-date">
+      </div>
+      <div class="form-group">
+        <label for="input-quote">Frase o Nota Personale</label>
+        <input type="text" id="input-quote" placeholder="Es. Sii sempre te stesso">
+      </div>
+    </div>
+
+    <!-- Anteprima Carta -->
+    <div class="card-preview">
+      <div class="card">
+        <div class="card-header">Carta Personale</div>
+        
+        <div class="avatar-container">
+          <span class="avatar-placeholder" id="placeholder-icon">👤</span>
+          <img id="card-photo" src="" alt="Foto Profilo">
+        </div>
+
+        <div class="card-info">
+          <div class="card-name" id="card-name-text">Il Tuo Nome</div>
+          <div class="card-role" id="card-role-text">Il Tuo Ruolo</div>
+          
+          <div class="card-details">
+            <p><span>Data:</span> <span id="card-date-text">--/--/----</span></p>
+            <p><span>Nota:</span> <span id="card-quote-text">Aggiungi una frase...</span></p>
+          </div>
+        </div>
+
+        <div class="card-footer">PASS UFFICIALE • ID-2026</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Collegamento degli elementi
+    const inputPhoto = document.getElementById('input-photo');
+    const inputName = document.getElementById('input-name');
+    const inputRole = document.getElementById('input-role');
+    const inputDate = document.getElementById('input-date');
+    const inputQuote = document.getElementById('input-quote');
+
+    const cardPhoto = document.getElementById('card-photo');
+    const placeholderIcon = document.getElementById('placeholder-icon');
+    const cardNameText = document.getElementById('card-name-text');
+    const cardRoleText = document.getElementById('card-role-text');
+    const cardDateText = document.getElementById('card-date-text');
+    const cardQuoteText = document.getElementById('card-quote-text');
+
+    // Aggiornamento Foto
+    inputPhoto.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          cardPhoto.src = event.target.result;
+          cardPhoto.style.display = 'block';
+          placeholderIcon.style.display = 'none';
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Aggiornamento Testi in tempo reale
+    inputName.addEventListener('input', () => {
+      cardNameText.textContent = inputName.value.trim() || 'Il Tuo Nome';
+    });
+
+    inputRole.addEventListener('input', () => {
+      cardRoleText.textContent = inputRole.value.trim() || 'Il Tuo Ruolo';
+    });
+
+    inputDate.addEventListener('change', () => {
+      if (inputDate.value) {
+        const parts = inputDate.value.split('-');
+        cardDateText.textContent = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      } else {
+        cardDateText.textContent = '--/--/----';
+      }
+    });
+
+    inputQuote.addEventListener('input', () => {
+      cardQuoteText.textContent = inputQuote.value.trim() || 'Aggiungi una frase...';
+    });
+  </script>
+</body>
+</html>
