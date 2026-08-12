@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -23,7 +23,6 @@
       box-sizing: border-box; 
       margin: 0; 
       padding: 0; 
-      /* Impedisce filtri o inversioni colore su alcuni browser Android/Brave */
       forced-color-adjust: none;
     }
 
@@ -59,7 +58,6 @@
       } 
     }
 
-    /* SPLASH SCREEN BIANCO BLOCATO */
     #splash { 
       position: absolute; 
       top:0; 
@@ -83,30 +81,14 @@
 
     .col { flex: 1; display: flex; flex-direction: column; }
     
-    /* ANIMAZIONI LOOP INFINITO */
     .up { animation: scrollUp 22s linear infinite; }
     .down { animation: scrollDown 22s linear infinite; }
     
     @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
     @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
 
-    .sticker { 
-      width: 75px; 
-      height: 75px; 
-      margin: 15px auto; 
-      flex-shrink: 0; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-    }
-
-    .sticker img { 
-      width: 100%; 
-      height: 100%; 
-      object-fit: contain; 
-      /* Previene modifiche del contrasto sulle immagini */
-      filter: none !important;
-    }
+    .sticker { width: 75px; height: 75px; margin: 15px auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .sticker img { width: 100%; height: 100%; object-fit: contain; filter: none !important; }
 
     .content-overlay { 
       position: absolute; 
@@ -122,26 +104,29 @@
       background: rgba(255, 255, 255, 0.75) !important; 
     }
 
+    /* TITOLO GRANDE SU DUE RIGHE */
     .logo-main { 
-      font-size: 2.2rem; 
+      font-size: 3.5rem; 
+      line-height: 0.9;
       font-weight: 800; 
       color: #000000 !important; 
-      margin-bottom: 20px; 
-      letter-spacing: 2px; 
+      margin-bottom: 40px; 
+      text-align: center;
+      letter-spacing: -2px;
     }
 
     .btn-start { 
       background-color: #000000 !important; 
       color: #ffffff !important; 
       border: none; 
-      padding: 15px 40px; 
+      padding: 15px 50px; 
       border-radius: 30px; 
       font-weight: 800; 
       cursor: pointer; 
-      font-size: 1.1rem; 
+      font-size: 1.3rem; 
     }
 
-    /* UI PRINCIPALE BLOCCATA */
+    /* UI PRINCIPALE */
     .main-ui { 
       display: none; 
       width: 100%; 
@@ -187,16 +172,17 @@
   <div class="phone-wrapper">
     <div id="splash">
       <div class="bg-scrolling">
-        <!-- Colonna 1 -->
         <div class="col up" id="col1"></div>
-        <!-- Colonna 2 -->
         <div class="col down" id="col2"></div>
-        <!-- Colonna 3 -->
         <div class="col up" id="col3"></div>
       </div>
       <div class="content-overlay">
-        <div class="logo-main">Pocket Review</div>
-        <button class="btn-start" onclick="startApp()">INIZIA</button>
+        <!-- TITOLO SEPARATO -->
+        <div class="logo-main">
+            <div>Pocket</div>
+            <div>Review</div>
+        </div>
+        <button class="btn-start" onclick="startApp()">Mix</button>
       </div>
     </div>
 
@@ -205,39 +191,31 @@
       <div class="card-canvas-area">
         <div class="card" id="main-card">
           <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
-            <div id="placeholder" class="placeholder-box">+ Foto</div>
-            <img id="card-photo-img" style="display:none;" alt="Foto">
+            <div id="placeholder" class="placeholder-box">+ Photo</div>
+            <img id="card-photo-img" style="display:none;" alt="Photo">
           </div>
           <div class="card-info-box">
-            <div class="card-title editable" id="card-title" contenteditable="true">Nome</div>
-            <div class="card-voto editable" id="card-voto" contenteditable="true">Info / Voto</div>
-            <div class="card-review editable" id="card-review" contenteditable="true">Note / Commento...</div>
+            <div class="card-title editable" id="card-title" contenteditable="true">Name</div>
+            <div class="card-voto editable" id="card-voto" contenteditable="true">Rating</div>
+            <div class="card-review editable" id="card-review" contenteditable="true">Review...</div>
           </div>
         </div>
       </div>
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
-      <div class="btn-download" onclick="downloadCard()">Scarica Immagine</div>
+      <div class="btn-download" onclick="downloadCard()">Download Card</div>
     </div>
   </div>
 
   <script>
     const images = [
-      "1000072971-removebg-preview.png",
-      "1000072972-removebg-preview.png",
-      "1000072974-removebg-preview.png",
-      "1000072977-removebg-preview.png",
-      "1000072978-removebg-preview.png",
-      "1000072979-removebg-preview.png",
-      "1000072980-removebg-preview.png",
-      "1000072981-removebg-preview.png",
-      "1000072982-removebg-preview.png",
-      "1000072983-removebg-preview.png",
-      "1000072985-removebg-preview.png",
-      "1000072986-removebg-preview.png",
-      "1000072987-removebg-preview.png",
-      "1000072988-removebg-preview.png",
-      "1000072989-removebg-preview.png",
-      "1000072990-removebg-preview.png"
+      "1000072971-removebg-preview.png", "1000072972-removebg-preview.png",
+      "1000072974-removebg-preview.png", "1000072977-removebg-preview.png",
+      "1000072978-removebg-preview.png", "1000072979-removebg-preview.png",
+      "1000072980-removebg-preview.png", "1000072981-removebg-preview.png",
+      "1000072982-removebg-preview.png", "1000072983-removebg-preview.png",
+      "1000072985-removebg-preview.png", "1000072986-removebg-preview.png",
+      "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
+      "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
 
     function shuffleArray(array) {
@@ -252,21 +230,13 @@
     function renderColumn(colId) {
       const colEl = document.getElementById(colId);
       const shuffled = shuffleArray(images);
-      
       let htmlContent = '';
-      shuffled.forEach(imgName => {
-        htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`;
-      });
-      shuffled.forEach(imgName => {
-        htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`;
-      });
-
+      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
+      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
       colEl.innerHTML = htmlContent;
     }
 
-    renderColumn('col1');
-    renderColumn('col2');
-    renderColumn('col3');
+    renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
 
     function startApp() { document.getElementById('splash').style.display = 'none'; document.getElementById('main-ui').style.display = 'flex'; }
     function loadPhoto(e) {
@@ -286,7 +256,7 @@
       const editables = card.querySelectorAll('.editable');
       editables.forEach(el => {
         const text = el.innerText.trim();
-        if (text === '' || text === 'Nome' || text === 'Info / Voto' || text === 'Note / Commento...') {
+        if (text === '' || text === 'Name' || text === 'Rating' || text === 'Review...') {
           el.dataset.oldText = el.innerText;
           el.innerText = '';
         }
@@ -299,7 +269,7 @@
           }
         });
         const link = document.createElement('a');
-        link.download = 'scheda.png';
+        link.download = 'card.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
