@@ -23,6 +23,9 @@
       background-color: #ffffff; 
       color: #000000;
       font-family: 'Quicksand', sans-serif; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
     }
 
     .phone-wrapper { 
@@ -31,15 +34,42 @@
       position: relative; overflow: hidden; display: flex; flex-direction: column; 
     }
 
+    @media (min-width: 500px) { 
+      .phone-wrapper { 
+        width: 380px; 
+        height: 780px; 
+        border-radius: 40px; 
+        border: 8px solid #000000; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+      } 
+    }
+
+    /* SPLASH SCREEN CON IMMAGINI RIPRISTINATE */
     #splash { 
       position: absolute; top:0; left:0; width:100%; height:100%; 
-      background-color: #ffffff; z-index: 100; display: flex; 
+      background-color: #ffffff; z-index: 100; display: flex; overflow: hidden;
     }
     
+    .bg-scrolling { 
+      display: flex; width: 100%; height: 100%; opacity: 0.85; pointer-events: none; 
+    }
+
+    .col { flex: 1; display: flex; flex-direction: column; }
+    
+    /* ANIMAZIONI LOOP INFINITO */
+    .up { animation: scrollUp 22s linear infinite; }
+    .down { animation: scrollDown 22s linear infinite; }
+    
+    @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+
+    .sticker { width: 75px; height: 75px; margin: 15px auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .sticker img { width: 100%; height: 100%; object-fit: contain; }
+
     .content-overlay { 
-      position: absolute; width: 100%; height: 100%; 
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
       display: flex; flex-direction: column; justify-content: center; align-items: center; 
-      z-index: 10; background: rgba(255, 255, 255, 0.85); 
+      z-index: 10; background: rgba(255, 255, 255, 0.75); 
     }
 
     .logo-main { 
@@ -54,6 +84,7 @@
       font-weight: 800; font-size: 1.3rem; cursor: pointer;
     }
 
+    /* UI PRINCIPALE (NON TOCCATA) */
     .main-ui { 
       display: none; width: 100%; height: 100%; flex-direction: column; 
       padding: 20px; justify-content: space-between; align-items: center; 
@@ -89,6 +120,12 @@
 
   <div class="phone-wrapper">
     <div id="splash">
+      <div class="bg-scrolling">
+        <!-- Le colonne verranno riempite dal JS -->
+        <div class="col up" id="col1"></div>
+        <div class="col down" id="col2"></div>
+        <div class="col up" id="col3"></div>
+      </div>
       <div class="content-overlay">
         <div class="logo-main">
           <div>Pocket</div>
@@ -119,6 +156,41 @@
   </div>
 
   <script>
+    // LISTA IMMAGINI RIPRISTINATA
+    const images = [
+      "1000072971-removebg-preview.png", "1000072972-removebg-preview.png",
+      "1000072974-removebg-preview.png", "1000072977-removebg-preview.png",
+      "1000072978-removebg-preview.png", "1000072979-removebg-preview.png",
+      "1000072980-removebg-preview.png", "1000072981-removebg-preview.png",
+      "1000072982-removebg-preview.png", "1000072983-removebg-preview.png",
+      "1000072985-removebg-preview.png", "1000072986-removebg-preview.png",
+      "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
+      "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
+    ];
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderColumn(colId) {
+      const colEl = document.getElementById(colId);
+      const shuffled = shuffleArray(images);
+      let htmlContent = '';
+      // Primo blocco
+      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
+      // Secondo blocco (per il loop)
+      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
+      colEl.innerHTML = htmlContent;
+    }
+
+    // Inizializza le colonne
+    renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
+
     function startApp() { document.getElementById('splash').style.display = 'none'; document.getElementById('main-ui').style.display = 'flex'; }
     
     function loadPhoto(e) {
@@ -134,6 +206,7 @@
       reader.readAsDataURL(file);
     }
 
+    // FUNZIONE DOWNLOAD (NON TOCCATA, mantiene trasparenza angoli)
     function downloadCard() {
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
@@ -170,4 +243,3 @@
   </script>
 </body>
 </html>
-
