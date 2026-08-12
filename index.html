@@ -2,75 +2,101 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Anime ID Card Creator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Anime ID Card</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body { background: #e0e0e0; display: flex; flex-direction: column; align-items: center; padding: 40px; font-family: 'Segoe UI', sans-serif; }
-    
-    .toolbar { display: flex; gap: 15px; margin-bottom: 20px; }
-    button { padding: 10px 20px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; background: #333; color: white; }
+    /* RESET BASE */
+    body { margin: 0; padding: 0; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
 
-    /* CARTA - Il cuore di tutto */
-    .card {
-      width: 350px; height: 500px; 
-      background: #ffffff; border: 4px solid #000; border-radius: 15px;
-      padding: 20px; display: flex; flex-direction: column; align-items: center;
-      position: relative; transition: all 0.3s ease;
-      cursor: pointer; /* Indica che si può cliccare ovunque per cambiare colore */
+    /* STILE DESKTOP: SFONDO SCURO E SAGOMA TELEFONO */
+    @media (min-width: 768px) {
+      body { background-color: #1a1a1a; }
+      #phone-frame {
+        width: 375px; height: 667px;
+        background: #fff;
+        border: 10px solid #000;
+        border-radius: 40px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        position: relative;
+        overflow: hidden;
+      }
     }
-    .card.horizontal { width: 500px; height: 350px; flex-direction: row; justify-content: flex-start; gap: 20px; }
 
-    /* FOTO */
+    /* STILE MOBILE: SCHERMO PIENO */
+    @media (max-width: 767px) {
+      body { background-color: #fff; }
+      #phone-frame { width: 100vw; height: 100vh; background: #fff; }
+    }
+
+    /* CONTENUTO DEL GIOCO */
+    #app-content { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+
+    .toolbar { display: flex; gap: 10px; margin-bottom: 20px; }
+    button { padding: 10px 15px; cursor: pointer; border: none; border-radius: 8px; font-weight: bold; background: #333; color: white; font-size: 0.9rem; }
+
+    .card {
+      width: 300px; height: 420px; /* Dimensioni adattate per stare nel telefono */
+      background: #ffffff; border: 3px solid #000; border-radius: 15px;
+      padding: 15px; display: flex; flex-direction: column; align-items: center;
+      position: relative; transition: all 0.3s ease; cursor: pointer;
+    }
+    .card.horizontal { width: 330px; height: 230px; flex-direction: row; gap: 10px; padding: 10px; }
+
     .photo-area { 
-      width: 180px; height: 180px; border: 3px solid #000; border-radius: 10px;
+      width: 140px; height: 140px; border: 2px solid #000; border-radius: 10px;
       display: flex; align-items: center; justify-content: center; overflow: hidden;
-      background: #ddd; margin-bottom: 15px; flex-shrink: 0;
+      background: #ddd; margin-bottom: 10px; flex-shrink: 0;
     }
     .photo-area img { width: 100%; height: 100%; object-fit: cover; }
     
-    /* TESTI MODIFICABILI */
-    [contenteditable="true"] { outline: none; border: 1px dashed transparent; padding: 2px; }
+    [contenteditable="true"] { outline: none; border: 1px dashed transparent; }
     [contenteditable="true"]:hover { border: 1px dashed #666; }
     
-    .title { font-size: 1.2rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
-    .name { font-size: 1.8rem; font-weight: 900; }
-    .rank { font-size: 1rem; color: #555; font-style: italic; margin-bottom: 20px; }
+    .title { font-size: 1rem; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
+    .name { font-size: 1.5rem; font-weight: 900; }
+    .rank { font-size: 0.9rem; color: #555; font-style: italic; margin-bottom: 10px; }
     
-    .data-box { width: 100%; border-top: 2px solid #000; padding-top: 15px; font-size: 0.9rem; line-height: 1.6; }
+    .data-box { width: 100%; border-top: 2px solid #000; padding-top: 10px; font-size: 0.8rem; }
   </style>
 </head>
 <body>
 
-  <div class="toolbar">
-    <button onclick="toggleLayout()">🔄 Ruota Carta</button>
-    <button onclick="downloadCard()">📥 Scarica PNG</button>
-  </div>
-
-  <input type="file" id="fileInput" style="display:none" accept="image/*">
-  <input type="color" id="colorInput" style="display:none">
-
-  <!-- La Carta -->
-  <div class="card" id="card" onclick="changeColor()">
-    <div class="title" contenteditable="true">Gilda degli Avventurieri</div>
-    
-    <div class="photo-area" id="photoArea" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
-      <span id="placeholder">📸 Carica</span>
-      <img id="imgDisplay">
-    </div>
-
-    <div style="text-align: center;">
-      <div class="name" contenteditable="true">Nome Personaggio</div>
-      <div class="rank" contenteditable="true">Classe / Rank S</div>
-      <div class="data-box" contenteditable="true">
-        ID: 001<br>
-        Data Nascita: 12/08<br>
-        Abilità: Sconosciuta
+  <!-- Il contenitore che diventa "telefono" su desktop o "schermo intero" su mobile -->
+  <div id="phone-frame">
+    <div id="app-content">
+      
+      <div class="toolbar">
+        <button onclick="toggleLayout()">🔄 Ruota</button>
+        <button onclick="downloadCard()">📥 Scarica</button>
       </div>
+
+      <input type="file" id="fileInput" style="display:none" accept="image/*">
+      <input type="color" id="colorInput" style="display:none">
+
+      <div class="card" id="card" onclick="changeColor()">
+        <div class="title" contenteditable="true">Gilda Avventurieri</div>
+        
+        <div class="photo-area" id="photoArea" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+          <span id="placeholder">📸</span>
+          <img id="imgDisplay">
+        </div>
+
+        <div style="text-align: center;">
+          <div class="name" contenteditable="true">Nome</div>
+          <div class="rank" contenteditable="true">Classe / Rank</div>
+          <div class="data-box" contenteditable="true">
+            ID: 001<br>
+            Data: 12/08/2026<br>
+            Note: ...
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <script>
-    // Caricamento Foto
     document.getElementById('fileInput').onchange = e => {
       const reader = new FileReader();
       reader.onload = r => {
@@ -80,26 +106,25 @@
       reader.readAsDataURL(e.target.files[0]);
     };
 
-    // Cambio Colore Sfondo
-    function changeColor() {
-      document.getElementById('colorInput').click();
-    }
+    function changeColor() { document.getElementById('colorInput').click(); }
     document.getElementById('colorInput').oninput = e => {
       document.getElementById('card').style.background = e.target.value;
     };
 
-    // Layout
-    function toggleLayout() {
-      document.getElementById('card').classList.toggle('horizontal');
-    }
+    function toggleLayout() { document.getElementById('card').classList.toggle('horizontal'); }
 
-    // Download
     function downloadCard() {
+      // Nasconde temporaneamente i bordi tratteggiati del testo prima di salvare
+      const editables = document.querySelectorAll('[contenteditable="true"]');
+      editables.forEach(el => el.style.border = 'none');
+      
       html2canvas(document.getElementById('card')).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'mia-carta-anime.png';
+        link.download = 'mia-carta.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
+        // Ripristina bordi
+        editables.forEach(el => el.style.border = '');
       });
     }
   </script>
