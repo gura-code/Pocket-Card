@@ -92,7 +92,7 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD - STILI DI BASE (MODALITÀ BIANCA) */
+    /* CARD */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -168,7 +168,7 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* AUTOMATICO PER CHI USA IL TELEFONO IN MODALITÀ SCURA (PAGINA GENERALE) */
+    /* AUTOMATICO PER CHI USA IL TELEFONO IN MODALITÀ SCURA */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -205,7 +205,6 @@
       <div style="font-weight:800; margin-top:10px; font-size: 1.2rem;">New Entry</div>
       
       <div class="card-canvas-area">
-        <!-- LA CARTA -->
         <div class="card" id="main-card">
           <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
             <div id="placeholder" class="placeholder-box">+ Photo</div>
@@ -218,7 +217,6 @@
           </div>
         </div>
 
-        <!-- SELETTORE CON PALLINA BIANCA E NERA -->
         <div class="color-picker">
           <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
           <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
@@ -241,6 +239,16 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
+
+    // Svuota i campi al click
+    document.querySelectorAll('.editable').forEach(el => {
+      el.addEventListener('focus', function() {
+        const placeholders = ['Name', 'Rating', 'Review...'];
+        if (placeholders.includes(this.innerText.trim())) {
+          this.innerText = '';
+        }
+      });
+    });
 
     function shuffleArray(array) {
       const arr = [...array];
@@ -277,11 +285,9 @@
       reader.readAsDataURL(file);
     }
 
-    // CAMBIO TEMA BIANCO / NERO
     function setCardTheme(theme) {
       const card = document.getElementById('main-card');
       const dots = document.querySelectorAll('.color-dot');
-
       if (theme === 'dark') {
         card.classList.add('dark-theme');
         dots[0].classList.remove('active');
@@ -296,7 +302,6 @@
     function downloadCard() {
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
-
       editables.forEach(el => {
         const text = el.innerText.trim();
         if (text === 'Name' || text === 'Rating' || text === 'Review...') {
@@ -305,18 +310,13 @@
         }
       });
 
-      html2canvas(card, { 
-        scale: 3, 
-        backgroundColor: null, 
-        useCORS: true 
-      }).then(canvas => {
+      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
         editables.forEach(el => {
           if (el.dataset.oldText) {
             el.innerText = el.dataset.oldText;
             delete el.dataset.oldText;
           }
         });
-
         const link = document.createElement('a');
         link.download = 'card.png';
         link.href = canvas.toDataURL('image/png');
