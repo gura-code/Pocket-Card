@@ -11,7 +11,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { width: 100vw; height: 100dvh; overflow: hidden; background: #e0e0e0; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
-    /* MOCKUP TELEFONO */
+    /* TELEFONO CONTAINER */
     .phone-wrapper { width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
     @media (min-width: 500px) { .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
 
@@ -39,13 +39,12 @@
       box-shadow: 0 8px 15px rgba(0,0,0,0.1);
       align-items: center;
       box-sizing: border-box;
-      position: relative;
     }
 
-    /* CONTENITORE FOTO: SI ADATTA PERFETTAMENTE SENZA BORDI VUOTI */
+    /* CONTENITORE IMMAGINE ADATTABILE SENZA TAGLI */
     .card-photo-box { 
       height: 100%; 
-      max-width: 140px;
+      max-width: 130px;
       border: 2px solid #000000; 
       border-radius: 10px; 
       background: #f0f0f0; 
@@ -53,33 +52,28 @@
       align-items: center; 
       justify-content: center; 
       cursor: pointer; 
-      overflow: hidden; 
       flex-shrink: 0;
-    }
-
-    /* QUANDO L'IMMAGINE È CARICATA, IL BORDO SI ADATTA ALLA FOTO */
-    .card-photo-box.has-image {
-      background: transparent;
-      line-height: 0;
+      padding: 3px;
     }
 
     .card-photo-box img {
-      max-height: 156px; /* Altezza interna disponibile */
-      max-width: 136px;
+      max-height: 100%;
+      max-width: 100%;
       width: auto;
       height: auto;
+      object-fit: contain;
       display: block;
-      border-radius: 8px;
+      border-radius: 6px;
     }
 
     .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; height: 100%; justify-content: center; }
     
-    /* EDITABILE SULLA CARTA */
-    .editable { outline: none; border: 1px dashed transparent; transition: border 0.2s; min-height: 1em; }
-    .editable:hover, .editable:focus { border: 1px dashed #888; border-radius: 4px; }
+    /* CAMPI MODIFICABILI */
+    .editable { outline: none; transition: background 0.2s; }
+    .editable:hover, .editable:focus { background: rgba(0,0,0,0.04); border-radius: 4px; }
 
     .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
-    .card-voto { font-size: 0.85rem; font-weight: 800; color: #ffab00; }
+    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
     .card-review { font-size: 0.75rem; color: #333; font-style: italic; line-height: 1.2; word-break: break-word; }
 
     .btn-download { width: 100%; background: #000; color: #fff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; margin-bottom: 10px; }
@@ -100,14 +94,14 @@
         <div class="card" id="main-card">
           
           <div class="card-photo-box" id="photo-box" onclick="document.getElementById('file-input').click()">
-            <span id="placeholder" style="font-size:0.75rem; font-weight:700; color:#666; text-align:center; padding: 8px;">+ Inserisci Foto</span>
+            <span id="placeholder" style="font-size:0.75rem; font-weight:700; color:#666; text-align:center;">+ Foto</span>
             <img id="card-photo-img" style="display:none;" alt="Foto">
           </div>
 
           <div class="card-info-box">
-            <div class="card-title editable" id="card-title" contenteditable="true" data-placeholder="Titolo">Titolo Prova</div>
-            <div class="card-voto editable" id="card-voto" contenteditable="true" data-placeholder="Voto">★★★★★</div>
-            <div class="card-review editable" id="card-review" contenteditable="true" data-placeholder="Opinione">Clicca qui per scrivere la tua opinione...</div>
+            <div class="card-title editable" id="card-title" contenteditable="true">Titolo</div>
+            <div class="card-voto editable" id="card-voto" contenteditable="true">Voto: -</div>
+            <div class="card-review editable" id="card-review" contenteditable="true">La tua opinione...</div>
           </div>
 
         </div>
@@ -132,37 +126,40 @@
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = document.getElementById('card-photo-img');
-        const box = document.getElementById('photo-box');
-        
         img.src = event.target.result;
         img.style.display = 'block';
         document.getElementById('placeholder').style.display = 'none';
-        
-        // Aggiunge la classe che stringe il bordo attorno all'immagine senza spazi vuoti
-        box.classList.add('has-image');
+        document.getElementById('photo-box').style.background = 'transparent';
       }
       reader.readAsDataURL(file);
     }
 
     function downloadCard() {
       const card = document.getElementById('main-card');
-      
-      // Prima del download, se un campo di testo è vuoto o ha ancora il testo base, lo nascondiamo
       const editables = card.querySelectorAll('.editable');
+
+      // Nasconde i testi rimasti vuoti prima del download
       editables.forEach(el => {
-        if (el.innerText.trim() === '' || el.innerText.trim() === 'Clicca qui per scrivere la tua opinione...') {
-          el.style.opacity = '0';
+        const text = el.innerText.trim();
+        if (text === '' || text === 'Titolo' || text === 'Voto: -' || text === 'La tua opinione...') {
+          el.dataset.oldText = el.innerText;
+          el.innerText = '';
         }
       });
 
       html2canvas(card, { 
         scale: 3,
-        backgroundColor: null, // Mantiene lo sfondo Trasparente sugli angoli
+        backgroundColor: null,
         useCORS: true,
         logging: false
       }).then(canvas => {
-        // Ripristiniamo la visibilità per continuare a modificare nell'editor
-        editables.forEach(el => el.style.opacity = '1');
+        // Ripristina i testi vuoti per poter continuare a modificarli
+        editables.forEach(el => {
+          if (el.dataset.oldText) {
+            el.innerText = el.dataset.oldText;
+            delete el.dataset.oldText;
+          }
+        });
 
         const link = document.createElement('a');
         link.download = 'scheda.png';
