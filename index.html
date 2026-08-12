@@ -113,9 +113,9 @@
           </div>
 
           <div class="card-info-box">
-            <div class="card-title editable" id="card-title" contenteditable="true">Titolo</div>
-            <div class="card-voto editable" id="card-voto" contenteditable="true">Voto: -</div>
-            <div class="card-review editable" id="card-review" contenteditable="true">La tua opinione...</div>
+            <div class="card-title editable" id="card-title" contenteditable="true">Nome</div>
+            <div class="card-voto editable" id="card-voto" contenteditable="true">Info / Voto</div>
+            <div class="card-review editable" id="card-review" contenteditable="true">Note / Commento...</div>
           </div>
 
         </div>
@@ -154,7 +154,7 @@
       // Nasconde i testi vuoti o predefiniti prima del download
       editables.forEach(el => {
         const text = el.innerText.trim();
-        if (text === '' || text === 'Titolo' || text === 'Voto: -' || text === 'La tua opinione...') {
+        if (text === '' || text === 'Nome' || text === 'Info / Voto' || text === 'Note / Commento...') {
           el.dataset.oldText = el.innerText;
           el.innerText = '';
         }
