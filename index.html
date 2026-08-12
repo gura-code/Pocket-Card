@@ -11,12 +11,6 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     
-    /* Protezione globale per immagini: impedisce a Samsung di invertire i colori */
-    img, .sticker img, .card-photo-box img {
-        color-scheme: light !important;
-        filter: none !important;
-    }
-
     html, body { width: 100vw; height: 100dvh; overflow: hidden; background-color: #ffffff; color: #000000; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
     .phone-wrapper { width: 100vw; height: 100dvh; background-color: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
@@ -71,14 +65,17 @@
       .content-overlay { background: rgba(0, 0, 0, 0.75) !important; }
       .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
       .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
-      /* NESSUN FILTRO QUI: lasciamo che il browser gestisca il tema, ma abbiamo protetto le immagini nel blocco globale iniziale */
+      
+      /* FORZIAMO L'INVERSIONE DELLE IMMAGINI QUI */
+      img { filter: invert(1) !important; }
+      
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
     }
   </style>
 </head>
 <body>
-  <!-- [IL RESTO DEL CORPO E DELLO SCRIPT RIMANE INVARIATO] -->
+  <!-- [TUTTO IL RESTO DEL CODICE RIMANE INVARIATO] -->
   <div class="phone-wrapper">
     <div id="splash">
       <div class="bg-scrolling">
