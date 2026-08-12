@@ -119,6 +119,16 @@
     
     .card-info-box { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; }
     .editable { outline: none; }
+    
+    /* GESTIONE PLACEHOLDER DINAMICO (GRIGETTO QUANDO È VUOTO O IN FOCUS) */
+    .editable:empty:before {
+      content: attr(data-placeholder);
+      color: #aaa;
+    }
+    .editable:focus:empty:before {
+      color: #ccc;
+    }
+
     .card-title { font-size: 1.1rem; font-weight: 800; color: #000000; word-break: break-word; }
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
     .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
@@ -131,6 +141,7 @@
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
     .card.dark-theme .card-review { color: #aaaaaa; }
+    .card.dark-theme .editable:empty:before { color: #555; }
     .card.dark-theme .placeholder-box {
       border-color: #ffffff;
       background-color: #1a1a1a;
@@ -211,9 +222,9 @@
             <img id="card-photo-img" style="display:none;" alt="Photo">
           </div>
           <div class="card-info-box">
-            <div class="card-title editable" contenteditable="true">Name</div>
-            <div class="card-voto editable" contenteditable="true">Rating</div>
-            <div class="card-review editable" contenteditable="true">Review...</div>
+            <div class="card-title editable" contenteditable="true" data-placeholder="Name">Name</div>
+            <div class="card-voto editable" contenteditable="true" data-placeholder="Rating">Rating</div>
+            <div class="card-review editable" contenteditable="true" data-placeholder="Review...">Review...</div>
           </div>
         </div>
 
@@ -240,12 +251,20 @@
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
 
-    // Svuota i campi al click
+    // Gestione clic, vuoto e ripristino testo
     document.querySelectorAll('.editable').forEach(el => {
+      // Quando clicchi: se c'è il testo di default, scompare per lasciarti scrivere subito
       el.addEventListener('focus', function() {
-        const placeholders = ['Name', 'Rating', 'Review...'];
-        if (placeholders.includes(this.innerText.trim())) {
+        const ph = this.getAttribute('data-placeholder');
+        if (this.innerText.trim() === ph) {
           this.innerText = '';
+        }
+      });
+
+      // Quando esci dal campo (blur): se non hai scritto niente, torna il testo originale
+      el.addEventListener('blur', function() {
+        if (this.innerText.trim() === '') {
+          this.innerText = this.getAttribute('data-placeholder');
         }
       });
     });
@@ -302,21 +321,25 @@
     function downloadCard() {
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
+      
+      // Se stai scaricando e non hai scritto niente, rimuove la scritta di default per l'immagine
       editables.forEach(el => {
-        const text = el.innerText.trim();
-        if (text === 'Name' || text === 'Rating' || text === 'Review...') {
-          el.dataset.oldText = el.innerText;
+        const ph = el.getAttribute('data-placeholder');
+        if (el.innerText.trim() === ph) {
+          el.dataset.wasPlaceholder = "true";
           el.innerText = '';
         }
       });
 
       html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+        // Ripristina i testi di default nella schermata dopo il download
         editables.forEach(el => {
-          if (el.dataset.oldText) {
-            el.innerText = el.dataset.oldText;
-            delete el.dataset.oldText;
+          if (el.dataset.wasPlaceholder) {
+            el.innerText = el.getAttribute('data-placeholder');
+            delete el.dataset.wasPlaceholder;
           }
         });
+
         const link = document.createElement('a');
         link.download = 'card.png';
         link.href = canvas.toDataURL('image/png');
