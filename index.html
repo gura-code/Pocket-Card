@@ -8,46 +8,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: #f4f1ea; color: #4a3e3d; display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; }
+    body { background-color: #f0f0f0; color: #111111; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
     
-    h1 { margin-bottom: 20px; font-size: 1.8rem; color: #5a4634; text-align: center; }
+    .main-wrapper { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 600px; }
 
-    .container { display: flex; flex-wrap: wrap; gap: 30px; max-width: 1050px; width: 100%; justify-content: center; align-items: flex-start; }
+    /* CONTROLLI IN ALTO */
+    .controls-bar { display: flex; gap: 10px; width: 100%; justify-content: center; }
+    .btn-action { padding: 10px 16px; background: #ffffff; border: 2px solid #111; border-radius: 10px; font-weight: bold; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
+    .btn-action:hover { background: #111; color: #fff; }
+    .btn-download { background: #111; color: #fff; }
+    .btn-download:hover { background: #333; }
 
-    /* FORM DI INPUT */
-    .form-container { background: #ffffff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex: 1; min-width: 320px; border: 1px solid #e0d8cc; }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #6b5744; }
-    input[type="text"], input[type="date"], select { width: 100%; padding: 10px; border: 2px solid #e6dfd5; border-radius: 8px; font-size: 0.9rem; outline: none; background: white; transition: border-color 0.2s; }
-    input[type="color"] { width: 100%; height: 42px; border: 2px solid #e6dfd5; border-radius: 8px; cursor: pointer; background: white; padding: 4px; }
-    input[type="text"]:focus, input[type="date"]:focus, select:focus { border-color: #a88b70; }
-
-    .row { display: flex; gap: 10px; }
-    .row .form-group { flex: 1; }
-
-    /* PULSANTE SCARICA */
-    .download-btn { width: 100%; padding: 12px; background-color: #8c7355; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-    .download-btn:hover { background-color: #705b42; }
-
-    /* ANTEPRIMA CARTA */
-    .card-preview { flex: 1; min-width: 340px; display: flex; justify-content: center; align-items: center; padding: 10px; }
-    
-    /* STILI BASE DELLA CARTA (VERTICALE: 315x500) */
+    /* STILI BASE DELLA CARTA (BIANCO E NERO INIZIALE - VERTICALE 315x500) */
     .card { 
       width: 315px; 
       height: 500px; 
-      border: 3px solid #b89b7d; 
+      border: 3px solid #111111; 
       border-radius: 20px; 
       padding: 20px; 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.12); 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15); 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       position: relative; 
       overflow: hidden; 
-      transition: all 0.3s ease;
-      background: linear-gradient(135deg, #ffffff, #f5ebd9);
-      color: #333333;
+      transition: width 0.3s, height 0.3s;
+      background: #ffffff;
+      color: #111111;
+      user-select: none;
     }
 
     /* ORIENTAMENTO ORIZZONTALE ESATTO (500x315) */
@@ -60,222 +48,139 @@
       padding: 25px 20px 20px 20px;
     }
 
-    /* FONT */
-    .font-sans { font-family: 'Segoe UI', Roboto, sans-serif; }
-    .font-serif { font-family: 'Georgia', 'Times New Roman', serif; }
-    .font-mono { font-family: 'Courier New', Courier, monospace; }
-
-    .card-header { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; text-align: center; }
+    /* TITOLO CLICCABILE PER CAMBIARE SFONDO */
+    .card-header { 
+      font-size: 0.85rem; 
+      font-weight: bold; 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
+      margin-bottom: 15px; 
+      text-align: center; 
+      cursor: pointer;
+      padding: 4px 8px;
+      border: 1px dashed transparent;
+      border-radius: 6px;
+    }
+    .card-header:hover { border-color: #111; background: rgba(0,0,0,0.05); }
     .card.horizontal .card-header { position: absolute; top: 12px; left: 0; width: 100%; text-align: center; }
 
-    /* AVATAR & FOTO INTERATTIVA */
+    /* FOTO PROFILE CLICCABILE */
     .avatar-container { 
-      border: 3px solid #b89b7d; 
+      width: 150px;
+      height: 150px;
+      border: 3px solid #111111; 
+      border-radius: 16px;
       overflow: hidden; 
-      background-color: rgba(255,255,255,0.4); 
+      background-color: #f9f9f9; 
       display: flex; 
       flex-direction: column;
       align-items: center; 
       justify-content: center; 
-      margin-bottom: 12px; 
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 15px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
       flex-shrink: 0;
-      transition: all 0.3s ease;
       cursor: pointer;
-      position: relative;
+      transition: transform 0.2s, opacity 0.2s;
     }
     .avatar-container:hover { transform: scale(1.02); opacity: 0.9; }
     .card.horizontal .avatar-container { margin-bottom: 0; margin-top: 15px; }
     .avatar-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .avatar-placeholder { font-size: 2rem; }
-    .avatar-hint { font-size: 0.65rem; font-weight: bold; margin-top: 4px; opacity: 0.7; text-align: center; padding: 0 4px; }
+    .avatar-placeholder { font-size: 2.2rem; }
+    .avatar-hint { font-size: 0.65rem; font-weight: bold; margin-top: 4px; opacity: 0.6; text-align: center; }
 
-    /* FORME FOTO */
-    .shape-circle { border-radius: 50%; }
-    .shape-square { border-radius: 16px; }
-    .shape-rectangle { border-radius: 8px; }
-
-    /* DIMENSIONI FOTO */
-    .size-small { width: 100px; height: 100px; }
-    .size-medium { width: 140px; height: 140px; }
-    .size-passport { width: 125px; height: 155px; }
-
-    .card.horizontal .size-medium { width: 150px; height: 150px; }
-    .card.horizontal .size-small { width: 110px; height: 110px; }
-    .card.horizontal .size-passport { width: 130px; height: 160px; }
-
+    /* INFO TESTI MODIFICABILI SULLA CARTA */
     .card-info { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; flex: 1; }
     .card.horizontal .card-info { text-align: left; align-items: flex-start; margin-top: 20px; padding-left: 10px; }
 
-    .card-name { font-size: 1.35rem; font-weight: bold; margin-bottom: 2px; word-break: break-word; line-height: 1.2; }
-    .card-role { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; opacity: 0.85; word-break: break-word; }
+    .editable { outline: none; border: 1px dashed transparent; border-radius: 6px; padding: 2px 6px; transition: border-color 0.2s; }
+    .editable:hover, .editable:focus { border-color: #111111; background: rgba(255,255,255,0.5); }
+
+    .card-name { font-size: 1.4rem; font-weight: bold; margin-bottom: 8px; word-break: break-word; line-height: 1.2; min-width: 100px; }
     
-    .card-details { background: rgba(255, 255, 255, 0.75); padding: 10px 12px; border-radius: 12px; font-size: 0.82rem; border: 1px solid rgba(0,0,0,0.08); text-align: left; width: 100%; }
-    .card-details p { margin-bottom: 4px; }
+    /* RIQUADRO DATI CLICCABILE/MODIFICABILE */
+    .card-details { 
+      background: #ffffff; 
+      padding: 12px; 
+      border-radius: 12px; 
+      font-size: 0.85rem; 
+      border: 2px solid #111111; 
+      text-align: left; 
+      width: 100%; 
+      cursor: pointer;
+    }
+    .card-details p { margin-bottom: 4px; display: flex; gap: 6px; }
     .card-details p:last-child { margin-bottom: 0; }
     .card-details span.label { font-weight: bold; }
 
-    .card-footer { position: absolute; bottom: 8px; font-size: 0.65rem; opacity: 0.6; letter-spacing: 1px; width: 100%; text-align: center; left: 0; }
-    
-    /* Input nascosto per il caricamento */
-    #hidden-file-input { display: none; }
+    .card-footer { position: absolute; bottom: 8px; font-size: 0.65rem; opacity: 0.5; letter-spacing: 1px; width: 100%; text-align: center; left: 0; }
+
+    /* INPUT NASCOSTI PER FOTO E COLORI */
+    #hidden-file-input, #hidden-bg-color, #hidden-box-color { display: none; }
   </style>
 </head>
 <body>
 
-  <h1>📇 Crea la Tua Carta Personale</h1>
-
-  <div class="container">
-    <!-- Form Opzioni -->
-    <div class="form-container">
-      
-      <!-- Input nascosto attivato al click sulla carta -->
-      <input type="file" id="hidden-file-input" accept="image/*">
-
-      <div class="row">
-        <div class="form-group">
-          <label for="input-name">Nome e Cognome *</label>
-          <input type="text" id="input-name" placeholder="Es. Nome Cognome">
-        </div>
-        <div class="form-group">
-          <label for="input-role">Soprannome / Titolo (Opzionale)</label>
-          <input type="text" id="input-role" placeholder="Es. Il Campione">
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label for="input-date">Data</label>
-          <input type="date" id="input-date">
-        </div>
-        <div class="form-group">
-          <label for="input-quote">Frase o Nota</label>
-          <input type="text" id="input-quote" placeholder="Es. Nota personale">
-        </div>
-      </div>
-
-      <hr style="margin: 15px 0; border: none; border-top: 1px dashed #e0d8cc;">
-
-      <!-- Sezione Personalizzazione Colori -->
-      <div class="row">
-        <div class="form-group">
-          <label for="input-color-bg">Colore Sfondo</label>
-          <input type="color" id="input-color-bg" value="#ff66cc">
-        </div>
-        <div class="form-group">
-          <label for="input-color-text">Colore Testo</label>
-          <input type="color" id="input-color-text" value="#222222">
-        </div>
-        <div class="form-group">
-          <label for="input-color-box">Colore Riquadro</label>
-          <input type="color" id="input-color-box" value="#ffffff">
-        </div>
-      </div>
-
-      <!-- Sezione Stile e Layout -->
-      <div class="row">
-        <div class="form-group">
-          <label for="select-orientation">Orientamento</label>
-          <select id="select-orientation">
-            <option value="vertical">Verticale</option>
-            <option value="horizontal">Orizzontale</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="select-font">Carattere (Font)</label>
-          <select id="select-font">
-            <option value="font-sans">Classico (Sans-serif)</option>
-            <option value="font-serif">Elegante (Serif)</option>
-            <option value="font-mono">Moderno (Monospace)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="form-group">
-          <label for="select-shape">Forma Foto</label>
-          <select id="select-shape">
-            <option value="shape-square">Quadrata Arrotondata</option>
-            <option value="shape-circle">Circolare</option>
-            <option value="shape-rectangle">Rettangolare</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="select-size">Dimensione Foto</label>
-          <select id="select-size">
-            <option value="size-medium">Grande (Standard)</option>
-            <option value="size-small">Media</option>
-            <option value="size-passport">Fototessera / Rettangolare</option>
-          </select>
-        </div>
-      </div>
-
-      <button class="download-btn" id="download-btn">📥 Scarica la Carta (PNG)</button>
+  <div class="main-wrapper">
+    <!-- Pulsanti di azione in alto -->
+    <div class="controls-bar">
+      <button class="btn-action" id="rotate-btn">🔄 Ruota Carta</button>
+      <button class="btn-action btn-download" id="download-btn">📥 Scarica Carta (PNG)</button>
     </div>
 
-    <!-- Anteprima Carta -->
-    <div class="card-preview">
-      <div class="card font-sans" id="card-to-download">
-        <div class="card-header" id="card-header-text">Carta Personale</div>
-        
-        <!-- Cliccando qui si carica la foto -->
-        <div class="avatar-container shape-square size-medium" id="avatar-box" title="Clicca per caricare una foto">
-          <span class="avatar-placeholder" id="placeholder-icon">📸</span>
-          <span class="avatar-hint" id="placeholder-text">Clicca per foto</span>
-          <img id="card-photo" src="" alt="Foto Profilo">
-        </div>
+    <!-- Input Nascosti -->
+    <input type="file" id="hidden-file-input" accept="image/*">
+    <input type="color" id="hidden-bg-color" value="#ffffff">
+    <input type="color" id="hidden-box-color" value="#ffffff">
 
-        <div class="card-info">
-          <div class="card-name" id="card-name-text">Il Tuo Nome</div>
-          <div class="card-role" id="card-role-text" style="display: none;"></div>
-          
-          <div class="card-details" id="card-details-box">
-            <p><span class="label">Data:</span> <span id="card-date-text">--/--/----</span></p>
-            <p><span class="label">Nota:</span> <span id="card-quote-text">Aggiungi una frase...</span></p>
-          </div>
-        </div>
-
-        <div class="card-footer">PASS UFFICIALE • ID-2026</div>
+    <!-- La Carta -->
+    <div class="card" id="card-to-download">
+      <div class="card-header" id="card-header-text" title="Clicca per cambiare colore dello sfondo">CARTA PERSONALE 🎨</div>
+      
+      <!-- Clicca qui per la foto -->
+      <div class="avatar-container" id="avatar-box" title="Clicca per caricare la foto">
+        <span class="avatar-placeholder" id="placeholder-icon">📸</span>
+        <span class="avatar-hint" id="placeholder-text">Inserisci Foto</span>
+        <img id="card-photo" src="" alt="Foto Profilo">
       </div>
+
+      <div class="card-info">
+        <!-- Nome modificabile direttamente cliccandoci sopra -->
+        <div class="card-name editable" contenteditable="true" id="card-name-text" title="Clicca per modificare il nome">Nome Cognome</div>
+        
+        <!-- Riquadro Dati -->
+        <div class="card-details" id="card-details-box" title="Doppio clic per cambiare colore del riquadro">
+          <p><span class="label">Data:</span> <span class="editable" contenteditable="true" id="card-date-text">01/01/2026</span></p>
+          <p><span class="label">Nota:</span> <span class="editable" contenteditable="true" id="card-quote-text">Scrivi una nota qui...</span></p>
+        </div>
+      </div>
+
+      <div class="card-footer">PASS UFFICIALE • ID-2026</div>
     </div>
   </div>
 
   <script>
-    // Elementi Input
-    const hiddenFileInput = document.getElementById('hidden-file-input');
-    const inputName = document.getElementById('input-name');
-    const inputRole = document.getElementById('input-role');
-    const inputDate = document.getElementById('input-date');
-    const inputQuote = document.getElementById('input-quote');
-
-    // Elementi Selezioni Colori e Stile
-    const inputColorBg = document.getElementById('input-color-bg');
-    const inputColorText = document.getElementById('input-color-text');
-    const inputColorBox = document.getElementById('input-color-box');
-    const selectOrientation = document.getElementById('select-orientation');
-    const selectFont = document.getElementById('select-font');
-    const selectShape = document.getElementById('select-shape');
-    const selectSize = document.getElementById('select-size');
-
-    // Elementi Carta
+    // Elementi
     const card = document.getElementById('card-to-download');
+    const rotateBtn = document.getElementById('rotate-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    
     const avatarBox = document.getElementById('avatar-box');
     const cardPhoto = document.getElementById('card-photo');
     const placeholderIcon = document.getElementById('placeholder-icon');
     const placeholderText = document.getElementById('placeholder-text');
-    const cardNameText = document.getElementById('card-name-text');
-    const cardRoleText = document.getElementById('card-role-text');
-    const cardDateText = document.getElementById('card-date-text');
-    const cardQuoteText = document.getElementById('card-quote-text');
+    
+    const cardHeader = document.getElementById('card-header-text');
     const cardDetailsBox = document.getElementById('card-details-box');
-    const downloadBtn = document.getElementById('download-btn');
+    
+    const hiddenFileInput = document.getElementById('hidden-file-input');
+    const hiddenBgColor = document.getElementById('hidden-bg-color');
+    const hiddenBoxColor = document.getElementById('hidden-box-color');
 
-    // Cliccando sull'avatar si attiva il caricamento file
+    // 1. CARICAMENTO FOTO (Cliccando sulla foto)
     avatarBox.addEventListener('click', () => {
       hiddenFileInput.click();
     });
 
-    // Aggiornamento Foto
     hiddenFileInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -290,88 +195,36 @@
       }
     });
 
-    // Aggiornamento Nome
-    inputName.addEventListener('input', () => { 
-      cardNameText.textContent = inputName.value.trim() || 'Il Tuo Nome'; 
+    // 2. CAMBIO COLORE SFONDO (Cliccando sul titolo "CARTA PERSONALE")
+    cardHeader.addEventListener('click', () => {
+      hiddenBgColor.click();
     });
 
-    // Aggiornamento Titolo/Ruolo (Opzionale)
-    inputRole.addEventListener('input', () => { 
-      const roleValue = inputRole.value.trim();
-      if (roleValue === "") {
-        cardRoleText.style.display = 'none';
-      } else {
-        cardRoleText.textContent = roleValue;
-        cardRoleText.style.display = 'block';
-      }
+    hiddenBgColor.addEventListener('input', () => {
+      const color = hiddenBgColor.value;
+      card.style.background = color;
     });
 
-    // Aggiornamento Frase e Data
-    inputQuote.addEventListener('input', () => { 
-      cardQuoteText.textContent = inputQuote.value.trim() || 'Aggiungi una frase...'; 
-    });
-    
-    inputDate.addEventListener('change', () => {
-      if (inputDate.value) {
-        const parts = inputDate.value.split('-');
-        cardDateText.textContent = `${parts[2]}/${parts[1]}/${parts[0]}`;
-      } else {
-        cardDateText.textContent = '--/--/----';
-      }
+    // 3. CAMBIO COLORE RIQUADRO DATI (Doppio clic sul riquadro dati)
+    cardDetailsBox.addEventListener('dblclick', () => {
+      hiddenBoxColor.click();
     });
 
-    // Gestione Colori Personalizzati
-    inputColorBg.addEventListener('input', () => {
-      const bgColor = inputColorBg.value;
-      card.style.background = `linear-gradient(135deg, #ffffff, ${bgColor})`;
-      card.style.borderColor = bgColor;
-      avatarBox.style.borderColor = bgColor;
+    hiddenBoxColor.addEventListener('input', () => {
+      const color = hiddenBoxColor.value;
+      cardDetailsBox.style.backgroundColor = color;
     });
 
-    inputColorText.addEventListener('input', () => {
-      const textColor = inputColorText.value;
-      card.style.color = textColor;
+    // 4. RUOTA CARTA (Verticale / Orizzontale)
+    rotateBtn.addEventListener('click', () => {
+      card.classList.toggle('horizontal');
     });
 
-    inputColorBox.addEventListener('input', () => {
-      const boxColor = inputColorBox.value;
-      cardDetailsBox.style.backgroundColor = boxColor;
-    });
-
-    // Cambio Orientamento (Verticale / Orizzontale)
-    selectOrientation.addEventListener('change', () => {
-      if (selectOrientation.value === 'horizontal') {
-        card.classList.add('horizontal');
-      } else {
-        card.classList.remove('horizontal');
-      }
-    });
-
-    // Cambio Font
-    selectFont.addEventListener('change', () => {
-      card.classList.remove('font-sans', 'font-serif', 'font-mono');
-      card.classList.add(selectFont.value);
-    });
-
-    // Cambio Forma Foto
-    selectShape.addEventListener('change', () => {
-      avatarBox.classList.remove('shape-circle', 'shape-square', 'shape-rectangle');
-      avatarBox.classList.add(selectShape.value);
-    });
-
-    // Cambio Dimensione Foto
-    selectSize.addEventListener('change', () => {
-      avatarBox.classList.remove('size-small', 'size-medium', 'size-passport');
-      avatarBox.classList.add(selectSize.value);
-    });
-
-    // Inizializzazione colore di default dello sfondo rosa
-    card.style.background = `linear-gradient(135deg, #ffffff, ${inputColorBg.value})`;
-    card.style.borderColor = inputColorBg.value;
-    avatarBox.style.borderColor = inputColorBg.value;
-
-    // Scarica la Carta
+    // 5. SCARICA CARTA
     downloadBtn.addEventListener('click', () => {
+      // Rimuove temporaneamente le evidenziazioni dei testi durante il download
+      document.querySelectorAll('.editable').forEach(el => el.blur());
+      
       html2canvas(card, { scale: 2 }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'carta-personale.png';
