@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Media Card</title>
+  <title>Pocket Review</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
@@ -15,18 +15,28 @@
     .phone-wrapper { width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
     @media (min-width: 500px) { .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
 
-    /* SPLASH SCREEN */
-    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; color: #fff; }
-    .logo-main { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; letter-spacing: 2px; }
+    /* SPLASH SCREEN CON ANIMAZIONE */
+    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; overflow: hidden; }
+    
+    .bg-scrolling { position: absolute; width: 100%; height: 100%; display: flex; opacity: 0.3; pointer-events: none; }
+    .col { flex: 1; display: flex; flex-direction: column; animation: scroll 15s linear infinite; }
+    .col.reverse { animation: scroll-reverse 15s linear infinite; }
+    .sticker { width: 100px; height: 100px; margin: 10px; border: 2px solid #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; }
+    
+    @keyframes scroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    @keyframes scroll-reverse { from { transform: translateY(-50%); } to { transform: translateY(0); } }
+
+    .content-overlay { z-index: 10; text-align: center; }
+    .logo-main { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 20px; letter-spacing: 1px; }
     .btn-start { background: #fff; color: #000; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 1rem; }
 
     /* MAIN UI */
     .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; align-items: center; }
-    .app-header { font-size: 1.2rem; font-weight: 800; text-align: center; color: #000; }
+    .app-header { font-size: 1.2rem; font-weight: 800; text-align: center; color: #000; margin-top: 10px; }
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
     
-    /* CARTA - DIMENSIONI FISSE */
+    /* CARTA - NON TOCCATA */
     .card { 
       width: 320px; 
       height: 180px; 
@@ -41,55 +51,16 @@
       box-sizing: border-box;
     }
 
-    /* AREA FOTO SENZA SPAZI VUOTI */
-    .card-photo-box { 
-      height: 100%; 
-      max-width: 130px;
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      flex-shrink: 0;
-    }
-
-    /* BOX SEGNAPOSTO INIZIALE */
-    .placeholder-box {
-      width: 100px;
-      height: 100%;
-      border: 2px dashed #000000;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f0f0f0;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #666;
-      text-align: center;
-      padding: 8px;
-    }
-
-    /* L'IMMAGINE HA IL BORDO NERO ADERENTE AL 100% SENZA SPAZI INERTI */
-    .card-photo-box img {
-      max-height: 156px;
-      max-width: 130px;
-      width: auto;
-      height: auto;
-      display: block;
-      border: 2px solid #000000;
-      border-radius: 8px;
-    }
-
+    .card-photo-box { height: 100%; max-width: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    .placeholder-box { width: 100px; height: 100%; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 0.75rem; font-weight: 700; color: #666; text-align: center; padding: 8px; }
+    .card-photo-box img { max-height: 156px; max-width: 130px; width: auto; height: auto; display: block; border: 2px solid #000000; border-radius: 8px; }
     .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; height: 100%; justify-content: center; }
     
-    /* CAMPI MODIFICABILI */
     .editable { outline: none; transition: background 0.2s; }
     .editable:hover, .editable:focus { background: rgba(0,0,0,0.04); border-radius: 4px; }
-
     .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
     .card-review { font-size: 0.75rem; color: #333; font-style: italic; line-height: 1.2; word-break: break-word; }
-
     .btn-download { width: 100%; background: #000; color: #fff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; margin-bottom: 10px; }
   </style>
 </head>
@@ -97,32 +68,38 @@
 
   <div class="phone-wrapper">
     <div id="splash">
-      <div class="logo-main">JOURNAL</div>
-      <button class="btn-start" onclick="startApp()">INIZIA</button>
+      <div class="bg-scrolling">
+        <div class="col">
+          <div class="sticker">Sticker 1</div><div class="sticker">Sticker 2</div><div class="sticker">Sticker 3</div>
+        </div>
+        <div class="col reverse">
+          <div class="sticker">Sticker 4</div><div class="sticker">Sticker 5</div><div class="sticker">Sticker 6</div>
+        </div>
+      </div>
+      <div class="content-overlay">
+        <div class="logo-main">Pocket Review</div>
+        <button class="btn-start" onclick="startApp()">INIZIA</button>
+      </div>
     </div>
 
     <div class="main-ui" id="main-ui">
-      <div class="app-header">Crea la tua Scheda</div>
+      <div class="app-header">New Entry</div>
 
       <div class="card-canvas-area">
         <div class="card" id="main-card">
-          
           <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
             <div id="placeholder" class="placeholder-box">+ Foto</div>
             <img id="card-photo-img" style="display:none;" alt="Foto">
           </div>
-
           <div class="card-info-box">
             <div class="card-title editable" id="card-title" contenteditable="true">Nome</div>
             <div class="card-voto editable" id="card-voto" contenteditable="true">Info / Voto</div>
             <div class="card-review editable" id="card-review" contenteditable="true">Note / Commento...</div>
           </div>
-
         </div>
       </div>
 
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
-
       <div class="btn-download" onclick="downloadCard()">Scarica Immagine</div>
     </div>
   </div>
@@ -132,11 +109,9 @@
       document.getElementById('splash').style.display = 'none'; 
       document.getElementById('main-ui').style.display = 'flex'; 
     }
-
     function loadPhoto(e) {
       const file = e.target.files[0];
       if(!file) return;
-
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = document.getElementById('card-photo-img');
@@ -146,12 +121,9 @@
       }
       reader.readAsDataURL(file);
     }
-
     function downloadCard() {
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
-
-      // Nasconde i testi vuoti o predefiniti prima del download
       editables.forEach(el => {
         const text = el.innerText.trim();
         if (text === '' || text === 'Nome' || text === 'Info / Voto' || text === 'Note / Commento...') {
@@ -159,21 +131,13 @@
           el.innerText = '';
         }
       });
-
-      html2canvas(card, { 
-        scale: 3,
-        backgroundColor: null,
-        useCORS: true,
-        logging: false
-      }).then(canvas => {
-        // Ripristina i testi per continuare ad usarli nell'editor
+      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true, logging: false }).then(canvas => {
         editables.forEach(el => {
           if (el.dataset.oldText) {
             el.innerText = el.dataset.oldText;
             delete el.dataset.oldText;
           }
         });
-
         const link = document.createElement('a');
         link.download = 'scheda.png';
         link.href = canvas.toDataURL('image/png');
