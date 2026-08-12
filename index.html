@@ -12,38 +12,105 @@
     
     h1 { margin-bottom: 20px; font-size: 1.8rem; color: #5a4634; text-align: center; }
 
-    .container { display: flex; flex-wrap: wrap; gap: 30px; max-width: 900px; width: 100%; justify-content: center; align-items: flex-start; }
+    .container { display: flex; flex-wrap: wrap; gap: 30px; max-width: 1000px; width: 100%; justify-content: center; align-items: flex-start; }
 
     /* FORM DI INPUT */
-    .form-container { background: #ffffff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex: 1; min-width: 300px; border: 1px solid #e0d8cc; }
+    .form-container { background: #ffffff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex: 1; min-width: 320px; border: 1px solid #e0d8cc; }
     .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #6b5744; }
-    input[type="text"], input[type="date"], input[type="file"] { width: 100%; padding: 10px; border: 2px solid #e6dfd5; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
-    input[type="text"]:focus, input[type="date"]:focus { border-color: #a88b70; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #6b5744; }
+    input[type="text"], input[type="date"], input[type="file"], select { width: 100%; padding: 10px; border: 2px solid #e6dfd5; border-radius: 8px; font-size: 0.9rem; outline: none; background: white; transition: border-color 0.2s; }
+    input[type="text"]:focus, input[type="date"]:focus, select:focus { border-color: #a88b70; }
+
+    .row { display: flex; gap: 10px; }
+    .row .form-group { flex: 1; }
 
     /* PULSANTE SCARICA */
     .download-btn { width: 100%; padding: 12px; background-color: #8c7355; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
     .download-btn:hover { background-color: #705b42; }
 
     /* ANTEPRIMA CARTA */
-    .card-preview { flex: 1; min-width: 300px; display: flex; justify-content: center; }
-    .card { width: 320px; height: 480px; background: linear-gradient(135deg, #fffcf7, #f5ebd9); border: 3px solid #b89b7d; border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; position: relative; overflow: hidden; }
-    .card-header { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #8c7355; margin-bottom: 15px; }
+    .card-preview { flex: 1; min-width: 320px; display: flex; justify-content: center; align-items: center; padding: 10px; }
     
-    .avatar-container { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #b89b7d; overflow: hidden; background-color: #e6dfd5; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .avatar-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
-    .avatar-placeholder { color: #a89a8b; font-size: 2.5rem; }
+    /* STILI BASE DELLA CARTA (VERTICALE) */
+    .card { 
+      width: 320px; 
+      height: 480px; 
+      border: 3px solid #b89b7d; 
+      border-radius: 20px; 
+      padding: 20px; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      position: relative; 
+      overflow: hidden; 
+      transition: all 0.3s ease;
+    }
 
-    .card-info { width: 100%; text-align: center; }
-    .card-name { font-size: 1.4rem; font-weight: bold; color: #4a3e3d; margin-bottom: 4px; word-wrap: break-word; }
-    .card-role { font-size: 0.95rem; color: #8c7355; font-weight: 600; margin-bottom: 15px; word-wrap: break-word; }
+    /* ORIENTAMENTO ORIZZONTALE */
+    .card.horizontal {
+      width: 480px;
+      height: 300px;
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 25px;
+    }
+
+    /* TEMI COLORE CARTA */
+    .theme-cozy { background: linear-gradient(135deg, #fffcf7, #f5ebd9); color: #4a3e3d; border-color: #b89b7d; }
+    .theme-dark { background: linear-gradient(135deg, #2b2b2b, #1a1a1a); color: #f0f0f0; border-color: #555; }
+    .theme-dark .card-header, .theme-dark .card-role { color: #d4af37; }
+    .theme-dark .card-details { background: rgba(255, 255, 255, 0.1); border-color: #444; color: #fff; }
+    .theme-dark .card-details span { color: #d4af37; }
+
+    .theme-gold { background: linear-gradient(135deg, #fff9e6, #f3e5ab); color: #3a3005; border-color: #d4af37; }
+    .theme-gold .card-header, .theme-gold .card-role { color: #997a15; }
+
+    /* FONT */
+    .font-sans { font-family: 'Segoe UI', Roboto, sans-serif; }
+    .font-serif { font-family: 'Georgia', 'Times New Roman', serif; }
+    .font-mono { font-family: 'Courier New', Courier, monospace; }
+
+    .card-header { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #8c7355; margin-bottom: 10px; }
     
-    .card-details { background: rgba(255, 255, 255, 0.6); padding: 12px; border-radius: 12px; font-size: 0.85rem; border: 1px solid #eae1d3; text-align: left; }
-    .card-details p { margin-bottom: 6px; }
+    /* AVATAR & FOTO */
+    .avatar-container { 
+      border: 3px solid #b89b7d; 
+      overflow: hidden; 
+      background-color: #e6dfd5; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      margin-bottom: 10px; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+    .avatar-container img { width: 100%; height: 100%; object-fit: cover; display: none; }
+    .avatar-placeholder { color: #a89a8b; font-size: 2rem; }
+
+    /* FORME FOTO */
+    .shape-circle { border-radius: 50%; }
+    .shape-square { border-radius: 12px; }
+    .shape-rectangle { border-radius: 6px; }
+
+    /* DIMENSIONI FOTO */
+    .size-small { width: 80px; height: 80px; }
+    .size-medium { width: 120px; height: 120px; }
+    .size-passport { width: 105px; height: 135px; } /* Proporzione classica 35x45 */
+
+    .card-info { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .card.horizontal .card-info { width: 55%; text-align: left; }
+
+    .card-name { font-size: 1.3rem; font-weight: bold; margin-bottom: 4px; word-wrap: break-word; }
+    .card-role { font-size: 0.9rem; color: #8c7355; font-weight: 600; margin-bottom: 10px; word-wrap: break-word; }
+    
+    .card-details { background: rgba(255, 255, 255, 0.6); padding: 10px 12px; border-radius: 10px; font-size: 0.8rem; border: 1px solid #eae1d3; text-align: left; width: 100%; }
+    .card-details p { margin-bottom: 4px; }
     .card-details p:last-child { margin-bottom: 0; }
     .card-details span { font-weight: bold; color: #6b5744; }
 
-    .card-footer { position: absolute; bottom: 15px; font-size: 0.7rem; color: #b8a999; letter-spacing: 1px; }
+    .card-footer { position: absolute; bottom: 10px; font-size: 0.65rem; opacity: 0.6; letter-spacing: 1px; }
   </style>
 </head>
 <body>
@@ -53,25 +120,82 @@
   <div class="container">
     <!-- Form Opzioni -->
     <div class="form-container">
+      
+      <!-- Sezione Dati -->
       <div class="form-group">
         <label for="input-photo">Foto Profilo</label>
         <input type="file" id="input-photo" accept="image/*">
       </div>
-      <div class="form-group">
-        <label for="input-name">Nome e Cognome</label>
-        <input type="text" id="input-name" placeholder="Es. Nome Cognome">
+
+      <div class="row">
+        <div class="form-group">
+          <label for="input-name">Nome e Cognome</label>
+          <input type="text" id="input-name" placeholder="Es. Nome Cognome">
+        </div>
+        <div class="form-group">
+          <label for="input-role">Ruolo / Titolo</label>
+          <input type="text" id="input-role" placeholder="Es. Membro Club">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="input-role">Titolo / Ruolo</label>
-        <input type="text" id="input-role" placeholder="Es. Membro del Club, Visitatore...">
+
+      <div class="row">
+        <div class="form-group">
+          <label for="input-date">Data</label>
+          <input type="date" id="input-date">
+        </div>
+        <div class="form-group">
+          <label for="input-quote">Frase o Nota</label>
+          <input type="text" id="input-quote" placeholder="Es. Nota personale">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="input-date">Data di Registrazione</label>
-        <input type="date" id="input-date">
+
+      <hr style="margin: 15px 0; border: none; border-top: 1px dashed #e0d8cc;">
+
+      <!-- Sezione Personalizzazione Stile -->
+      <div class="row">
+        <div class="form-group">
+          <label for="select-orientation">Orientamento</label>
+          <select id="select-orientation">
+            <option value="vertical">Verticale</option>
+            <option value="horizontal">Orizzontale</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="select-theme">Colore Carta</label>
+          <select id="select-theme">
+            <option value="theme-cozy">Chiaro (Cozy)</option>
+            <option value="theme-dark">Scuro (Elegante)</option>
+            <option value="theme-gold">Dorato (VIP)</option>
+          </select>
+        </div>
       </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label for="select-font">Carattere (Font)</label>
+          <select id="select-font">
+            <option value="font-sans">Classico (Sans-serif)</option>
+            <option value="font-serif">Elegante (Serif)</option>
+            <option value="font-mono">Moderno (Monospace)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="select-shape">Forma Foto</label>
+          <select id="select-shape">
+            <option value="shape-circle">Circolare</option>
+            <option value="shape-square">Quadrata Arrotondata</option>
+            <option value="shape-rectangle">Rettangolare</option>
+          </select>
+        </div>
+      </div>
+
       <div class="form-group">
-        <label for="input-quote">Frase o Nota Personale</label>
-        <input type="text" id="input-quote" placeholder="Es. Sii sempre te stesso">
+        <label for="select-size">Dimensione Foto</label>
+        <select id="select-size">
+          <option value="size-medium">Media (Standard)</option>
+          <option value="size-small">Piccola</option>
+          <option value="size-passport">Fototessera / Passaporto</option>
+        </select>
       </div>
 
       <button class="download-btn" id="download-btn">📥 Scarica la Carta (PNG)</button>
@@ -79,10 +203,10 @@
 
     <!-- Anteprima Carta -->
     <div class="card-preview">
-      <div class="card" id="card-to-download">
+      <div class="card theme-cozy font-sans" id="card-to-download">
         <div class="card-header">Carta Personale</div>
         
-        <div class="avatar-container">
+        <div class="avatar-container shape-circle size-medium" id="avatar-box">
           <span class="avatar-placeholder" id="placeholder-icon">👤</span>
           <img id="card-photo" src="" alt="Foto Profilo">
         </div>
@@ -103,22 +227,32 @@
   </div>
 
   <script>
-    // Elementi del DOM
+    // Elementi Input
     const inputPhoto = document.getElementById('input-photo');
     const inputName = document.getElementById('input-name');
     const inputRole = document.getElementById('input-role');
     const inputDate = document.getElementById('input-date');
     const inputQuote = document.getElementById('input-quote');
-    const downloadBtn = document.getElementById('download-btn');
 
+    // Elementi Selezioni Stile
+    const selectOrientation = document.getElementById('select-orientation');
+    const selectTheme = document.getElementById('select-theme');
+    const selectFont = document.getElementById('select-font');
+    const selectShape = document.getElementById('select-shape');
+    const selectSize = document.getElementById('select-size');
+
+    // Elementi Carta
+    const card = document.getElementById('card-to-download');
+    const avatarBox = document.getElementById('avatar-box');
     const cardPhoto = document.getElementById('card-photo');
     const placeholderIcon = document.getElementById('placeholder-icon');
     const cardNameText = document.getElementById('card-name-text');
     const cardRoleText = document.getElementById('card-role-text');
     const cardDateText = document.getElementById('card-date-text');
     const cardQuoteText = document.getElementById('card-quote-text');
+    const downloadBtn = document.getElementById('download-btn');
 
-    // Caricamento Foto
+    // Aggiornamento Foto
     inputPhoto.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -133,14 +267,10 @@
     });
 
     // Aggiornamento Testi
-    inputName.addEventListener('input', () => {
-      cardNameText.textContent = inputName.value.trim() || 'Il Tuo Nome';
-    });
-
-    inputRole.addEventListener('input', () => {
-      cardRoleText.textContent = inputRole.value.trim() || 'Il Tuo Ruolo';
-    });
-
+    inputName.addEventListener('input', () => { cardNameText.textContent = inputName.value.trim() || 'Il Tuo Nome'; });
+    inputRole.addEventListener('input', () => { cardRoleText.textContent = inputRole.value.trim() || 'Il Tuo Ruolo'; });
+    inputQuote.addEventListener('input', () => { cardQuoteText.textContent = inputQuote.value.trim() || 'Aggiungi una frase...'; });
+    
     inputDate.addEventListener('change', () => {
       if (inputDate.value) {
         const parts = inputDate.value.split('-');
@@ -150,15 +280,42 @@
       }
     });
 
-    inputQuote.addEventListener('input', () => {
-      cardQuoteText.textContent = inputQuote.value.trim() || 'Aggiungi una frase...';
+    // Cambio Orientamento (Verticale / Orizzontale)
+    selectOrientation.addEventListener('change', () => {
+      if (selectOrientation.value === 'horizontal') {
+        card.classList.add('horizontal');
+      } else {
+        card.classList.remove('horizontal');
+      }
     });
 
-    // Funzione per Scaricare la Carta
+    // Cambio Tema Colore
+    selectTheme.addEventListener('change', () => {
+      card.classList.remove('theme-cozy', 'theme-dark', 'theme-gold');
+      card.classList.add(selectTheme.value);
+    });
+
+    // Cambio Font
+    selectFont.addEventListener('change', () => {
+      card.classList.remove('font-sans', 'font-serif', 'font-mono');
+      card.classList.add(selectFont.value);
+    });
+
+    // Cambio Forma Foto
+    selectShape.addEventListener('change', () => {
+      avatarBox.classList.remove('shape-circle', 'shape-square', 'shape-rectangle');
+      avatarBox.classList.add(selectShape.value);
+    });
+
+    // Cambio Dimensione Foto
+    selectSize.addEventListener('change', () => {
+      avatarBox.classList.remove('size-small', 'size-medium', 'size-passport');
+      avatarBox.classList.add(selectSize.value);
+    });
+
+    // Scarica la Carta
     downloadBtn.addEventListener('click', () => {
-      const cardElement = document.getElementById('card-to-download');
-      
-      html2canvas(cardElement, { scale: 2 }).then(canvas => {
+      html2canvas(card, { scale: 2 }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'carta-personale.png';
         link.href = canvas.toDataURL('image/png');
