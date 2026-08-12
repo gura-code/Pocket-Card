@@ -10,6 +10,13 @@
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* Protezione globale per immagini: impedisce a Samsung di invertire i colori */
+    img, .sticker img, .card-photo-box img {
+        color-scheme: light !important;
+        filter: none !important;
+    }
+
     html, body { width: 100vw; height: 100dvh; overflow: hidden; background-color: #ffffff; color: #000000; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
     .phone-wrapper { width: 100vw; height: 100dvh; background-color: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
@@ -25,7 +32,7 @@
     @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
     @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
     .sticker { width: 75px; height: 75px; margin: 15px auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .sticker img { width: 100%; height: 100%; object-fit: contain; transition: filter 0.3s; }
+    .sticker img { width: 100%; height: 100%; object-fit: contain; }
 
     .content-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; background: rgba(255, 255, 255, 0.75); }
     .logo-main { font-size: 3.5rem; line-height: 0.9; font-weight: 800; color: #000000; margin-bottom: 40px; text-align: center; letter-spacing: -2px; }
@@ -34,9 +41,7 @@
     .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; align-items: center; background-color: #ffffff; }
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* FIX BRAVE: Max-width impedisce ai bordi di toccare senza cambiare la dimensione fissa */
     .card { width: 320px; max-width: 90vw; height: 180px; background-color: #ffffff; border: 3px solid #000000; border-radius: 20px; padding: 12px; display: flex; gap: 12px; align-items: center; box-sizing: border-box; transition: all 0.2s ease; }
-
     .card-photo-box { height: 100%; max-width: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
     .placeholder-box { width: 100px; height: 100%; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; font-size: 0.75rem; color: #666666; font-weight: 700; }
     .card-photo-box img { max-height: 156px; max-width: 130px; border: 2px solid #000000; border-radius: 8px; }
@@ -61,21 +66,19 @@
     .color-dot.active { box-shadow: 0 0 0 3px #000000; }
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* FIX SAMSUNG/DARK MODE */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui { background-color: #000000 !important; color: #ffffff !important; }
       .content-overlay { background: rgba(0, 0, 0, 0.75) !important; }
       .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
       .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
-      /* Forza l'inversione delle immagini nello splash screen */
-      .sticker img { filter: invert(1) !important; }
+      /* NESSUN FILTRO QUI: lasciamo che il browser gestisca il tema, ma abbiamo protetto le immagini nel blocco globale iniziale */
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
     }
   </style>
 </head>
 <body>
-
+  <!-- [IL RESTO DEL CORPO E DELLO SCRIPT RIMANE INVARIATO] -->
   <div class="phone-wrapper">
     <div id="splash">
       <div class="bg-scrolling">
@@ -84,10 +87,7 @@
         <div class="col up" id="col3"></div>
       </div>
       <div class="content-overlay">
-        <div class="logo-main">
-          <div>Pocket</div>
-          <div>Review</div>
-        </div>
+        <div class="logo-main"><div>Pocket</div><div>Review</div></div>
         <button class="btn-start" onclick="startApp()">Start</button>
       </div>
     </div>
@@ -127,78 +127,13 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
-
-    function shuffleArray(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function renderColumn(colId) {
-      const colEl = document.getElementById(colId);
-      const shuffled = shuffleArray(images);
-      let htmlContent = '';
-      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
-      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
-      colEl.innerHTML = htmlContent;
-    }
-
+    function shuffleArray(array) { const arr = [...array]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
+    function renderColumn(colId) { const colEl = document.getElementById(colId); const shuffled = shuffleArray(images); let htmlContent = ''; shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; }); shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; }); colEl.innerHTML = htmlContent; }
     renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
     function startApp() { document.getElementById('splash').style.display = 'none'; document.getElementById('main-ui').style.display = 'flex'; }
-    
-    function loadPhoto(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = document.getElementById('card-photo-img');
-        img.src = event.target.result;
-        img.style.display = 'block';
-        document.getElementById('placeholder').style.display = 'none';
-      }
-      reader.readAsDataURL(file);
-    }
-
-    function setCardTheme(theme) {
-      const card = document.getElementById('main-card');
-      const dots = document.querySelectorAll('.color-dot');
-      if (theme === 'dark') {
-        card.classList.add('dark-theme');
-        dots[0].classList.remove('active');
-        dots[1].classList.add('active');
-      } else {
-        card.classList.remove('dark-theme');
-        dots[0].classList.add('active');
-        dots[1].classList.remove('active');
-      }
-    }
-
-    function downloadCard() {
-      const card = document.getElementById('main-card');
-      const editables = card.querySelectorAll('.editable');
-      editables.forEach(el => {
-        const text = el.innerText.trim();
-        if (text === 'Name' || text === 'Rating' || text === 'Review...') {
-          el.dataset.oldText = el.innerText;
-          el.innerText = '';
-        }
-      });
-      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-        editables.forEach(el => {
-          if (el.dataset.oldText) {
-            el.innerText = el.dataset.oldText;
-            delete el.dataset.oldText;
-          }
-        });
-        const link = document.createElement('a');
-        link.download = 'card.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
-    }
+    function loadPhoto(e) { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(event) { const img = document.getElementById('card-photo-img'); img.src = event.target.result; img.style.display = 'block'; document.getElementById('placeholder').style.display = 'none'; } reader.readAsDataURL(file); }
+    function setCardTheme(theme) { const card = document.getElementById('main-card'); const dots = document.querySelectorAll('.color-dot'); if (theme === 'dark') { card.classList.add('dark-theme'); dots[0].classList.remove('active'); dots[1].classList.add('active'); } else { card.classList.remove('dark-theme'); dots[0].classList.add('active'); dots[1].classList.remove('active'); } }
+    function downloadCard() { const card = document.getElementById('main-card'); const editables = card.querySelectorAll('.editable'); editables.forEach(el => { const text = el.innerText.trim(); if (text === 'Name' || text === 'Rating' || text === 'Review...') { el.dataset.oldText = el.innerText; el.innerText = ''; } }); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { editables.forEach(el => { if (el.dataset.oldText) { el.innerText = el.dataset.oldText; delete el.dataset.oldText; } }); const link = document.createElement('a'); link.download = 'card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
   </script>
 </body>
 </html>
