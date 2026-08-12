@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <!-- IMPEDISCE AI BROWSER MOBILE DI FORZARE IL DARK MODE AUTOMATICO -->
+  <meta name="color-scheme" content="light">
   
   <title>Pocket Review</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
   <style>
+    :root {
+      color-scheme: light;
+    }
+
     * { 
       box-sizing: border-box; 
       margin: 0; 
@@ -91,7 +97,7 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD - DIMENSIONI MODIFICATE PER NON TOCCARE I BORDI */
+    /* CARD */
     .card { 
       width: 320px; 
       max-width: 85vw; 
@@ -127,19 +133,19 @@
 
     /* CARD - VARIANTE NERA */
     .card.dark-theme {
-      background-color: #000000;
-      border-color: #ffffff;
+      background-color: #000000 !important;
+      border-color: #ffffff !important;
     }
-    .card.dark-theme .card-title { color: #ffffff; }
-    .card.dark-theme .card-voto { color: #cccccc; }
-    .card.dark-theme .card-review { color: #aaaaaa; }
+    .card.dark-theme .card-title { color: #ffffff !important; }
+    .card.dark-theme .card-voto { color: #cccccc !important; }
+    .card.dark-theme .card-review { color: #aaaaaa !important; }
     .card.dark-theme .placeholder-box {
-      border-color: #ffffff;
-      background-color: #1a1a1a;
-      color: #aaaaaa;
+      border-color: #ffffff !important;
+      background-color: #1a1a1a !important;
+      color: #aaaaaa !important;
     }
     .card.dark-theme .card-photo-box img {
-      border-color: #ffffff;
+      border-color: #ffffff !important;
     }
 
     /* SELETTORE COLORI (PALLINE) */
@@ -161,8 +167,8 @@
 
     .color-dot:active { transform: scale(0.9); }
 
-    .dot-white { background-color: #ffffff; }
-    .dot-black { background-color: #000000; border-color: #000000; }
+    .dot-white { background-color: #ffffff !important; border-color: #000000 !important; }
+    .dot-black { background-color: #000000 !important; border-color: #000000 !important; }
 
     .color-dot.active {
       box-shadow: 0 0 0 3px #000000;
@@ -170,7 +176,7 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* AUTOMATICO PER CHI USA IL TELEFONO IN MODALITÀ SCURA (PAGINA GENERALE) */
+    /* MEDIA QUERY PER DARK MODE SUL DISPOSITIVO */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -180,8 +186,12 @@
       .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
       .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
       .sticker img { filter: invert(1); }
-      .color-dot { border-color: #ffffff; }
-      .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
+      
+      /* Mantieni visibili e corretti i pallini nel selettore colori */
+      .color-dot { border-color: #ffffff !important; }
+      .color-dot.active { box-shadow: 0 0 0 3px #ffffff !important; }
+      .dot-white { background-color: #ffffff !important; }
+      .dot-black { background-color: #000000 !important; }
     }
   </style>
 </head>
