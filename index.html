@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Crea la tua Carta Personale</title>
+  <!-- Libreria per scaricare la carta come immagine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: #f4f1ea; color: #4a3e3d; display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100vh; }
@@ -18,6 +20,10 @@
     label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; color: #6b5744; }
     input[type="text"], input[type="date"], input[type="file"] { width: 100%; padding: 10px; border: 2px solid #e6dfd5; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
     input[type="text"]:focus, input[type="date"]:focus { border-color: #a88b70; }
+
+    /* PULSANTE SCARICA */
+    .download-btn { width: 100%; padding: 12px; background-color: #8c7355; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+    .download-btn:hover { background-color: #705b42; }
 
     /* ANTEPRIMA CARTA */
     .card-preview { flex: 1; min-width: 300px; display: flex; justify-content: center; }
@@ -67,11 +73,13 @@
         <label for="input-quote">Frase o Nota Personale</label>
         <input type="text" id="input-quote" placeholder="Es. Sii sempre te stesso">
       </div>
+
+      <button class="download-btn" id="download-btn">📥 Scarica la Carta (PNG)</button>
     </div>
 
     <!-- Anteprima Carta -->
     <div class="card-preview">
-      <div class="card">
+      <div class="card" id="card-to-download">
         <div class="card-header">Carta Personale</div>
         
         <div class="avatar-container">
@@ -95,12 +103,13 @@
   </div>
 
   <script>
-    // Collegamento degli elementi
+    // Elementi del DOM
     const inputPhoto = document.getElementById('input-photo');
     const inputName = document.getElementById('input-name');
     const inputRole = document.getElementById('input-role');
     const inputDate = document.getElementById('input-date');
     const inputQuote = document.getElementById('input-quote');
+    const downloadBtn = document.getElementById('download-btn');
 
     const cardPhoto = document.getElementById('card-photo');
     const placeholderIcon = document.getElementById('placeholder-icon');
@@ -109,7 +118,7 @@
     const cardDateText = document.getElementById('card-date-text');
     const cardQuoteText = document.getElementById('card-quote-text');
 
-    // Aggiornamento Foto
+    // Caricamento Foto
     inputPhoto.addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (file) {
@@ -123,7 +132,7 @@
       }
     });
 
-    // Aggiornamento Testi in tempo reale
+    // Aggiornamento Testi
     inputName.addEventListener('input', () => {
       cardNameText.textContent = inputName.value.trim() || 'Il Tuo Nome';
     });
@@ -143,6 +152,18 @@
 
     inputQuote.addEventListener('input', () => {
       cardQuoteText.textContent = inputQuote.value.trim() || 'Aggiungi una frase...';
+    });
+
+    // Funzione per Scaricare la Carta
+    downloadBtn.addEventListener('click', () => {
+      const cardElement = document.getElementById('card-to-download');
+      
+      html2canvas(cardElement, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'carta-personale.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
     });
   </script>
 </body>
