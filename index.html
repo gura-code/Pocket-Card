@@ -10,7 +10,6 @@
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    
     html, body { width: 100vw; height: 100dvh; overflow: hidden; background-color: #ffffff; color: #000000; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
     .phone-wrapper { width: 100vw; height: 100dvh; background-color: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
@@ -60,22 +59,25 @@
     .color-dot.active { box-shadow: 0 0 0 3px #000000; }
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
+    /* Modalità Scura personalizzata */
     @media (prefers-color-scheme: dark) {
-      html, body, .phone-wrapper, #splash, .main-ui { background-color: #000000 !important; color: #ffffff !important; }
-      .content-overlay { background: rgba(0, 0, 0, 0.75) !important; }
-      .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
-      .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
+      body, .phone-wrapper, #splash, .main-ui { background-color: #000000; color: #ffffff; }
+      .content-overlay { background: rgba(0, 0, 0, 0.75); }
+      .logo-main { color: #ffffff; }
+      .btn-start, .btn-download { background-color: #ffffff; color: #000000; }
+      .card { background-color: #000000; border-color: #ffffff; }
+      .card-title { color: #ffffff; }
+      .placeholder-box { background-color: #222; border-color: #ffffff; color: #aaa; }
       
-      /* FORZIAMO L'INVERSIONE DELLE IMMAGINI QUI */
-      img { filter: invert(1) !important; }
-      
+      /* Inversione solo per le immagini */
+      img { filter: invert(1); }
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
     }
   </style>
 </head>
 <body>
-  <!-- [TUTTO IL RESTO DEL CODICE RIMANE INVARIATO] -->
+
   <div class="phone-wrapper">
     <div id="splash">
       <div class="bg-scrolling">
@@ -84,7 +86,10 @@
         <div class="col up" id="col3"></div>
       </div>
       <div class="content-overlay">
-        <div class="logo-main"><div>Pocket</div><div>Review</div></div>
+        <div class="logo-main">
+          <div>Pocket</div>
+          <div>Review</div>
+        </div>
         <button class="btn-start" onclick="startApp()">Start</button>
       </div>
     </div>
@@ -124,13 +129,82 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
-    function shuffleArray(array) { const arr = [...array]; for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; }
-    function renderColumn(colId) { const colEl = document.getElementById(colId); const shuffled = shuffleArray(images); let htmlContent = ''; shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; }); shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; }); colEl.innerHTML = htmlContent; }
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderColumn(colId) {
+      const colEl = document.getElementById(colId);
+      const shuffled = shuffleArray(images);
+      let htmlContent = '';
+      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
+      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
+      colEl.innerHTML = htmlContent;
+    }
+
     renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
-    function startApp() { document.getElementById('splash').style.display = 'none'; document.getElementById('main-ui').style.display = 'flex'; }
-    function loadPhoto(e) { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(event) { const img = document.getElementById('card-photo-img'); img.src = event.target.result; img.style.display = 'block'; document.getElementById('placeholder').style.display = 'none'; } reader.readAsDataURL(file); }
-    function setCardTheme(theme) { const card = document.getElementById('main-card'); const dots = document.querySelectorAll('.color-dot'); if (theme === 'dark') { card.classList.add('dark-theme'); dots[0].classList.remove('active'); dots[1].classList.add('active'); } else { card.classList.remove('dark-theme'); dots[0].classList.add('active'); dots[1].classList.remove('active'); } }
-    function downloadCard() { const card = document.getElementById('main-card'); const editables = card.querySelectorAll('.editable'); editables.forEach(el => { const text = el.innerText.trim(); if (text === 'Name' || text === 'Rating' || text === 'Review...') { el.dataset.oldText = el.innerText; el.innerText = ''; } }); html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => { editables.forEach(el => { if (el.dataset.oldText) { el.innerText = el.dataset.oldText; delete el.dataset.oldText; } }); const link = document.createElement('a'); link.download = 'card.png'; link.href = canvas.toDataURL('image/png'); link.click(); }); }
+    
+    function startApp() { 
+        document.getElementById('splash').style.display = 'none'; 
+        document.getElementById('main-ui').style.display = 'flex'; 
+    }
+    
+    function loadPhoto(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = document.getElementById('card-photo-img');
+        img.src = event.target.result;
+        img.style.display = 'block';
+        document.getElementById('placeholder').style.display = 'none';
+      }
+      reader.readAsDataURL(file);
+    }
+
+    function setCardTheme(theme) {
+      const card = document.getElementById('main-card');
+      const dots = document.querySelectorAll('.color-dot');
+      if (theme === 'dark') {
+        card.classList.add('dark-theme');
+        dots[0].classList.remove('active');
+        dots[1].classList.add('active');
+      } else {
+        card.classList.remove('dark-theme');
+        dots[0].classList.add('active');
+        dots[1].classList.remove('active');
+      }
+    }
+
+    function downloadCard() {
+      const card = document.getElementById('main-card');
+      const editables = card.querySelectorAll('.editable');
+      editables.forEach(el => {
+        const text = el.innerText.trim();
+        if (text === 'Name' || text === 'Rating' || text === 'Review...') {
+          el.dataset.oldText = el.innerText;
+          el.innerText = '';
+        }
+      });
+      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+        editables.forEach(el => {
+          if (el.dataset.oldText) {
+            el.innerText = el.dataset.oldText;
+            delete el.dataset.oldText;
+          }
+        });
+        const link = document.createElement('a');
+        link.download = 'card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
   </script>
 </body>
 </html>
