@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Media Journal - Black & White</title>
+  <title>Media Journal - Fixed Export</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
@@ -19,44 +19,81 @@
       .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
     }
 
-    .screen { width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; padding: 20px 15px; }
-    .screen.active { display: flex; animation: fadeIn 0.3s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .screen { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px 15px; }
 
     .btn-main { background: #000000; color: white; border: none; padding: 12px 35px; font-weight: 800; border-radius: 30px; cursor: pointer; margin-top: 15px; width: 100%; max-width: 280px; text-align: center; }
 
-    /* CARTA ORIZZONTALE */
+    /* CARTA ORIZZONTALE CON DIMENSIONI RIGIDE PER EVITARE DISTORSIONI */
     .card-canvas-area { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; }
-    .anime-card-horizontal {
-      width: 310px; height: 185px; background: #ffffff; border: 3px solid #000000; border-radius: 18px; padding: 12px; display: flex; gap: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    }
-    .card-photo-box { width: 110px; height: 100%; border: 2px dashed #000000; border-radius: 12px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; flex-shrink: 0; }
-    .card-photo-box img { width: 100%; height: 100%; object-fit: cover; }
     
-    .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 5px; }
-    .card-title { font-size: 1.1rem; font-weight: 800; color: #000; }
+    .anime-card-horizontal {
+      width: 310px; 
+      height: 185px; 
+      background: #ffffff; 
+      border: 3px solid #000000; 
+      border-radius: 18px; 
+      padding: 12px; 
+      display: flex; 
+      gap: 12px; 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    /* CONTENITORE FOTO RIGIDO */
+    .card-photo-box { 
+      width: 110px; 
+      min-width: 110px;
+      height: 155px; 
+      min-height: 155px;
+      border: 2px dashed #000000; 
+      border-radius: 12px; 
+      background: #f0f0f0; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      overflow: hidden; 
+      flex-shrink: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .card-photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-info-box { 
+      flex: 1; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px; 
+      overflow: hidden;
+    }
+    
+    .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
-    .card-review { font-size: 0.7rem; color: #333; font-style: italic; line-height: 1.2; height: 60px; overflow: hidden; }
+    .card-review { font-size: 0.7rem; color: #333; font-style: italic; line-height: 1.2; height: 80px; overflow: hidden; word-break: break-word; }
 
     /* INPUTS & CONTROLLI */
-    .input-box { width: 100%; padding: 10px; border: 2px solid #000000; border-radius: 12px; margin-bottom: 8px; outline: none; }
-    .controls-wrapper { width: 100%; background: #ffffff; border-top: 2px solid #eee; padding: 15px; }
-    .category-tabs { display: flex; justify-content: space-between; gap: 5px; margin-bottom: 12px; border-bottom: 2px solid #000; padding-bottom: 8px; }
-    .tab-btn { background: none; border: none; font-size: 0.75rem; font-weight: 800; color: #aaa; cursor: pointer; padding: 5px 8px; }
-    .tab-btn.active { color: #000; border-bottom: 2px solid #000; }
+    .input-box { width: 100%; padding: 10px; border: 2px solid #000000; border-radius: 12px; margin-bottom: 8px; outline: none; font-family: inherit; }
+    .controls-wrapper { width: 100%; background: #ffffff; border-top: 2px solid #eee; padding: 15px; margin-top: auto; }
   </style>
 </head>
 <body>
 
   <div class="phone-wrapper">
-    <div id="screen-game" class="screen active">
+    <div id="screen-game" class="screen">
       <div style="font-weight: 800; color: #000; margin-bottom: 10px; font-size: 1.2rem;">Media Journal</div>
 
       <div class="card-canvas-area">
         <div class="anime-card-horizontal" id="main-card">
-          <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
+          <div class="card-photo-box" id="photo-box" onclick="document.getElementById('file-input').click()">
             <span id="placeholder" style="font-size:0.7rem; color:#000;">Poster 📷</span>
-            <img id="card-photo-img" alt="Foto">
+            <img id="card-photo-img" style="display:none;" alt="Foto">
           </div>
           <div class="card-info-box">
             <div class="card-title" id="card-title">Titolo</div>
@@ -78,9 +115,14 @@
   </div>
 
   <script>
-    function update(id, val) { document.getElementById(id).innerText = val; }
+    function update(id, val) { 
+      document.getElementById(id).innerText = val.trim() !== '' ? val : (id==='card-title'?'Titolo':id==='card-voto'?'Voto: -':'Opinione...'); 
+    }
     
     function loadPhoto(e) {
+      const file = e.target.files[0];
+      if(!file) return;
+
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = document.getElementById('card-photo-img');
@@ -88,11 +130,20 @@
         img.style.display = 'block';
         document.getElementById('placeholder').style.display = 'none';
       }
-      reader.readAsDataURL(e.target.files[0]);
+      reader.readAsDataURL(file);
     }
 
     function downloadCard() {
-      html2canvas(document.getElementById('main-card'), { scale: 3 }).then(canvas => {
+      const card = document.getElementById('main-card');
+      
+      // html2canvas con opzioni rigide per mantenere esattamente le proporzioni
+      html2canvas(card, { 
+        scale: 3, 
+        useCORS: true,
+        logging: false,
+        width: 310,
+        height: 185
+      }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'media-card.png';
         link.href = canvas.toDataURL('image/png');
