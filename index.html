@@ -2,159 +2,104 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Collection Card - Transparent</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collection Card - Smart</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100vw; height: 100dvh; overflow: hidden; background: #e0e0e0; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
+    html, body { background: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 
-    /* TELEFONO CONTAINER */
-    .phone-wrapper { width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-    @media (min-width: 500px) { .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
-
-    /* SPLASH SCREEN */
-    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; color: #fff; }
-    .logo-main { font-size: 2.2rem; font-weight: 800; margin-bottom: 20px; }
-    .btn-start { background: #fff; color: #000; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; }
-
-    /* MAIN INTERFACE */
-    .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; }
-    .app-header { font-size: 1.2rem; font-weight: 800; text-align: center; color: #000; }
-
-    .card-canvas-area { width: 100%; height: 210px; display: flex; align-items: center; justify-content: center; }
-    
-    /* CARTA A DIMENSIONI FISSE */
+    /* CARTA - DIMENSIONI FISSE */
     .card { 
-      width: 320px; 
-      height: 180px; 
-      background: #ffffff; 
-      border: 3px solid #000000; 
-      border-radius: 18px; 
-      padding: 12px; 
-      display: flex; 
-      gap: 12px; 
-      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-      align-items: center;
-      box-sizing: border-box;
+      width: 320px; height: 180px; background: #fff; border: 3px solid #000; border-radius: 18px; 
+      padding: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
     }
 
-    /* CONTENITORE IMMAGINE FLESSIBILE */
-    .card-photo-box { 
-      height: 100%; 
-      width: auto;
-      max-width: 140px;
-      border: 2px solid #000000; 
-      border-radius: 10px; 
-      background: #f8f8f8; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      overflow: hidden; 
-      flex-shrink: 0;
+    .card-photo { 
+      height: 100%; width: auto; max-width: 140px; border: 2px solid #000; border-radius: 10px; 
+      background: #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; overflow: hidden;
     }
+    .card-photo img { max-height: 100%; max-width: 100%; object-fit: contain; }
 
-    .card-photo-box img {
-      max-height: 100%;
-      max-width: 100%;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-    .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
-    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
-    .card-review { font-size: 0.75rem; color: #333; font-style: italic; line-height: 1.2; word-break: break-word; }
+    .card-info { flex: 1; display: flex; flex-direction: column; gap: 5px; overflow: hidden; }
+    
+    /* STILI NASCOSTI DI DEFAULT */
+    #card-title { font-size: 1.2rem; font-weight: 800; display: none; }
+    #card-stars { font-size: 1rem; color: #ffcc00; display: none; }
+    #card-review { font-size: 0.75rem; font-style: italic; color: #333; display: none; margin-top: 5px; }
 
     /* CONTROLLI */
-    .controls-group { width: 100%; display: flex; flex-direction: column; gap: 8px; }
-    .input-box { width: 100%; padding: 10px; border: 2px solid #000; border-radius: 12px; outline: none; font-family: inherit; font-size: 0.85rem; }
-    .btn-download { background: #000; color: #fff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; }
+    .controls { margin-top: 20px; width: 320px; display: flex; flex-direction: column; gap: 10px; }
+    input, textarea { width: 100%; padding: 10px; border: 2px solid #000; border-radius: 10px; }
+    .btn-download { background: #000; color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 800; }
   </style>
 </head>
 <body>
 
-  <div class="phone-wrapper">
-    <!-- SPLASH SCREEN -->
-    <div id="splash">
-      <div class="logo-main">COLLECTION</div>
-      <button class="btn-start" onclick="startApp()">INIZIA</button>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <div class="card" id="main-card">
+      <div class="card-photo" onclick="document.getElementById('file-input').click()">
+        <img id="card-photo-img" style="display:none;" alt="Foto">
+      </div>
+      <div class="card-info">
+        <div id="card-title"></div>
+        <div id="card-stars"></div>
+        <div id="card-review"></div>
+      </div>
     </div>
+    
+    <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
 
-    <!-- APP UI -->
-    <div class="main-ui" id="main-ui">
-      <div class="app-header">Crea Scheda</div>
-
-      <div class="card-canvas-area">
-        <div class="card" id="main-card">
-          <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
-            <span id="placeholder" style="font-size:0.7rem; font-weight:700; padding:10px;">+ Foto</span>
-            <img id="card-photo-img" style="display:none;" alt="Foto">
-          </div>
-          <div class="card-info-box">
-            <div class="card-title" id="card-title">Titolo</div>
-            <div class="card-voto" id="card-voto">Voto: -</div>
-            <div class="card-review" id="card-review">La tua opinione...</div>
-          </div>
-        </div>
-      </div>
-      <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
-
-      <div class="controls-group">
-        <input type="text" class="input-box" placeholder="Titolo" oninput="update('card-title', this.value)">
-        <input type="text" class="input-box" placeholder="Voto" oninput="update('card-voto', 'Voto: ' + this.value)">
-        <textarea class="input-box" placeholder="Recensione..." oninput="update('card-review', this.value)" style="height: 60px; resize:none;"></textarea>
-        <div class="btn-download" onclick="downloadCard()">Scarica Immagine</div>
-      </div>
+    <div class="controls">
+      <input type="text" placeholder="Titolo" oninput="updateText('card-title', this.value)">
+      <!-- Selezione stelle -->
+      <select onchange="updateStars(this.value)">
+        <option value="0">Senza voto</option>
+        <option value="1">★</option>
+        <option value="2">★★</option>
+        <option value="3">★★★</option>
+        <option value="4">★★★★</option>
+        <option value="5">★★★★★</option>
+      </select>
+      <textarea placeholder="Recensione..." oninput="updateText('card-review', this.value)"></textarea>
+      <div class="btn-download" onclick="downloadCard()">Scarica Immagine</div>
     </div>
   </div>
 
   <script>
-    function startApp() { 
-      document.getElementById('splash').style.display = 'none'; 
-      document.getElementById('main-ui').style.display = 'flex'; 
+    function updateText(id, val) {
+      const el = document.getElementById(id);
+      if (!val || val.trim() === '') {
+        el.style.display = 'none';
+      } else {
+        el.style.display = 'block';
+        el.innerText = val;
+      }
     }
 
-    function update(id, val) { 
-      const el = document.getElementById(id);
-      if (val.trim() === '') {
-        if (id === 'card-title') el.innerText = 'Titolo';
-        else if (id === 'card-voto') el.innerText = 'Voto: -';
-        else el.innerText = 'La tua opinione...';
+    function updateStars(val) {
+      const el = document.getElementById('card-stars');
+      if (val === "0") {
+        el.style.display = 'none';
       } else {
-        el.innerText = val;
+        el.style.display = 'block';
+        el.innerText = "★".repeat(val);
       }
     }
     
     function loadPhoto(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-
       const reader = new FileReader();
-      reader.onload = function(event) {
+      reader.onload = (ev) => {
         const img = document.getElementById('card-photo-img');
-        img.src = event.target.result;
+        img.src = ev.target.result;
         img.style.display = 'block';
-        document.getElementById('placeholder').style.display = 'none';
-      }
-      reader.readAsDataURL(file);
+      };
+      reader.readAsDataURL(e.target.files[0]);
     }
 
     function downloadCard() {
-      const card = document.getElementById('main-card');
-      
-      // Impostando backgroundColor a null, l'immagine esportata avrà uno sfondo trasparente
-      // rendendo puliti gli angoli arrotondati senza sfondi bianchi attorno.
-      html2canvas(card, { 
-        scale: 3,
-        backgroundColor: null, 
-        useCORS: true,
-        logging: false
+      html2canvas(document.getElementById('main-card'), { 
+        backgroundColor: null, scale: 3 
       }).then(canvas => {
         const link = document.createElement('a');
         link.download = 'scheda.png';
