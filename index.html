@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="color-scheme" content="light">
   
   <title>Pocket Review</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
   <style>
+    /* BASE (MODALITÀ CHIARA) */
     * { 
       box-sizing: border-box; 
       margin: 0; 
@@ -44,7 +44,6 @@
       } 
     }
 
-    /* SPLASH SCREEN CON IMMAGINI RIPRISTINATE */
     #splash { 
       position: absolute; top:0; left:0; width:100%; height:100%; 
       background-color: #ffffff; z-index: 100; display: flex; overflow: hidden;
@@ -56,7 +55,6 @@
 
     .col { flex: 1; display: flex; flex-direction: column; }
     
-    /* ANIMAZIONI LOOP INFINITO */
     .up { animation: scrollUp 22s linear infinite; }
     .down { animation: scrollDown 22s linear infinite; }
     
@@ -84,7 +82,6 @@
       font-weight: 800; font-size: 1.3rem; cursor: pointer;
     }
 
-    /* UI PRINCIPALE (NON TOCCATA) */
     .main-ui { 
       display: none; width: 100%; height: 100%; flex-direction: column; 
       padding: 20px; justify-content: space-between; align-items: center; 
@@ -114,6 +111,46 @@
     .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
+
+    /* AUTOMATICO IN MODALITÀ SCURA */
+    @media (prefers-color-scheme: dark) {
+      html, body, .phone-wrapper, #splash, .main-ui, .card {
+        background-color: #000000 !important;
+        color: #ffffff !important;
+      }
+      
+      .content-overlay {
+        background: rgba(0, 0, 0, 0.75) !important;
+      }
+
+      .logo-main, .card-title, .editable, div[style*="font-weight:800"] {
+        color: #ffffff !important;
+      }
+
+      .card-voto, .card-review {
+        color: #cccccc !important;
+      }
+
+      .card {
+        border-color: #ffffff !important;
+      }
+
+      .placeholder-box {
+        border-color: #ffffff !important;
+        background-color: #1a1a1a !important;
+        color: #aaaaaa !important;
+      }
+
+      .btn-start, .btn-download {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+
+      /* Converte le linee nere delle immagini PNG in bianco */
+      .sticker img, .card-photo-box img {
+        filter: invert(1);
+      }
+    }
   </style>
 </head>
 <body>
@@ -121,7 +158,6 @@
   <div class="phone-wrapper">
     <div id="splash">
       <div class="bg-scrolling">
-        <!-- Le colonne verranno riempite dal JS -->
         <div class="col up" id="col1"></div>
         <div class="col down" id="col2"></div>
         <div class="col up" id="col3"></div>
@@ -156,7 +192,6 @@
   </div>
 
   <script>
-    // LISTA IMMAGINI RIPRISTINATA
     const images = [
       "1000072971-removebg-preview.png", "1000072972-removebg-preview.png",
       "1000072974-removebg-preview.png", "1000072977-removebg-preview.png",
@@ -181,14 +216,11 @@
       const colEl = document.getElementById(colId);
       const shuffled = shuffleArray(images);
       let htmlContent = '';
-      // Primo blocco
       shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
-      // Secondo blocco (per il loop)
       shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
       colEl.innerHTML = htmlContent;
     }
 
-    // Inizializza le colonne
     renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
 
     function startApp() { document.getElementById('splash').style.display = 'none'; document.getElementById('main-ui').style.display = 'flex'; }
@@ -206,12 +238,10 @@
       reader.readAsDataURL(file);
     }
 
-    // FUNZIONE DOWNLOAD (NON TOCCATA, mantiene trasparenza angoli)
     function downloadCard() {
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
 
-      // Pulisce il testo predefinito prima del download
       editables.forEach(el => {
         const text = el.innerText.trim();
         if (text === 'Name' || text === 'Rating' || text === 'Review...') {
@@ -220,13 +250,11 @@
         }
       });
 
-      // Genera l'immagine con sfondo trasparente esternamente agli angoli arrotondati
       html2canvas(card, { 
         scale: 3, 
         backgroundColor: null, 
         useCORS: true 
       }).then(canvas => {
-        // Ripristina testo
         editables.forEach(el => {
           if (el.dataset.oldText) {
             el.innerText = el.dataset.oldText;
