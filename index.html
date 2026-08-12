@@ -3,126 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Media Journal - Fixed Export</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <title>Media Journal - Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { width: 100vw; height: 100dvh; overflow: hidden; background: #e0e0e0; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
 
-    /* STRUTTURA TELEFONO */
-    .phone-wrapper {
-      width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column;
-    }
-    @media (min-width: 500px) {
-      .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    }
+    /* TELEFONO */
+    .phone-wrapper { width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    @media (min-width: 500px) { .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
 
-    .screen { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 20px 15px; }
+    /* SPLASH SCREEN (La schermata iniziale) */
+    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; color: #fff; }
+    .logo-main { font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; }
+    .btn-start { background: #fff; color: #000; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; }
 
-    .btn-main { background: #000000; color: white; border: none; padding: 12px 35px; font-weight: 800; border-radius: 30px; cursor: pointer; margin-top: 15px; width: 100%; max-width: 280px; text-align: center; }
-
-    /* CARTA ORIZZONTALE CON DIMENSIONI RIGIDE PER EVITARE DISTORSIONI */
-    .card-canvas-area { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; }
+    /* INTERFACCIA MAIN */
+    .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; }
     
-    .anime-card-horizontal {
-      width: 310px; 
-      height: 185px; 
-      background: #ffffff; 
-      border: 3px solid #000000; 
-      border-radius: 18px; 
-      padding: 12px; 
-      display: flex; 
-      gap: 12px; 
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      position: relative;
-    }
+    /* TAB DI NAVIGAZIONE */
+    .category-tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    .tab { font-size: 0.8rem; font-weight: 700; color: #aaa; cursor: pointer; }
+    .tab.active { color: #000; border-bottom: 2px solid #000; }
 
-    /* CONTENITORE FOTO RIGIDO */
-    .card-photo-box { 
-      width: 110px; 
-      min-width: 110px;
-      height: 155px; 
-      min-height: 155px;
-      border: 2px dashed #000000; 
-      border-radius: 12px; 
-      background: #f0f0f0; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      overflow: hidden; 
-      flex-shrink: 0;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .card-photo-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .card-info-box { 
-      flex: 1; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 6px; 
-      overflow: hidden;
-    }
+    /* CARTA (Il box da scaricare) */
+    .card-canvas-area { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .anime-card-horizontal { width: 310px; height: 185px; background: #fff; border: 3px solid #000; border-radius: 18px; padding: 12px; display: flex; gap: 12px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
     
-    .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
+    .card-photo-box { width: 110px; height: 155px; border: 2px dashed #000; border-radius: 12px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; flex-shrink: 0; background-size: cover; background-position: center; }
+    .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 5px; overflow: hidden; }
+    .card-title { font-size: 1.1rem; font-weight: 800; color: #000; }
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
-    .card-review { font-size: 0.7rem; color: #333; font-style: italic; line-height: 1.2; height: 80px; overflow: hidden; word-break: break-word; }
+    .card-review { font-size: 0.7rem; color: #333; font-style: italic; line-height: 1.2; height: 70px; overflow: hidden; }
 
-    /* INPUTS & CONTROLLI */
-    .input-box { width: 100%; padding: 10px; border: 2px solid #000000; border-radius: 12px; margin-bottom: 8px; outline: none; font-family: inherit; }
-    .controls-wrapper { width: 100%; background: #ffffff; border-top: 2px solid #eee; padding: 15px; margin-top: auto; }
+    /* CONTROLLI */
+    .input-box { width: 100%; padding: 12px; border: 2px solid #000; border-radius: 12px; margin-bottom: 10px; outline: none; }
+    .btn-download { background: #000; color: #fff; padding: 15px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; margin-top: 10px; }
   </style>
 </head>
 <body>
 
   <div class="phone-wrapper">
-    <div id="screen-game" class="screen">
-      <div style="font-weight: 800; color: #000; margin-bottom: 10px; font-size: 1.2rem;">Media Journal</div>
+    <!-- Schermata di avvio -->
+    <div id="splash">
+      <div class="logo-main">JOURNAL</div>
+      <button class="btn-start" onclick="startApp()">INIZIA</button>
+    </div>
+
+    <!-- Interfaccia -->
+    <div class="main-ui" id="main-ui">
+      <div class="category-tabs">
+        <div class="tab active" onclick="selectTab(this)">Anime</div>
+        <div class="tab" onclick="selectTab(this)">Film</div>
+        <div class="tab" onclick="selectTab(this)">Manga</div>
+        <div class="tab" onclick="selectTab(this)">Libri</div>
+      </div>
 
       <div class="card-canvas-area">
         <div class="anime-card-horizontal" id="main-card">
           <div class="card-photo-box" id="photo-box" onclick="document.getElementById('file-input').click()">
-            <span id="placeholder" style="font-size:0.7rem; color:#000;">Poster 📷</span>
-            <img id="card-photo-img" style="display:none;" alt="Foto">
+            <span id="placeholder" style="font-size:0.7rem;">+</span>
+            <img id="card-photo-img" style="display:none; width:100%; height:100%; object-fit:cover;">
           </div>
           <div class="card-info-box">
             <div class="card-title" id="card-title">Titolo</div>
             <div class="card-voto" id="card-voto">Voto: -</div>
-            <div class="card-review" id="card-review">Opinione...</div>
+            <div class="card-review" id="card-review">La tua opinione...</div>
           </div>
         </div>
       </div>
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
 
-      <div class="controls-wrapper">
-        <input type="text" class="input-box" placeholder="Titolo" oninput="update('card-title', this.value)">
-        <input type="text" class="input-box" placeholder="Voto" oninput="update('card-voto', 'Voto: ' + this.value)">
-        <textarea class="input-box" placeholder="Cosa ne pensi?" oninput="update('card-review', this.value)" style="height: 60px; resize:none;"></textarea>
-        
-        <button class="btn-main" onclick="downloadCard()">Scarica Immagine</button>
-      </div>
+      <input type="text" class="input-box" placeholder="Titolo" oninput="update('card-title', this.value)">
+      <input type="text" class="input-box" placeholder="Voto (es. 9/10)" oninput="update('card-voto', 'Voto: ' + this.value)">
+      <textarea class="input-box" placeholder="Recensione..." oninput="update('card-review', this.value)" style="height: 80px; resize:none;"></textarea>
+      
+      <div class="btn-download" onclick="downloadCard()">Scarica Immagine</div>
     </div>
   </div>
 
   <script>
-    function update(id, val) { 
-      document.getElementById(id).innerText = val.trim() !== '' ? val : (id==='card-title'?'Titolo':id==='card-voto'?'Voto: -':'Opinione...'); 
-    }
+    function startApp() { document.getElementById('splash').style.display = 'none'; document.getElementById('main-ui').style.display = 'flex'; }
+    function selectTab(el) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); }
+    function update(id, val) { document.getElementById(id).innerText = val || (id==='card-title'?'Titolo':id==='card-voto'?'Voto: -':'La tua opinione...'); }
     
     function loadPhoto(e) {
-      const file = e.target.files[0];
-      if(!file) return;
-
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = document.getElementById('card-photo-img');
@@ -130,22 +97,13 @@
         img.style.display = 'block';
         document.getElementById('placeholder').style.display = 'none';
       }
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(e.target.files[0]);
     }
 
     function downloadCard() {
-      const card = document.getElementById('main-card');
-      
-      // html2canvas con opzioni rigide per mantenere esattamente le proporzioni
-      html2canvas(card, { 
-        scale: 3, 
-        useCORS: true,
-        logging: false,
-        width: 310,
-        height: 185
-      }).then(canvas => {
+      html2canvas(document.getElementById('main-card'), { scale: 3, width: 310, height: 185 }).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'media-card.png';
+        link.download = 'my-journal.png';
         link.href = canvas.toDataURL('image/png');
         link.click();
       });
