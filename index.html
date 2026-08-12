@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Collection Card - Smart</title>
+  <title>Collection Card - Libertà Totale</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { background: #e0e0e0; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
@@ -14,23 +15,24 @@
       width: 320px; height: 180px; background: #fff; border: 3px solid #000; border-radius: 18px; 
       padding: 12px; display: flex; gap: 12px; align-items: center; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
     }
-
     .card-photo { 
       height: 100%; width: auto; max-width: 140px; border: 2px solid #000; border-radius: 10px; 
-      background: #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; overflow: hidden;
+      background: #f8f8f8; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; overflow: hidden;
     }
     .card-photo img { max-height: 100%; max-width: 100%; object-fit: contain; }
-
     .card-info { flex: 1; display: flex; flex-direction: column; gap: 5px; overflow: hidden; }
     
-    /* STILI NASCOSTI DI DEFAULT */
-    #card-title { font-size: 1.2rem; font-weight: 800; display: none; }
-    #card-stars { font-size: 1rem; color: #ffcc00; display: none; }
-    #card-review { font-size: 0.75rem; font-style: italic; color: #333; display: none; margin-top: 5px; }
+    /* TESTO - NASCOSTO SE VUOTO */
+    .card-text { font-weight: 800; }
+    #display-title { font-size: 1.2rem; }
+    #display-voto { font-size: 0.9rem; color: #555; }
+    #display-review { font-size: 0.75rem; font-style: italic; color: #333; margin-top: 5px; }
 
     /* CONTROLLI */
     .controls { margin-top: 20px; width: 320px; display: flex; flex-direction: column; gap: 10px; }
     input, textarea { width: 100%; padding: 10px; border: 2px solid #000; border-radius: 10px; }
+    .btn-row { display: flex; gap: 5px; }
+    .btn-opt { flex: 1; padding: 8px; border: 2px solid #000; border-radius: 8px; cursor: pointer; background: #fff; font-weight: bold; font-size: 0.8rem; }
     .btn-download { background: #000; color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; font-weight: 800; }
   </style>
 </head>
@@ -42,49 +44,46 @@
         <img id="card-photo-img" style="display:none;" alt="Foto">
       </div>
       <div class="card-info">
-        <div id="card-title"></div>
-        <div id="card-stars"></div>
-        <div id="card-review"></div>
+        <div id="display-title" class="card-text"></div>
+        <div id="display-voto" class="card-text"></div>
+        <div id="display-review" class="card-text"></div>
       </div>
     </div>
     
     <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
 
     <div class="controls">
-      <input type="text" placeholder="Titolo" oninput="updateText('card-title', this.value)">
-      <!-- Selezione stelle -->
-      <select onchange="updateStars(this.value)">
-        <option value="0">Senza voto</option>
-        <option value="1">★</option>
-        <option value="2">★★</option>
-        <option value="3">★★★</option>
-        <option value="4">★★★★</option>
-        <option value="5">★★★★★</option>
-      </select>
-      <textarea placeholder="Recensione..." oninput="updateText('card-review', this.value)"></textarea>
+      <input type="text" placeholder="Titolo" oninput="update('display-title', this.value)">
+      
+      <!-- Input Voto e Bottoni rapidi -->
+      <input type="text" id="voto-input" placeholder="Voto (es. 8/10, ★★★★)" oninput="update('display-voto', this.value)">
+      <div class="btn-row">
+        <button class="btn-opt" onclick="addText('★★★★★')">Stelle</button>
+        <button class="btn-opt" onclick="addText('8/10')">Decimi</button>
+        <button class="btn-opt" onclick="addText('90/100')">Centesimi</button>
+      </div>
+
+      <textarea placeholder="Recensione..." oninput="update('display-review', this.value)"></textarea>
       <div class="btn-download" onclick="downloadCard()">Scarica Immagine</div>
     </div>
   </div>
 
   <script>
-    function updateText(id, val) {
+    function update(id, val) {
       const el = document.getElementById(id);
       if (!val || val.trim() === '') {
         el.style.display = 'none';
+        el.innerText = '';
       } else {
         el.style.display = 'block';
         el.innerText = val;
       }
     }
 
-    function updateStars(val) {
-      const el = document.getElementById('card-stars');
-      if (val === "0") {
-        el.style.display = 'none';
-      } else {
-        el.style.display = 'block';
-        el.innerText = "★".repeat(val);
-      }
+    function addText(text) {
+      const input = document.getElementById('voto-input');
+      input.value = text;
+      update('display-voto', text);
     }
     
     function loadPhoto(e) {
