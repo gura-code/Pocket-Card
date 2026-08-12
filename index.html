@@ -19,6 +19,7 @@
     .form-group { margin-bottom: 15px; }
     label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.85rem; color: #6b5744; }
     input[type="text"], input[type="date"], input[type="file"], select { width: 100%; padding: 10px; border: 2px solid #e6dfd5; border-radius: 8px; font-size: 0.9rem; outline: none; background: white; transition: border-color 0.2s; }
+    input[type="color"] { width: 100%; height: 42px; border: 2px solid #e6dfd5; border-radius: 8px; cursor: pointer; background: white; padding: 4px; }
     input[type="text"]:focus, input[type="date"]:focus, select:focus { border-color: #a88b70; }
 
     .row { display: flex; gap: 10px; }
@@ -45,6 +46,7 @@
       position: relative; 
       overflow: hidden; 
       transition: all 0.3s ease;
+      background: linear-gradient(135deg, #ffffff, #f5ebd9);
     }
 
     /* ORIENTAMENTO ORIZZONTALE */
@@ -55,16 +57,6 @@
       justify-content: space-around;
       padding: 25px;
     }
-
-    /* TEMI COLORE CARTA */
-    .theme-cozy { background: linear-gradient(135deg, #fffcf7, #f5ebd9); color: #4a3e3d; border-color: #b89b7d; }
-    .theme-dark { background: linear-gradient(135deg, #2b2b2b, #1a1a1a); color: #f0f0f0; border-color: #555; }
-    .theme-dark .card-header, .theme-dark .card-role { color: #d4af37; }
-    .theme-dark .card-details { background: rgba(255, 255, 255, 0.1); border-color: #444; color: #fff; }
-    .theme-dark .card-details span { color: #d4af37; }
-
-    .theme-gold { background: linear-gradient(135deg, #fff9e6, #f3e5ab); color: #3a3005; border-color: #d4af37; }
-    .theme-gold .card-header, .theme-gold .card-role { color: #997a15; }
 
     /* FONT */
     .font-sans { font-family: 'Segoe UI', Roboto, sans-serif; }
@@ -97,7 +89,7 @@
     /* DIMENSIONI FOTO */
     .size-small { width: 80px; height: 80px; }
     .size-medium { width: 120px; height: 120px; }
-    .size-passport { width: 105px; height: 135px; } /* Proporzione classica 35x45 */
+    .size-passport { width: 105px; height: 135px; }
 
     .card-info { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
     .card.horizontal .card-info { width: 55%; text-align: left; }
@@ -105,10 +97,10 @@
     .card-name { font-size: 1.3rem; font-weight: bold; margin-bottom: 4px; word-wrap: break-word; }
     .card-role { font-size: 0.9rem; color: #8c7355; font-weight: 600; margin-bottom: 10px; word-wrap: break-word; }
     
-    .card-details { background: rgba(255, 255, 255, 0.6); padding: 10px 12px; border-radius: 10px; font-size: 0.8rem; border: 1px solid #eae1d3; text-align: left; width: 100%; }
+    .card-details { background: rgba(255, 255, 255, 0.7); padding: 10px 12px; border-radius: 10px; font-size: 0.8rem; border: 1px solid rgba(0,0,0,0.08); text-align: left; width: 100%; }
     .card-details p { margin-bottom: 4px; }
     .card-details p:last-child { margin-bottom: 0; }
-    .card-details span { font-weight: bold; color: #6b5744; }
+    .card-details span { font-weight: bold; color: #5a4634; }
 
     .card-footer { position: absolute; bottom: 10px; font-size: 0.65rem; opacity: 0.6; letter-spacing: 1px; }
   </style>
@@ -161,12 +153,8 @@
           </select>
         </div>
         <div class="form-group">
-          <label for="select-theme">Colore Carta</label>
-          <select id="select-theme">
-            <option value="theme-cozy">Chiaro (Cozy)</option>
-            <option value="theme-dark">Scuro (Elegante)</option>
-            <option value="theme-gold">Dorato (VIP)</option>
-          </select>
+          <label for="input-color">Colore Carta</label>
+          <input type="color" id="input-color" value="#f5ebd9">
         </div>
       </div>
 
@@ -203,7 +191,7 @@
 
     <!-- Anteprima Carta -->
     <div class="card-preview">
-      <div class="card theme-cozy font-sans" id="card-to-download">
+      <div class="card font-sans" id="card-to-download">
         <div class="card-header">Carta Personale</div>
         
         <div class="avatar-container shape-circle size-medium" id="avatar-box">
@@ -236,7 +224,7 @@
 
     // Elementi Selezioni Stile
     const selectOrientation = document.getElementById('select-orientation');
-    const selectTheme = document.getElementById('select-theme');
+    const inputColor = document.getElementById('input-color');
     const selectFont = document.getElementById('select-font');
     const selectShape = document.getElementById('select-shape');
     const selectSize = document.getElementById('select-size');
@@ -289,10 +277,12 @@
       }
     });
 
-    // Cambio Tema Colore
-    selectTheme.addEventListener('change', () => {
-      card.classList.remove('theme-cozy', 'theme-dark', 'theme-gold');
-      card.classList.add(selectTheme.value);
+    // Gestione Colore Personalizzato
+    inputColor.addEventListener('input', () => {
+      const color = inputColor.value;
+      card.style.background = `linear-gradient(135deg, #ffffff, ${color})`;
+      card.style.borderColor = color;
+      avatarBox.style.borderColor = color;
     });
 
     // Cambio Font
