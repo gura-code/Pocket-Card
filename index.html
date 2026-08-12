@@ -3,21 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <!-- FORZA LA MODALITÀ CHIARA (BLOCCA DARK MODE DEL BROWSER) -->
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light">
+  
   <title>Pocket Review</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100vw; height: 100dvh; overflow: hidden; background: #f0f0f0; font-family: 'Quicksand', sans-serif; display: flex; justify-content: center; align-items: center; }
+    /* BLOCCO COLORI E DARK MODE AUTOMATICA */
+    :root {
+      color-scheme: light only;
+      supported-color-schemes: light;
+    }
 
-    .phone-wrapper { width: 100vw; height: 100dvh; background: #ffffff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-    @media (min-width: 500px) { .phone-wrapper { width: 380px; height: 780px; border-radius: 40px; border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); } }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      /* Impedisce filtri o inversioni colore su alcuni browser Android/Brave */
+      forced-color-adjust: none;
+    }
 
-    /* SPLASH SCREEN BIANCO */
-    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background: #ffffff; display: flex; z-index: 100; overflow: hidden; }
+    html, body { 
+      width: 100vw; 
+      height: 100dvh; 
+      overflow: hidden; 
+      background-color: #ffffff !important; 
+      color: #000000 !important;
+      font-family: 'Quicksand', sans-serif; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+    }
+
+    .phone-wrapper { 
+      width: 100vw; 
+      height: 100dvh; 
+      background-color: #ffffff !important; 
+      position: relative; 
+      overflow: hidden; 
+      display: flex; 
+      flex-direction: column; 
+    }
+
+    @media (min-width: 500px) { 
+      .phone-wrapper { 
+        width: 380px; 
+        height: 780px; 
+        border-radius: 40px; 
+        border: 8px solid #000000; 
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+      } 
+    }
+
+    /* SPLASH SCREEN BIANCO BLOCATO */
+    #splash { 
+      position: absolute; 
+      top:0; 
+      left:0; 
+      width:100%; 
+      height:100%; 
+      background-color: #ffffff !important; 
+      display: flex; 
+      z-index: 100; 
+      overflow: hidden; 
+    }
     
-    .bg-scrolling { display: flex; width: 100%; height: 100%; opacity: 0.85; pointer-events: none; }
+    .bg-scrolling { 
+      display: flex; 
+      width: 100%; 
+      height: 100%; 
+      opacity: 0.85; 
+      pointer-events: none; 
+      background-color: #ffffff !important;
+    }
+
     .col { flex: 1; display: flex; flex-direction: column; }
     
     /* ANIMAZIONI LOOP INFINITO */
@@ -27,28 +90,96 @@
     @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
     @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
 
-    .sticker { width: 75px; height: 75px; margin: 15px auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .sticker img { width: 100%; height: 100%; object-fit: contain; }
+    .sticker { 
+      width: 75px; 
+      height: 75px; 
+      margin: 15px auto; 
+      flex-shrink: 0; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+    }
 
-    .content-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; background: rgba(255,255,255,0.75); }
-    .logo-main { font-size: 2.2rem; font-weight: 800; color: #000; margin-bottom: 20px; letter-spacing: 2px; }
-    .btn-start { background: #000; color: #fff; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; font-size: 1.1rem; }
+    .sticker img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: contain; 
+      /* Previene modifiche del contrasto sulle immagini */
+      filter: none !important;
+    }
 
-    /* UI PRINCIPALE */
-    .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; align-items: center; }
-    .app-header { font-size: 1.2rem; font-weight: 800; text-align: center; color: #000; margin-top: 10px; }
+    .content-overlay { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      z-index: 10; 
+      background: rgba(255, 255, 255, 0.75) !important; 
+    }
+
+    .logo-main { 
+      font-size: 2.2rem; 
+      font-weight: 800; 
+      color: #000000 !important; 
+      margin-bottom: 20px; 
+      letter-spacing: 2px; 
+    }
+
+    .btn-start { 
+      background-color: #000000 !important; 
+      color: #ffffff !important; 
+      border: none; 
+      padding: 15px 40px; 
+      border-radius: 30px; 
+      font-weight: 800; 
+      cursor: pointer; 
+      font-size: 1.1rem; 
+    }
+
+    /* UI PRINCIPALE BLOCCATA */
+    .main-ui { 
+      display: none; 
+      width: 100%; 
+      height: 100%; 
+      flex-direction: column; 
+      padding: 20px; 
+      justify-content: space-between; 
+      align-items: center; 
+      background-color: #ffffff !important;
+    }
+
+    .app-header { font-size: 1.2rem; font-weight: 800; text-align: center; color: #000000 !important; margin-top: 10px; }
     .card-canvas-area { width: 100%; flex: 1; display: flex; align-items: center; justify-content: center; }
-    .card { width: 320px; height: 180px; background: #ffffff; border: 3px solid #000000; border-radius: 18px; padding: 12px; display: flex; gap: 12px; box-shadow: 0 8px 15px rgba(0,0,0,0.1); align-items: center; box-sizing: border-box; }
+    
+    .card { 
+      width: 320px; 
+      height: 180px; 
+      background-color: #ffffff !important; 
+      border: 3px solid #000000 !important; 
+      border-radius: 18px; 
+      padding: 12px; 
+      display: flex; 
+      gap: 12px; 
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1); 
+      align-items: center; 
+      box-sizing: border-box; 
+    }
+
     .card-photo-box { height: 100%; max-width: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-    .placeholder-box { width: 100px; height: 100%; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 0.75rem; font-weight: 700; color: #666; text-align: center; padding: 8px; }
+    .placeholder-box { width: 100px; height: 100%; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0 !important; font-size: 0.75rem; font-weight: 700; color: #666666 !important; text-align: center; padding: 8px; }
     .card-photo-box img { max-height: 156px; max-width: 130px; width: auto; height: auto; display: block; border: 2px solid #000000; border-radius: 8px; }
     .card-info-box { flex: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; height: 100%; justify-content: center; }
     .editable { outline: none; transition: background 0.2s; }
     .editable:hover, .editable:focus { background: rgba(0,0,0,0.04); border-radius: 4px; }
-    .card-title { font-size: 1.1rem; font-weight: 800; color: #000; word-break: break-word; }
-    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555; }
-    .card-review { font-size: 0.75rem; color: #333; font-style: italic; line-height: 1.2; word-break: break-word; }
-    .btn-download { width: 100%; background: #000; color: #fff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; margin-bottom: 10px; }
+    .card-title { font-size: 1.1rem; font-weight: 800; color: #000000 !important; word-break: break-word; }
+    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555 !important; }
+    .card-review { font-size: 0.75rem; color: #333333 !important; font-style: italic; line-height: 1.2; word-break: break-word; }
+    .btn-download { width: 100%; background-color: #000000 !important; color: #ffffff !important; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; cursor: pointer; margin-bottom: 10px; }
   </style>
 </head>
 <body>
@@ -90,7 +221,6 @@
   </div>
 
   <script>
-    // Lista dei 16 file estratti dall'immagine
     const images = [
       "1000072971-removebg-preview.png",
       "1000072972-removebg-preview.png",
@@ -110,7 +240,6 @@
       "1000072990-removebg-preview.png"
     ];
 
-    // Funzione per mescolare casualmente un array
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -120,17 +249,14 @@
       return arr;
     }
 
-    // Riempie una colonna con immagini casuali duplicandole per il loop continuo
     function renderColumn(colId) {
       const colEl = document.getElementById(colId);
       const shuffled = shuffleArray(images);
       
-      // Creiamo l'HTML con il primo blocco casuale + il duplicato per il loop
       let htmlContent = '';
       shuffled.forEach(imgName => {
         htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`;
       });
-      // Duplica per il loop senza stacchi
       shuffled.forEach(imgName => {
         htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`;
       });
@@ -138,7 +264,6 @@
       colEl.innerHTML = htmlContent;
     }
 
-    // Inizializza le 3 colonne in modo casuale
     renderColumn('col1');
     renderColumn('col2');
     renderColumn('col3');
@@ -166,7 +291,7 @@
           el.innerText = '';
         }
       });
-      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true, logging: false }).then(canvas => {
+      html2canvas(card, { scale: 3, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(canvas => {
         editables.forEach(el => {
           if (el.dataset.oldText) {
             el.innerText = el.dataset.oldText;
