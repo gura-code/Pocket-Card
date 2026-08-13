@@ -219,7 +219,7 @@
             <img id="card-photo-img" style="display:none;" alt="Photo">
           </div>
           <div class="card-info-box">
-            <div class="card-title editable placeholder-active" contenteditable="true" data-placeholder="Name">Name</div>
+            <div class="card-title editable placeholder-active" contenteditable="true" data-placeholder="Title">Title</div>
             <div class="card-voto editable placeholder-active" contenteditable="true" data-placeholder="Rating">Rating</div>
             <div class="card-review editable placeholder-active" contenteditable="true" data-placeholder="Review...">Review...</div>
           </div>
@@ -339,21 +339,21 @@
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
       
-      // Nasconde i campi lasciati vuoti e rimuove temporaneamente i placeholder
+      // Nasconde i campi lasciati vuoti per non lasciare spazi inutili nell'immagine salvata
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
           el.dataset.wasPlaceholder = "true";
-          el.style.display = 'none'; // Nasconde l'elemento per non lasciare spazi vuoti
+          el.style.display = 'none';
           el.innerText = '';
         }
       });
 
       html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-        // Ripristina l'interfaccia esattamente com'era
+        // Ripristina la scheda esattamente com'era a schermo
         editables.forEach(el => {
           if (el.dataset.wasPlaceholder) {
             el.innerText = el.getAttribute('data-placeholder');
-            el.style.display = ''; // Ripristina la visibilità della casella
+            el.style.display = '';
             delete el.dataset.wasPlaceholder;
           }
         });
