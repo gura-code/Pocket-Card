@@ -6,9 +6,7 @@
   
   <title>Pocket Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
-  <!-- Librerie per Cattura Immagini e Animazioni GIF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; }
@@ -56,7 +54,7 @@
       display: flex; gap: 12px; align-items: center; box-sizing: border-box;
     }
 
-    /* CONTENITORE FOTO */
+    /* CONTENITORE FOTO - Aderisce perfettamente sia alle immagini che alle GIF */
     .card-photo-box { height: 100%; max-height: 156px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
     .placeholder-box { width: 100px; height: 156px; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; font-size: 12px; color: #666666; font-weight: 700; }
     
@@ -188,8 +186,8 @@
       const file = e.target.files[0];
       if(!file) return;
       
-      // Controlla se il file caricato è una GIF animata
-      isGifLoaded = file.type === "image/gif";
+      // Controlla se è stata caricata una GIF
+      isGifLoaded = file.type === "image/gif" || file.name.toLowerCase().endsWith('.gif');
 
       const reader = new FileReader();
       reader.onload = function(event) {
@@ -220,46 +218,57 @@
       const btn = document.getElementById('download-btn');
       const editables = card.querySelectorAll('.editable');
       
-      // Nascondi il testo guida placeholder prima dello scatto
+      // Salva e nascondi i placeholder
+      const hiddenPlaceholders = [];
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
-          el.dataset.wasPlaceholder = "true";
-          el.style.display = 'none';
+          hiddenPlaceholders.push({ el: el, text: el.innerText });
           el.innerText = '';
         }
       });
 
-      // Se l'immagine caricata è una GIF
-      if (isGifLoaded && typeof GIF !== 'undefined') {
-        btn.innerText = "Generating GIF...";
-        
-        const gif = new GIF({
-          workers: 2,
-          quality: 10,
-          width: card.offsetWidth * 2,
-          height: card.offsetHeight * 2,
-          workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
-        });
+      if (isGifLoaded && window.MediaRecorder) {
+        btn.innerText = "Recording GIF Card...";
 
-        // Registra 10 fotogrammi per creare il ciclo dell'animazione
-        for (let i = 0; i < 10; i++) {
-          const canvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
-          gif.addFrame(canvas, { delay: 100 });
-        }
+        // Crea un canvas ad alta risoluzione per la registrazione animata
+        const canvas = document.createElement('canvas');
+        canvas.width = card.offsetWidth * 2;
+        canvas.height = card.offsetHeight * 2;
+        const ctx = canvas.getContext('2d');
 
-        gif.on('finished', function(blob) {
-          restorePlaceholders();
-          btn.innerText = "Download Card";
+        const stream = canvas.captureStream(30);
+        const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        const chunks = [];
+
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
           const link = document.createElement('a');
-          link.download = 'card-animated.gif';
+          link.download = 'card-animated.webm';
           link.href = URL.createObjectURL(blob);
           link.click();
-        });
 
-        gif.render();
+          restorePlaceholders();
+          btn.innerText = "Download Card";
+        };
+
+        recorder.start();
+
+        // Registra la carta per 2.5 secondi catturando l'animazione GIF
+        let startTime = Date.now();
+        const interval = setInterval(async () => {
+          const frameCanvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(frameCanvas, 0, 0);
+
+          if (Date.now() - startTime > 2500) {
+            clearInterval(interval);
+            recorder.stop();
+          }
+        }, 50);
 
       } else {
-        // Se è una foto normale (PNG, JPG)
+        // Scaricamento standard per immagini PNG normali
         html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
           restorePlaceholders();
           const link = document.createElement('a');
@@ -270,16 +279,11 @@
       }
 
       function restorePlaceholders() {
-        editables.forEach(el => {
-          if (el.dataset.wasPlaceholder) {
-            el.innerText = el.getAttribute('data-placeholder');
-            el.style.display = '';
-            delete el.dataset.wasPlaceholder;
-          }
+        hiddenPlaceholders.forEach(item => {
+          item.el.innerText = item.text;
         });
       }
     }
   </script>
 </body>
 </html>
-
