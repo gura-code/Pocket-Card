@@ -212,25 +212,26 @@
     .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
     .card-review { font-size: 11px; line-height: 14px; color: #333333; font-style: italic; word-break: break-word; }
 
+    /* Modalità scura della carta con ombra bianca esplicita sullo sfondo */
     .card.dark-theme {
-      background-color: #000000;
-      border: 3px solid #ffffff !important;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.25), 0 15px 35px rgba(0, 0, 0, 0.5);
+      background-color: #ffffff;
+      border: 3px solid #000000 !important;
+      box-shadow: 0 0 30px 5px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 255, 255, 0.5);
     }
-    .card.dark-theme .card-title { color: #ffffff; }
-    .card.dark-theme .card-voto { color: #cccccc; }
-    .card.dark-theme .card-review { color: #aaaaaa; }
-    .card.dark-theme .editable.placeholder-active { color: #666666 !important; }
+    .card.dark-theme .card-title { color: #000000; }
+    .card.dark-theme .card-voto { color: #555555; }
+    .card.dark-theme .card-review { color: #333333; }
+    .card.dark-theme .editable.placeholder-active { color: #a0a0a0 !important; }
     .card.dark-theme .placeholder-box {
-      border-color: #ffffff;
-      background-color: #1a1a1a;
-      color: #aaaaaa;
+      border-color: #000000;
+      background-color: #f0f0f0;
+      color: #666666;
     }
     .card.dark-theme .card-photo-img {
-      border-color: #ffffff;
+      border-color: #000000;
     }
 
-    /* SELETTORE COLORI (PALLINE) */
+    /* PALLINE BIANCO / NERO */
     .color-picker {
       display: flex;
       gap: 12px;
@@ -298,106 +299,190 @@
       cursor: pointer; 
     }
 
-    /* MODALE SELETTORE COLORE (SOLO GRIGLIA + INPUT) */
+    /* MODALE SELETTORE COLORE ( stile identico alla foto ) */
     .picker-modal-overlay {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.75);
       z-index: 200;
       display: none;
       justify-content: center;
       align-items: flex-end;
-      padding-bottom: 20px;
+      padding-bottom: 15px;
     }
 
     .picker-container {
-      width: 340px;
+      width: 350px;
       background: #1c1c1e;
       border-radius: 28px;
       padding: 16px;
       color: #ffffff;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
+    /* Tab in alto: Campioni / Spettro */
+    .picker-tabs {
+      display: flex;
+      background: #2c2c2e;
+      border-radius: 20px;
+      padding: 3px;
+      margin-bottom: 4px;
+    }
+
+    .picker-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 16px;
+      cursor: pointer;
+      color: #8e8e93;
+    }
+
+    .picker-tab.active {
+      background: #3a3a3c;
+      color: #ffffff;
+    }
+
+    /* Griglia colori */
     .grid-view {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      gap: 4px;
+      gap: 3px;
       width: 100%;
       height: 200px;
+      background: #000000;
+      padding: 4px;
+      border-radius: 8px;
     }
 
     .grid-cell {
-      border-radius: 3px;
+      border-radius: 2px;
       cursor: pointer;
     }
 
-    .picker-info {
+    /* Blocco info con doppio rettangolo e campi numerici */
+    .picker-info-row {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: #2c2c2e;
-      padding: 8px 12px;
-      border-radius: 14px;
-      font-size: 11px;
+      padding: 4px 0;
     }
 
-    .color-preview-box {
-      width: 40px; height: 26px;
-      border-radius: 6px;
+    .color-compare-box {
+      width: 55px;
+      height: 34px;
+      border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      overflow: hidden;
     }
 
-    .info-inputs {
+    .compare-half {
+      flex: 1;
+      height: 100%;
+    }
+
+    .info-inputs-container {
       display: flex;
       flex: 1;
       justify-content: space-between;
-      gap: 6px;
+      gap: 4px;
     }
 
     .input-group {
       display: flex;
       flex-direction: column;
-      color: #aaaaaa;
+      color: #8e8e93;
       font-weight: 700;
       font-size: 10px;
     }
 
+    .input-group span {
+      margin-bottom: 2px;
+    }
+
     .input-group input {
       background: #1c1c1e;
-      border: 1px solid #3a3a3c;
-      border-radius: 6px;
+      border: none;
       color: #ffffff;
       font-family: 'Quicksand', sans-serif;
-      font-weight: 800;
+      font-weight: 700;
       font-size: 11px;
-      padding: 3px 4px;
-      text-align: center;
-      margin-top: 2px;
+      padding: 2px 0;
+      text-align: left;
     }
 
     .input-group input:focus {
-      border-color: #0a84ff;
       outline: none;
     }
 
-    .hex-input { width: 68px; }
-    .rgb-input { width: 36px; }
+    .hex-input-val { width: 70px; }
+    .rgb-input-val { width: 26px; text-align: center; }
 
+    /* Linea tratteggiata divisoria come nella foto */
+    .picker-divider {
+      border-bottom: 1px dashed #3a3a3c;
+      width: 100%;
+      margin: 2px 0;
+    }
+
+    /* Riga inferiore con pallini salvati */
+    .saved-colors-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 4px;
+    }
+
+    .saved-dots-container {
+      display: flex;
+      gap: 12px;
+    }
+
+    .saved-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    .dropper-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropper-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: #ffffff;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Azioni finali (Annulla / Fatto) */
     .picker-actions {
       display: flex;
       justify-content: space-between;
-      border-top: 1px solid #2c2c2e;
-      padding-top: 10px;
+      padding-top: 6px;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 15px;
     }
 
-    .btn-action { cursor: pointer; padding: 4px 10px; }
-    .btn-action.cancel { color: #8e8e93; }
+    .btn-action { cursor: pointer; padding: 4px 6px; }
+    .btn-action.cancel { color: #ffffff; }
     .btn-action.done { color: #ffffff; }
 
     /* ADATTAMENTO DARK/LIGHT MODE GLOBALE */
@@ -450,7 +535,7 @@
       <div style="font-weight:800; margin-top:10px; font-size: 1.2rem;">Create Card</div>
       
       <div class="card-canvas-area">
-        <div class="card" id="main-card">
+        <div class="card dark-theme" id="main-card">
           <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
             <div id="placeholder" class="placeholder-box">+ Photo</div>
             <img id="card-photo-img" style="display:none;" alt="Photo">
@@ -464,8 +549,8 @@
 
         <!-- PALLINE BIANCO / NERO -->
         <div class="color-picker">
-          <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
-          <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
+          <div class="color-dot dot-white" onclick="setCardTheme('light')"></div>
+          <div class="color-dot dot-black active" onclick="setCardTheme('dark')"></div>
         </div>
 
         <!-- MENU SUB-OPTIONS -->
@@ -475,7 +560,7 @@
             Card Color
           </button>
           <button class="menu-btn" onclick="openCustomPicker('line')">
-            <svg viewBox="0 0 24 24"><path d="M12 19l7-73-3 3-7-7-3 3z"></path><path d="M18 13l-1.5-1.5"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M12 19l7-7-3-3-7-7-3 3z"></path><path d="M18 13l-1.5-1.5"></path></svg>
             Borders & Text
           </button>
         </div>
@@ -485,28 +570,68 @@
       <div class="btn-download" onclick="downloadCard()">Download Card</div>
     </div>
 
-    <!-- MODALE SELETTORE COLORE (SOLO GRIGLIA) -->
+    <!-- MODALE SELETTORE COLORE (STILE FOTO) -->
     <div class="picker-modal-overlay" id="picker-modal">
       <div class="picker-container">
-        <!-- VISTA GRIGLIA (TUTTI I QUADRATINI) -->
+        
+        <!-- Tab in alto -->
+        <div class="picker-tabs">
+          <div class="picker-tab active">Campioni</div>
+          <div class="picker-tab">Spettro</div>
+        </div>
+
+        <!-- Griglia colori -->
         <div class="grid-view" id="picker-grid"></div>
 
-        <!-- INFORMAZIONI E INPUT MODIFICABILI SOTTO -->
-        <div class="picker-info">
-          <div class="color-preview-box" id="preview-box"></div>
-          <div class="info-inputs">
-            <div class="input-group">Hex <input type="text" id="hex-input" class="hex-input" oninput="handleHexInput(this.value)"></div>
-            <div class="input-group">R <input type="number" id="r-input" class="rgb-input" min="0" max="255" oninput="handleRgbInput()"></div>
-            <div class="input-group">G <input type="number" id="g-input" class="rgb-input" min="0" max="255" oninput="handleRgbInput()"></div>
-            <div class="input-group">B <input type="number" id="b-input" class="rgb-input" min="0" max="255" oninput="handleRgbInput()"></div>
+        <!-- Blocco confronto e input esadecimale / RGB -->
+        <div class="picker-info-row">
+          <div class="color-compare-box" id="compare-box">
+            <div class="compare-half" id="compare-original" style="background-color: #55C772;"></div>
+            <div class="compare-half" id="compare-new" style="background-color: #55C772;"></div>
+          </div>
+          <div class="info-inputs-container">
+            <div class="input-group">
+              <span>Esadecimale</span>
+              <input type="text" id="hex-input" class="hex-input-val" oninput="handleHexInput(this.value)">
+            </div>
+            <div class="input-group">
+              <span>Rosso</span>
+              <input type="number" id="r-input" class="rgb-input-val" min="0" max="255" oninput="handleRgbInput()">
+            </div>
+            <div class="input-group">
+              <span>Verde</span>
+              <input type="number" id="g-input" class="rgb-input-val" min="0" max="255" oninput="handleRgbInput()">
+            </div>
+            <div class="input-group">
+              <span>Blu</span>
+              <input type="number" id="b-input" class="rgb-input-val" min="0" max="255" oninput="handleRgbInput()">
+            </div>
           </div>
         </div>
 
-        <!-- PULSANTI ANNULLA / FATTO -->
-        <div class="picker-actions">
-          <div class="btn-action cancel" onclick="closePicker()">Cancel</div>
-          <div class="btn-action done" onclick="applyPickerColor()">Done</div>
+        <!-- Linea tratteggiata -->
+        <div class="picker-divider"></div>
+
+        <!-- Pallini salvati in basso con contagocce -->
+        <div class="saved-colors-row">
+          <div class="saved-dots-container">
+            <div class="saved-dot" style="background-color: #F38B42;" onclick="selectColor('#F38B42')"></div>
+            <div class="saved-dot" style="background-color: #F8C39A;" onclick="selectColor('#F8C39A')"></div>
+            <div class="saved-dot" style="background-color: #E2ECD0;" onclick="selectColor('#E2ECD0')"></div>
+            <div class="saved-dot" style="background-color: #CBE3F2;" onclick="selectColor('#CBE3F2')"></div>
+            <div class="saved-dot" style="background-color: #79B8D5;" onclick="selectColor('#79B8D5')"></div>
+          </div>
+          <button class="dropper-btn">
+            <svg viewBox="0 0 24 24"><path d="M14.5 2.5l7 7L9 22H2v-7L14.5 2.5z"></path><path d="M12 5l7 7"></path></svg>
+          </button>
         </div>
+
+        <!-- Pulsanti Annulla / Fatto -->
+        <div class="picker-actions">
+          <div class="btn-action cancel" onclick="closePicker()">Annulla</div>
+          <div class="btn-action done" onclick="applyPickerColor()">Fatto</div>
+        </div>
+
       </div>
     </div>
 
@@ -526,6 +651,7 @@
 
     let currentTarget = 'bg';
     let selectedColor = '#FFFFFF';
+    let originalColor = '#FFFFFF';
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -604,7 +730,7 @@
 
     function setCardTheme(theme) {
       const card = document.getElementById('main-card');
-      const dots = document.querySelectorAll('.color-dot');
+      const dots = document.querySelectorAll('.color-picker .color-dot');
       
       card.style.backgroundColor = '';
       card.style.borderColor = '';
@@ -679,6 +805,8 @@
         currentHex = rgbToHex(borderCol);
       }
       
+      originalColor = currentHex;
+      document.getElementById('compare-original').style.backgroundColor = originalColor;
       selectColor(currentHex);
     }
 
@@ -695,7 +823,7 @@
 
     function selectColor(hex) {
       selectedColor = hex;
-      document.getElementById('preview-box').style.backgroundColor = hex;
+      document.getElementById('compare-new').style.backgroundColor = hex;
       document.getElementById('hex-input').value = hex.toUpperCase();
 
       let r = parseInt(hex.slice(1,3), 16) || 0;
@@ -711,7 +839,7 @@
       if (!val.startsWith('#')) val = '#' + val;
       if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
         selectedColor = val;
-        document.getElementById('preview-box').style.backgroundColor = val;
+        document.getElementById('compare-new').style.backgroundColor = val;
         let r = parseInt(val.slice(1,3), 16);
         let g = parseInt(val.slice(3,5), 16);
         let b = parseInt(val.slice(5,7), 16);
@@ -732,7 +860,7 @@
 
       let hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
       selectedColor = hex;
-      document.getElementById('preview-box').style.backgroundColor = hex;
+      document.getElementById('compare-new').style.backgroundColor = hex;
       document.getElementById('hex-input').value = hex.toUpperCase();
     }
 
