@@ -37,7 +37,7 @@
       .phone-wrapper { 
         width: 380px; 
         height: 780px; 
-        max-height: 92vh; /* Evita che il telefono si tagli in alto/basso su schermi bassi */
+        max-height: 92vh; 
         border-radius: 40px; 
         border: 8px solid #000000; 
         box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
@@ -93,7 +93,7 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD */
+    /* CARD BIANCE */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -131,10 +131,11 @@
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
     .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
 
-    /* CARD - VARIANTE NERA (CORRETTA) */
+    /* CARD NERA CON BORDINO BIANCO E OMBRA PER CONTRASTO */
     .card.dark-theme {
       background-color: #000000;
       border: 3px solid #ffffff !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35); /* L'ombra fa staccare il bordo dal fondo chiaro */
     }
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
