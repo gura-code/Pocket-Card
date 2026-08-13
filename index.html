@@ -93,7 +93,7 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD BIANCE */
+    /* CARD BIANCA */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -131,11 +131,11 @@
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
     .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
 
-    /* CARD NERA CON BORDINO BIANCO E OMBRA PER CONTRASTO */
+    /* CARD NERA CON BORDINO BIANCO E OMBRA */
     .card.dark-theme {
       background-color: #000000;
       border: 3px solid #ffffff !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35); /* L'ombra fa staccare il bordo dal fondo chiaro */
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
@@ -178,7 +178,7 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* AUTOMATICO PER CHI USA IL TELEFONO IN MODALITÀ SCURA */
+    /* ADATTAMENTO AUTOMATICO PER MODALITÀ SCURA DEL TELEFONO */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -190,6 +190,18 @@
       .sticker img { filter: invert(1); }
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
+
+      /* CORREZIONE BORDO CARTA BIANCA SU SFONDO NERO */
+      .card {
+        border: 3px solid #ffffff !important;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+      }
+
+      /* CORREZIONE CARTA NERA SU SFONDO NERO */
+      .card.dark-theme {
+        border: 3px solid #ffffff !important;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      }
     }
   </style>
 </head>
@@ -341,7 +353,6 @@
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
       
-      // Nasconde i campi lasciati vuoti per non lasciare spazi inutili nell'immagine salvata
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
           el.dataset.wasPlaceholder = "true";
@@ -351,7 +362,6 @@
       });
 
       html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-        // Ripristina la scheda esattamente com'era a schermo
         editables.forEach(el => {
           if (el.dataset.wasPlaceholder) {
             el.innerText = el.getAttribute('data-placeholder');
