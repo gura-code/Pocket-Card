@@ -155,7 +155,7 @@
       transition: all 0.2s ease;
     }
 
-    /* CONTENITORE FOTO */
+    /* CONTENITORE FOTO CON BORDO TRATTEGGIATO */
     .card-photo-box { 
       height: 100%; 
       max-height: 156px; 
@@ -170,7 +170,7 @@
       width: 100px; 
       height: 156px; 
       border: 2px dashed inherit; 
-      border-radius: 10px; 
+      border-radius: 12px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
@@ -184,8 +184,8 @@
       max-width: 140px;
       width: auto;
       height: auto;
-      border: 2px solid inherit; 
-      border-radius: 8px; 
+      border: 2px dashed inherit; 
+      border-radius: 12px; 
       display: block;
     }
     
@@ -294,7 +294,6 @@
       gap: 6px;
     }
 
-    /* Icona aggiornata con una linea / trattino pulito */
     .menu-btn svg {
       width: 14px;
       height: 14px;
@@ -486,7 +485,7 @@
           <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
         </div>
 
-        <!-- MENU SUB-OPTIONS CON ICONA A TRATTINO PULITO -->
+        <!-- MENU SUB-OPTIONS -->
         <div class="color-sub-menu" id="color-sub-menu">
           <button class="menu-btn" onclick="openCustomPicker('bg')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect></svg>
