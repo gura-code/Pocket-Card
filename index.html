@@ -118,16 +118,7 @@
     .card-photo-box img { max-height: 156px; max-width: 130px; border: 2px solid #000000; border-radius: 8px; }
     
     .card-info-box { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; }
-    .editable { outline: none; }
-    
-    /* GESTIONE PLACEHOLDER DINAMICO (GRIGETTO QUANDO È VUOTO O IN FOCUS) */
-    .editable:empty:before {
-      content: attr(data-placeholder);
-      color: #aaa;
-    }
-    .editable:focus:empty:before {
-      color: #ccc;
-    }
+    .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
     .card-title { font-size: 1.1rem; font-weight: 800; color: #000000; word-break: break-word; }
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
@@ -141,7 +132,6 @@
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
     .card.dark-theme .card-review { color: #aaaaaa; }
-    .card.dark-theme .editable:empty:before { color: #555; }
     .card.dark-theme .placeholder-box {
       border-color: #ffffff;
       background-color: #1a1a1a;
@@ -251,17 +241,23 @@
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
 
-    // Gestione clic, vuoto e ripristino testo
+    // GESTIONE SELEZIONE AL SINGOLO TOCCO (FLUIDITÀ TASTIERA)
     document.querySelectorAll('.editable').forEach(el => {
-      // Quando clicchi: se c'è il testo di default, scompare per lasciarti scrivere subito
       el.addEventListener('focus', function() {
         const ph = this.getAttribute('data-placeholder');
+        // Se c'è ancora il valore di default, seleziona tutto immediatamente col primo tocco
         if (this.innerText.trim() === ph) {
-          this.innerText = '';
+          setTimeout(() => {
+            const range = document.createRange();
+            range.selectNodeContents(this);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }, 0);
         }
       });
 
-      // Quando esci dal campo (blur): se non hai scritto niente, torna il testo originale
+      // Ripristina il valore di default se abbandonato vuoto
       el.addEventListener('blur', function() {
         if (this.innerText.trim() === '') {
           this.innerText = this.getAttribute('data-placeholder');
@@ -322,7 +318,6 @@
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
       
-      // Se stai scaricando e non hai scritto niente, rimuove la scritta di default per l'immagine
       editables.forEach(el => {
         const ph = el.getAttribute('data-placeholder');
         if (el.innerText.trim() === ph) {
@@ -332,7 +327,6 @@
       });
 
       html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-        // Ripristina i testi di default nella schermata dopo il download
         editables.forEach(el => {
           if (el.dataset.wasPlaceholder) {
             el.innerText = el.getAttribute('data-placeholder');
@@ -349,3 +343,4 @@
   </script>
 </body>
 </html>
+
