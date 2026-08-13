@@ -6,237 +6,87 @@
   
   <title>Pocket Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Librerie per Cattura Immagini e Animazioni GIF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
   
   <style>
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      -webkit-text-size-adjust: 100%;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; }
 
     html, body { 
-      width: 100vw; 
-      height: 100dvh; 
-      overflow: hidden; 
-      background-color: #ffffff; 
-      color: #000000;
-      font-family: 'Quicksand', sans-serif; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
+      width: 100vw; height: 100dvh; overflow: hidden; background-color: #ffffff; 
+      color: #000000; font-family: 'Quicksand', sans-serif; 
+      display: flex; justify-content: center; align-items: center; 
     }
 
     .phone-wrapper { 
-      width: 100vw; height: 100dvh; 
-      background-color: #ffffff; 
+      width: 100vw; height: 100dvh; background-color: #ffffff; 
       position: relative; overflow: hidden; display: flex; flex-direction: column; 
     }
 
     @media (min-width: 500px) { 
       .phone-wrapper { 
-        width: 380px; 
-        height: 780px; 
-        max-height: 92vh; 
-        border-radius: 40px; 
-        border: 8px solid #000000; 
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
+        width: 380px; height: 780px; max-height: 92vh; border-radius: 40px; 
+        border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
       } 
     }
 
     /* SPLASH SCREEN */
-    #splash { 
-      position: absolute; top:0; left:0; width:100%; height:100%; 
-      background-color: #ffffff; z-index: 100; display: flex; overflow: hidden;
-    }
-    
-    .bg-scrolling { 
-      display: flex; width: 100%; height: 100%; opacity: 0.85; pointer-events: none; 
-    }
-
+    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background-color: #ffffff; z-index: 100; display: flex; overflow: hidden; }
+    .bg-scrolling { display: flex; width: 100%; height: 100%; opacity: 0.85; pointer-events: none; }
     .col { flex: 1; display: flex; flex-direction: column; }
-    
     .up { animation: scrollUp 22s linear infinite; }
     .down { animation: scrollDown 22s linear infinite; }
-    
     @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
     @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
-
     .sticker { width: 75px; height: 75px; margin: 15px auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .sticker img { width: 100%; height: 100%; object-fit: contain; }
-
-    .content-overlay { 
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-      display: flex; flex-direction: column; justify-content: center; align-items: center; 
-      z-index: 10; background: rgba(255, 255, 255, 0.75); 
-    }
-
-    .logo-main { 
-      font-size: 4.5rem; line-height: 0.88; font-weight: 800; 
-      color: #000000; margin-bottom: 50px; text-align: center;
-      letter-spacing: -3px;
-      text-shadow: 0 4px 15px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn-start { 
-      background-color: #000000; color: #ffffff; 
-      border: none; padding: 15px 40px; border-radius: 30px; 
-      font-weight: 800; font-size: 1.2rem; cursor: pointer;
-    }
+    .content-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; background: rgba(255, 255, 255, 0.75); }
+    .logo-main { font-size: 4.5rem; line-height: 0.88; font-weight: 800; color: #000000; margin-bottom: 50px; text-align: center; letter-spacing: -3px; }
+    .btn-start { background-color: #000000; color: #ffffff; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; font-size: 1.2rem; cursor: pointer; }
 
     /* UI PRINCIPALE */
-    .main-ui { 
-      display: none; width: 100%; height: 100%; flex-direction: column; 
-      padding: 20px; justify-content: space-between; align-items: center; 
-      background-color: #ffffff;
-    }
-
+    .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; align-items: center; background-color: #ffffff; }
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
     /* CARD BIANCA */
     .card { 
-      width: 320px; height: 180px; 
-      background-color: #ffffff; 
-      border: 3px solid #000000; 
-      border-radius: 20px; 
-      padding: 12px; 
-      display: flex; 
-      gap: 12px; 
-      align-items: center;
-      box-sizing: border-box;
-      transition: all 0.2s ease;
+      width: 320px; height: 180px; background-color: #ffffff; 
+      border: 3px solid #000000; border-radius: 20px; padding: 12px; 
+      display: flex; gap: 12px; align-items: center; box-sizing: border-box;
     }
 
-    /* CONTENITORE FOTO - Aderisce perfettamente all'immagine caricata */
-    .card-photo-box { 
-      height: 100%; 
-      max-height: 156px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      flex-shrink: 0;
-    }
+    /* CONTENITORE FOTO */
+    .card-photo-box { height: 100%; max-height: 156px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+    .placeholder-box { width: 100px; height: 156px; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; font-size: 12px; color: #666666; font-weight: 700; }
     
-    .placeholder-box { 
-      width: 100px; 
-      height: 156px; 
-      border: 2px dashed #000000; 
-      border-radius: 10px; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      background-color: #f0f0f0; 
-      font-size: 12px; 
-      color: #666666; 
-      font-weight: 700; 
-    }
-    
-    /* L'immagine prende il bordo ed è incollata alle sue reali dimensioni */
     .card-photo-box img { 
-      max-height: 156px; 
-      max-width: 140px;
-      width: auto;
-      height: auto;
-      border: 2px solid #000000; 
-      border-radius: 8px; 
-      display: block;
+      max-height: 156px; max-width: 140px; width: auto; height: auto;
+      border: 2px solid #000000; border-radius: 8px; display: block;
     }
     
-    .card-info-box { 
-      flex: 1; 
-      height: 156px; 
-      display: flex; 
-      flex-direction: column; 
-      justify-content: center; 
-      overflow: hidden; 
-      gap: 4px; 
-      margin-left: 4px;
-    }
-
+    .card-info-box { flex: 1; height: 156px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; margin-left: 4px; }
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
-
-    /* STILE TESTO GUIDA */
-    .editable.placeholder-active {
-      color: #a0a0a0 !important;
-      opacity: 0.6;
-    }
-
+    .editable.placeholder-active { color: #a0a0a0 !important; opacity: 0.6; }
     .card-title { font-size: 16px; line-height: 20px; font-weight: 800; color: #000000; word-break: break-word; }
     .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
     .card-review { font-size: 11px; line-height: 14px; color: #333333; font-style: italic; word-break: break-word; }
 
     /* CARD NERA */
-    .card.dark-theme {
-      background-color: #000000;
-      border: 3px solid #ffffff !important;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    }
+    .card.dark-theme { background-color: #000000; border: 3px solid #ffffff !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); }
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
     .card.dark-theme .card-review { color: #aaaaaa; }
     .card.dark-theme .editable.placeholder-active { color: #666666 !important; }
-    .card.dark-theme .placeholder-box {
-      border-color: #ffffff;
-      background-color: #1a1a1a;
-      color: #aaaaaa;
-    }
-    .card.dark-theme .card-photo-box img {
-      border-color: #ffffff;
-    }
+    .card.dark-theme .placeholder-box { border-color: #ffffff; background-color: #1a1a1a; color: #aaaaaa; }
+    .card.dark-theme .card-photo-box img { border-color: #ffffff; }
 
-    /* SELETTORE COLORI (PALLINE) */
-    .color-picker {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .color-dot {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid #000000;
-      transition: transform 0.15s ease;
-    }
-
-    .color-dot:active { transform: scale(0.9); }
-
+    .color-picker { display: flex; gap: 12px; align-items: center; justify-content: center; }
+    .color-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid #000000; }
+    .color-dot.active { box-shadow: 0 0 0 3px #000000; }
     .dot-white { background-color: #ffffff; }
     .dot-black { background-color: #000000; border-color: #000000; }
-
-    .color-dot.active {
-      box-shadow: 0 0 0 3px #000000;
-    }
-    
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
-
-    /* ADATTAMENTO PER MODALITÀ SCURA DEL TELEFONO */
-    @media (prefers-color-scheme: dark) {
-      html, body, .phone-wrapper, #splash, .main-ui {
-        background-color: #000000 !important;
-        color: #ffffff !important;
-      }
-      .content-overlay { background: rgba(0, 0, 0, 0.75) !important; }
-      .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
-      .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
-      .sticker img { filter: invert(1); }
-      .color-dot { border-color: #ffffff; }
-      .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
-
-      .card {
-        border: 3px solid #000000 !important;
-        box-shadow: 0 0 35px rgba(255, 255, 255, 0.6); 
-      }
-
-      .card.dark-theme {
-        border: 3px solid #ffffff !important;
-        box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
-      }
-    }
   </style>
 </head>
 <body>
@@ -249,10 +99,7 @@
         <div class="col up" id="col3"></div>
       </div>
       <div class="content-overlay">
-        <div class="logo-main">
-          <div>Pocket</div>
-          <div>Card</div>
-        </div>
+        <div class="logo-main"><div>Pocket</div><div>Card</div></div>
         <button class="btn-start" onclick="startApp()">Start Creating</button>
       </div>
     </div>
@@ -280,21 +127,13 @@
       </div>
 
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
-      <div class="btn-download" onclick="downloadCard()">Download Card</div>
+      <div class="btn-download" id="download-btn" onclick="downloadCard()">Download Card</div>
     </div>
   </div>
 
   <script>
-    const images = [
-      "1000072971-removebg-preview.png", "1000072972-removebg-preview.png",
-      "1000072974-removebg-preview.png", "1000072977-removebg-preview.png",
-      "1000072978-removebg-preview.png", "1000072979-removebg-preview.png",
-      "1000072980-removebg-preview.png", "1000072981-removebg-preview.png",
-      "1000072982-removebg-preview.png", "1000072983-removebg-preview.png",
-      "1000072985-removebg-preview.png", "1000072986-removebg-preview.png",
-      "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
-      "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
-    ];
+    let isGifLoaded = false;
+    const images = ["1000072971-removebg-preview.png", "1000072972-removebg-preview.png", "1000072974-removebg-preview.png", "1000072977-removebg-preview.png", "1000072978-removebg-preview.png", "1000072979-removebg-preview.png", "1000072980-removebg-preview.png", "1000072981-removebg-preview.png", "1000072982-removebg-preview.png", "1000072983-removebg-preview.png", "1000072985-removebg-preview.png", "1000072986-removebg-preview.png", "1000072987-removebg-preview.png", "1000072988-removebg-preview.png", "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"];
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -313,18 +152,13 @@
       el.addEventListener('input', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
-        
-        if (text !== '' && text !== ph) {
-          this.classList.remove('placeholder-active');
-        } else {
-          this.classList.add('placeholder-active');
-        }
+        if (text !== '' && text !== ph) this.classList.remove('placeholder-active');
+        else this.classList.add('placeholder-active');
       });
 
       el.addEventListener('blur', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
-
         if (text === '' || text === ph) {
           this.innerText = ph;
           this.classList.add('placeholder-active');
@@ -334,28 +168,16 @@
       });
     });
 
-    function shuffleArray(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
     function renderColumn(colId) {
       const colEl = document.getElementById(colId);
       if(!colEl) return;
-      const shuffled = shuffleArray(images);
+      const shuffled = [...images].sort(() => 0.5 - Math.random());
       let htmlContent = '';
       shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
-      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
-      colEl.innerHTML = htmlContent;
+      colEl.innerHTML = htmlContent + htmlContent;
     }
 
-    renderColumn('col1'); 
-    renderColumn('col2'); 
-    renderColumn('col3');
+    renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
 
     function startApp() { 
       document.getElementById('splash').style.display = 'none'; 
@@ -365,6 +187,10 @@
     function loadPhoto(e) {
       const file = e.target.files[0];
       if(!file) return;
+      
+      // Controlla se il file caricato è una GIF animata
+      isGifLoaded = file.type === "image/gif";
+
       const reader = new FileReader();
       reader.onload = function(event) {
         const img = document.getElementById('card-photo-img');
@@ -389,10 +215,12 @@
       }
     }
 
-    function downloadCard() {
+    async function downloadCard() {
       const card = document.getElementById('main-card');
+      const btn = document.getElementById('download-btn');
       const editables = card.querySelectorAll('.editable');
       
+      // Nascondi il testo guida placeholder prima dello scatto
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
           el.dataset.wasPlaceholder = "true";
@@ -401,7 +229,47 @@
         }
       });
 
-      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+      // Se l'immagine caricata è una GIF
+      if (isGifLoaded && typeof GIF !== 'undefined') {
+        btn.innerText = "Generating GIF...";
+        
+        const gif = new GIF({
+          workers: 2,
+          quality: 10,
+          width: card.offsetWidth * 2,
+          height: card.offsetHeight * 2,
+          workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
+        });
+
+        // Registra 10 fotogrammi per creare il ciclo dell'animazione
+        for (let i = 0; i < 10; i++) {
+          const canvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
+          gif.addFrame(canvas, { delay: 100 });
+        }
+
+        gif.on('finished', function(blob) {
+          restorePlaceholders();
+          btn.innerText = "Download Card";
+          const link = document.createElement('a');
+          link.download = 'card-animated.gif';
+          link.href = URL.createObjectURL(blob);
+          link.click();
+        });
+
+        gif.render();
+
+      } else {
+        // Se è una foto normale (PNG, JPG)
+        html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+          restorePlaceholders();
+          const link = document.createElement('a');
+          link.download = 'card.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      }
+
+      function restorePlaceholders() {
         editables.forEach(el => {
           if (el.dataset.wasPlaceholder) {
             el.innerText = el.getAttribute('data-placeholder');
@@ -409,13 +277,9 @@
             delete el.dataset.wasPlaceholder;
           }
         });
-
-        const link = document.createElement('a');
-        link.download = 'card.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
+      }
     }
   </script>
 </body>
 </html>
+
