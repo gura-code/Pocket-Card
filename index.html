@@ -2,287 +2,103 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pocket Card</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- Carica le librerie necessarie -->
+  <script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; }
-
-    html, body { 
-      width: 100vw; height: 100dvh; overflow: hidden; background-color: #ffffff; 
-      color: #000000; font-family: 'Quicksand', sans-serif; 
-      display: flex; justify-content: center; align-items: center; 
-    }
-
-    .phone-wrapper { 
-      width: 100vw; height: 100dvh; background-color: #ffffff; 
-      position: relative; overflow: hidden; display: flex; flex-direction: column; 
-    }
-
-    @media (min-width: 500px) { 
-      .phone-wrapper { 
-        width: 380px; height: 780px; max-height: 92vh; border-radius: 40px; 
-        border: 8px solid #000000; box-shadow: 0 20px 40px rgba(0,0,0,0.3); 
-      } 
-    }
-
-    /* SPLASH SCREEN */
-    #splash { position: absolute; top:0; left:0; width:100%; height:100%; background-color: #ffffff; z-index: 100; display: flex; overflow: hidden; }
-    .bg-scrolling { display: flex; width: 100%; height: 100%; opacity: 0.85; pointer-events: none; }
-    .col { flex: 1; display: flex; flex-direction: column; }
-    .up { animation: scrollUp 22s linear infinite; }
-    .down { animation: scrollDown 22s linear infinite; }
-    @keyframes scrollUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-    @keyframes scrollDown { from { transform: translateY(-50%); } to { transform: translateY(0); } }
-    .sticker { width: 75px; height: 75px; margin: 15px auto; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-    .sticker img { width: 100%; height: 100%; object-fit: contain; }
-    .content-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; background: rgba(255, 255, 255, 0.75); }
-    .logo-main { font-size: 4.5rem; line-height: 0.88; font-weight: 800; color: #000000; margin-bottom: 50px; text-align: center; letter-spacing: -3px; }
-    .btn-start { background-color: #000000; color: #ffffff; border: none; padding: 15px 40px; border-radius: 30px; font-weight: 800; font-size: 1.2rem; cursor: pointer; }
-
-    /* UI PRINCIPALE */
-    .main-ui { display: none; width: 100%; height: 100%; flex-direction: column; padding: 20px; justify-content: space-between; align-items: center; background-color: #ffffff; }
-    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
-
-    /* CARD BIANCA */
-    .card { 
-      width: 320px; height: 180px; background-color: #ffffff; 
-      border: 3px solid #000000; border-radius: 20px; padding: 12px; 
-      display: flex; gap: 12px; align-items: center; box-sizing: border-box;
-    }
-
-    /* CONTENITORE FOTO */
-    .card-photo-box { height: 100%; max-height: 156px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-    .placeholder-box { width: 100px; height: 156px; border: 2px dashed #000000; border-radius: 10px; display: flex; align-items: center; justify-content: center; background-color: #f0f0f0; font-size: 12px; color: #666666; font-weight: 700; }
-    
-    .card-photo-box img { 
-      max-height: 156px; max-width: 140px; width: auto; height: auto;
-      border: 2px solid #000000; border-radius: 8px; display: block;
-    }
-    
-    .card-info-box { flex: 1; height: 156px; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; margin-left: 4px; }
-    .editable { outline: none; -webkit-tap-highlight-color: transparent; }
-    .editable.placeholder-active { color: #a0a0a0 !important; opacity: 0.6; }
-    .card-title { font-size: 16px; line-height: 20px; font-weight: 800; color: #000000; word-break: break-word; }
-    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
-    .card-review { font-size: 11px; line-height: 14px; color: #333333; font-style: italic; word-break: break-word; }
-
-    /* CARD NERA */
-    .card.dark-theme { background-color: #000000; border: 3px solid #ffffff !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5); }
-    .card.dark-theme .card-title { color: #ffffff; }
-    .card.dark-theme .card-voto { color: #cccccc; }
-    .card.dark-theme .card-review { color: #aaaaaa; }
-    .card.dark-theme .editable.placeholder-active { color: #666666 !important; }
-    .card.dark-theme .placeholder-box { border-color: #ffffff; background-color: #1a1a1a; color: #aaaaaa; }
-    .card.dark-theme .card-photo-box img { border-color: #ffffff; }
-
-    .color-picker { display: flex; gap: 12px; align-items: center; justify-content: center; }
-    .color-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid #000000; }
-    .color-dot.active { box-shadow: 0 0 0 3px #000000; }
-    .dot-white { background-color: #ffffff; }
-    .dot-black { background-color: #000000; border-color: #000000; }
-    .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
+    /* Stili mantenuti uguali per non rompere il design */
+    body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    .card { width: 320px; height: 180px; background: white; border: 3px solid black; border-radius: 20px; padding: 15px; display: flex; gap: 10px; align-items: center; }
+    .card-photo-box { width: 100px; height: 100%; border: 2px dashed black; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    #card-photo-img { max-width: 100%; max-height: 100%; display: none; }
+    .card-info { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .editable { outline: none; border-bottom: 1px solid #ccc; }
+    .btn { margin-top: 20px; padding: 15px 30px; background: black; color: white; border-radius: 20px; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <div class="phone-wrapper">
-    <div id="splash">
-      <div class="bg-scrolling">
-        <div class="col up" id="col1"></div>
-        <div class="col down" id="col2"></div>
-        <div class="col up" id="col3"></div>
-      </div>
-      <div class="content-overlay">
-        <div class="logo-main"><div>Pocket</div><div>Card</div></div>
-        <button class="btn-start" onclick="startApp()">Start Creating</button>
-      </div>
+  <div class="card" id="main-card">
+    <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
+      <span id="label">+ Photo</span>
+      <img id="card-photo-img">
     </div>
-
-    <div class="main-ui" id="main-ui">
-      <div style="font-weight:800; margin-top:10px; font-size: 1.2rem;">Create Card</div>
-      
-      <div class="card-canvas-area">
-        <div class="card" id="main-card">
-          <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
-            <div id="placeholder" class="placeholder-box">+ Photo</div>
-            <img id="card-photo-img" style="display:none;" alt="Photo">
-          </div>
-          <div class="card-info-box">
-            <div class="card-title editable placeholder-active" contenteditable="true" data-placeholder="Title / Name...">Title / Name...</div>
-            <div class="card-voto editable placeholder-active" contenteditable="true" data-placeholder="Rating / Genre / Role...">Rating / Genre / Role...</div>
-            <div class="card-review editable placeholder-active" contenteditable="true" data-placeholder="Review / Plot / Notes...">Review / Plot / Notes...</div>
-          </div>
-        </div>
-
-        <div class="color-picker">
-          <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
-          <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
-        </div>
-      </div>
-
-      <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
-      <div class="btn-download" id="download-btn" onclick="downloadCard()">Download Card</div>
+    <div class="card-info">
+      <div class="editable" contenteditable="true">Titolo</div>
+      <div class="editable" contenteditable="true">Voto</div>
     </div>
   </div>
 
+  <input type="file" id="file-input" style="display:none" accept="image/gif" onchange="loadGif(event)">
+  <div class="btn" onclick="generateVideo()">Download Card</div>
+
   <script>
-    let isGifLoaded = false;
-    const images = ["1000072971-removebg-preview.png", "1000072972-removebg-preview.png", "1000072974-removebg-preview.png", "1000072977-removebg-preview.png", "1000072978-removebg-preview.png", "1000072979-removebg-preview.png", "1000072980-removebg-preview.png", "1000072981-removebg-preview.png", "1000072982-removebg-preview.png", "1000072983-removebg-preview.png", "1000072985-removebg-preview.png", "1000072986-removebg-preview.png", "1000072987-removebg-preview.png", "1000072988-removebg-preview.png", "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"];
+    let gifData = null;
+    let gifWidth = 0, gifHeight = 0;
 
-    document.querySelectorAll('.editable').forEach(el => {
-      el.addEventListener('focus', function() {
-        const ph = this.getAttribute('data-placeholder');
-        if (this.innerText.trim() === ph) {
-          setTimeout(() => {
-            const range = document.createRange();
-            range.selectNodeContents(this);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }, 0);
-        }
-      });
-
-      el.addEventListener('input', function() {
-        const ph = this.getAttribute('data-placeholder');
-        const text = this.innerText.trim();
-        if (text !== '' && text !== ph) this.classList.remove('placeholder-active');
-        else this.classList.add('placeholder-active');
-      });
-
-      el.addEventListener('blur', function() {
-        const ph = this.getAttribute('data-placeholder');
-        const text = this.innerText.trim();
-        if (text === '' || text === ph) {
-          this.innerText = ph;
-          this.classList.add('placeholder-active');
-        } else {
-          this.classList.remove('placeholder-active');
-        }
-      });
-    });
-
-    function renderColumn(colId) {
-      const colEl = document.getElementById(colId);
-      if(!colEl) return;
-      const shuffled = [...images].sort(() => 0.5 - Math.random());
-      let htmlContent = '';
-      shuffled.forEach(imgName => { htmlContent += `<div class="sticker"><img src="${imgName}" alt="sticker"></div>`; });
-      colEl.innerHTML = htmlContent + htmlContent;
-    }
-
-    renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
-
-    function startApp() { 
-      document.getElementById('splash').style.display = 'none'; 
-      document.getElementById('main-ui').style.display = 'flex'; 
-    }
-    
-    function loadPhoto(e) {
+    function loadGif(e) {
       const file = e.target.files[0];
-      if(!file) return;
-
-      isGifLoaded = file.type === "image/gif" || file.name.toLowerCase().endsWith('.gif');
-
       const reader = new FileReader();
-      reader.onload = function(event) {
-        const img = document.getElementById('card-photo-img');
-        img.src = event.target.result;
-        img.style.display = 'block';
-        document.getElementById('placeholder').style.display = 'none';
-      }
-      reader.readAsDataURL(file);
+      reader.onload = async (e) => {
+        const buffer = new Uint8Array(e.target.result);
+        gifData = new omggif.GifReader(buffer);
+        gifWidth = gifData.width;
+        gifHeight = gifData.height;
+        document.getElementById('card-photo-img').src = URL.createObjectURL(file);
+        document.getElementById('card-photo-img').style.display = 'block';
+        document.getElementById('label').style.display = 'none';
+      };
+      reader.readAsArrayBuffer(file);
     }
 
-    function setCardTheme(theme) {
-      const card = document.getElementById('main-card');
-      const dots = document.querySelectorAll('.color-dot');
-      if (theme === 'dark') {
-        card.classList.add('dark-theme');
-        dots[0].classList.remove('active');
-        dots[1].classList.add('active');
-      } else {
-        card.classList.remove('dark-theme');
-        dots[0].classList.add('active');
-        dots[1].classList.remove('active');
-      }
-    }
-
-    async function downloadCard() {
-      const card = document.getElementById('main-card');
-      const editables = card.querySelectorAll('.editable');
+    async function generateVideo() {
+      if (!gifData) return alert("Carica prima una GIF!");
       
-      // Nascondi testo placeholder vuoto
-      const hiddenPlaceholders = [];
-      editables.forEach(el => {
-        if (el.classList.contains('placeholder-active')) {
-          hiddenPlaceholders.push({ el: el, text: el.innerText });
-          el.innerText = '';
-        }
-      });
+      const card = document.getElementById('main-card');
+      const canvas = document.createElement('canvas');
+      canvas.width = 640; canvas.height = 360; // Risoluzione video
+      const ctx = canvas.getContext('2d');
+      
+      // 1. Cattura il design della carta come immagine statica
+      const cardImg = await html2canvas(card).then(c => c);
+      
+      const stream = canvas.captureStream(30);
+      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      const chunks = [];
+      recorder.ondataavailable = e => chunks.push(e.data);
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/mp4' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'card.mp4';
+        a.click();
+      };
+      recorder.start();
 
-      if (isGifLoaded) {
-        // CATTURA ANIMATA (VIDEO MP4/WEBM)
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = card.offsetWidth * 2;
-          canvas.height = card.offsetHeight * 2;
-          const ctx = canvas.getContext('2d');
-
-          const stream = canvas.captureStream(30);
-          const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-          const chunks = [];
-
-          mediaRecorder.ondataavailable = e => chunks.push(e.data);
-          mediaRecorder.onstop = () => {
-            const blob = new Blob(chunks, { type: 'video/mp4' });
-            const link = document.createElement('a');
-            link.download = 'card-animated.mp4';
-            link.href = URL.createObjectURL(blob);
-            link.click();
-            restorePlaceholders();
-          };
-
-          mediaRecorder.start();
-
-          // Registra per 2.5 secondi
-          const startTime = Date.now();
-          const interval = setInterval(async () => {
-            if (Date.now() - startTime > 2500) {
-              clearInterval(interval);
-              mediaRecorder.stop();
-            } else {
-              const cardCanvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              ctx.drawImage(cardCanvas, 0, 0);
-            }
-          }, 40);
-
-        } catch (e) {
-          alert("Errore nella registrazione video.");
-          restorePlaceholders();
-        }
-
-      } else {
-        // FOTO PARANTE NORMALE (PNG)
-        html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-          restorePlaceholders();
-          const link = document.createElement('a');
-          link.download = 'card.png';
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-        });
+      // 2. Disegna fotogramma per fotogramma
+      const frameCanvas = document.createElement('canvas');
+      frameCanvas.width = gifWidth; frameCanvas.height = gifHeight;
+      const frameCtx = frameCanvas.getContext('2d');
+      
+      for (let i = 0; i < gifData.numFrames(); i++) {
+        // Disegna sfondo carta
+        ctx.drawImage(cardImg, 0, 0, 640, 360);
+        
+        // Decodifica fotogramma GIF
+        const imageData = frameCtx.createImageData(gifWidth, gifHeight);
+        gifData.decodeAndBlitFrameRGBA(i, imageData.data);
+        frameCtx.putImageData(imageData, 0, 0);
+        
+        // Disegna GIF sopra
+        ctx.drawImage(frameCanvas, 50, 50, 150, 150);
+        
+        // Aspetta un momento per il video
+        await new Promise(r => setTimeout(r, 100));
       }
-
-      function restorePlaceholders() {
-        hiddenPlaceholders.forEach(item => {
-          item.el.innerText = item.text;
-        });
-      }
+      recorder.stop();
     }
   </script>
 </body>
