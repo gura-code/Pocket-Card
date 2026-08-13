@@ -341,14 +341,14 @@
 
     .grid-view {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 4px;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 3px;
       width: 100%;
-      height: 200px;
+      height: 220px;
     }
 
     .grid-cell {
-      border-radius: 3px;
+      border-radius: 2px;
       cursor: pointer;
     }
 
@@ -649,23 +649,29 @@
     function initGridColors() {
       const grid = document.getElementById('picker-grid');
       grid.innerHTML = '';
-      const hues = [0, 30, 60, 120, 180, 210, 240, 280, 320, 0];
-      const rows = 10;
-      const cols = 10;
+      
+      // 12 tonalità cromatiche principali + 1 colonna grigi
+      const hues = [0, 25, 45, 60, 90, 140, 175, 200, 225, 260, 290, 325];
+      const rows = 13;
+      const cols = 13;
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           let cell = document.createElement('div');
           cell.className = 'grid-cell';
           let hexColor = '';
+          
           if (c === 0) {
-            let lightness = 100 - (r * 10);
+            // Prima colonna: Scala di grigi (dal bianco al nero in 13 passaggi)
+            let lightness = 100 - (r * (100 / 12));
             hexColor = hslToHex(0, 0, lightness);
           } else {
+            // Altre 12 colonne: sfumature dei vari colori
             let hue = hues[c - 1];
-            let lightness = 90 - (r * 8);
-            hexColor = hslToHex(hue, 85, lightness);
+            let lightness = 95 - (r * 7.2);
+            hexColor = hslToHex(hue, 90, lightness);
           }
+          
           cell.style.backgroundColor = hexColor;
           cell.onclick = () => selectColor(hexColor);
           grid.appendChild(cell);
