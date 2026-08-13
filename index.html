@@ -120,7 +120,7 @@
     .card-info-box { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; }
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
-    /* STILE TESTO GUIDA (GRIGIO / TRASPARENTE QUANDO SELEZIONATO) */
+    /* STILE TESTO GUIDA */
     .editable.placeholder-active {
       color: #a0a0a0 !important;
       opacity: 0.6;
@@ -248,13 +248,10 @@
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
 
-    // GESTIONE TRASPARENZA, DIGITAZIONE E RIPRISTINO AUTOMATICO
     document.querySelectorAll('.editable').forEach(el => {
-      // Quando tocchi la casella
       el.addEventListener('focus', function() {
         const ph = this.getAttribute('data-placeholder');
         if (this.innerText.trim() === ph) {
-          // Seleziona tutto il testo al singolo tocco per sovrascriverlo subito
           setTimeout(() => {
             const range = document.createRange();
             range.selectNodeContents(this);
@@ -265,7 +262,6 @@
         }
       });
 
-      // Mentre l'utente scrive o cancella
       el.addEventListener('input', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
@@ -277,12 +273,10 @@
         }
       });
 
-      // Quando sposti il focus altrove
       el.addEventListener('blur', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
 
-        // Se la casella è vuota o contiene ancora il placeholder, ripristina il valore di default
         if (text === '' || text === ph) {
           this.innerText = ph;
           this.classList.add('placeholder-active');
@@ -345,19 +339,21 @@
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
       
-      // Svuota temporaneamente i testi placeholder attivi per non farli uscire nella foto salvata
+      // Nasconde i campi lasciati vuoti e rimuove temporaneamente i placeholder
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
           el.dataset.wasPlaceholder = "true";
+          el.style.display = 'none'; // Nasconde l'elemento per non lasciare spazi vuoti
           el.innerText = '';
         }
       });
 
       html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-        // Ripristina la visualizzazione dell'interfaccia
+        // Ripristina l'interfaccia esattamente com'era
         editables.forEach(el => {
           if (el.dataset.wasPlaceholder) {
             el.innerText = el.getAttribute('data-placeholder');
+            el.style.display = ''; // Ripristina la visibilità della casella
             delete el.dataset.wasPlaceholder;
           }
         });
