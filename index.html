@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -94,10 +94,9 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD BIANCA - Struttura Rigida */
+    /* CARD BIANCA */
     .card { 
-      width: 320px; 
-      height: 180px; 
+      width: 320px; height: 180px; 
       background-color: #ffffff; 
       border: 3px solid #000000; 
       border-radius: 20px; 
@@ -106,25 +105,23 @@
       gap: 12px; 
       align-items: center;
       box-sizing: border-box;
-      transition: background-color 0.2s ease, border-color 0.2s ease;
-      overflow: hidden;
+      transition: all 0.2s ease;
     }
 
-    /* CONTENITORE FOTO */
+    /* CONTENITORE FOTO - Aderisce perfettamente all'immagine caricata */
     .card-photo-box { 
-      width: 110px;
-      height: 156px; 
+      height: 100%; 
+      max-height: 156px; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
       cursor: pointer; 
       flex-shrink: 0;
-      overflow: hidden;
     }
     
     .placeholder-box { 
-      width: 100%; 
-      height: 100%; 
+      width: 100px; 
+      height: 156px; 
       border: 2px dashed #000000; 
       border-radius: 10px; 
       display: flex; 
@@ -136,64 +133,39 @@
       font-weight: 700; 
     }
     
+    /* L'immagine prende il bordo ed è incollata alle sue reali dimensioni */
     .card-photo-box img { 
       max-height: 156px; 
-      max-width: 110px;
+      max-width: 140px;
       width: auto;
       height: auto;
       border: 2px solid #000000; 
       border-radius: 8px; 
       display: block;
-      object-fit: contain;
     }
     
-    /* BOX INFORMAZIONE TESTI - BLOCCATI IN ALTEZZA */
     .card-info-box { 
       flex: 1; 
       height: 156px; 
       display: flex; 
       flex-direction: column; 
-      justify-content: space-between; 
+      justify-content: center; 
       overflow: hidden; 
-      margin-left: 2px;
+      gap: 4px; 
+      margin-left: 4px;
     }
 
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
+    /* STILE TESTO GUIDA */
     .editable.placeholder-active {
       color: #a0a0a0 !important;
       opacity: 0.6;
     }
 
-    /* ALTEZZE RIGIDE DEI TESTI PER EVITARE DEFORMAZIONI */
-    .card-title { 
-      font-size: 15px; 
-      line-height: 18px; 
-      font-weight: 800; 
-      color: #000000; 
-      word-break: break-word;
-      max-height: 36px;
-      overflow: hidden;
-    }
-
-    .card-voto { 
-      font-size: 12px; 
-      line-height: 15px; 
-      font-weight: 800; 
-      color: #555555; 
-      max-height: 30px;
-      overflow: hidden;
-    }
-
-    .card-review { 
-      font-size: 11px; 
-      line-height: 14px; 
-      color: #333333; 
-      font-style: italic; 
-      word-break: break-word;
-      max-height: 70px;
-      overflow: hidden;
-    }
+    .card-title { font-size: 16px; line-height: 20px; font-weight: 800; color: #000000; word-break: break-word; }
+    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
+    .card-review { font-size: 11px; line-height: 14px; color: #333333; font-style: italic; word-break: break-word; }
 
     /* CARD NERA */
     .card.dark-theme {
@@ -214,7 +186,7 @@
       border-color: #ffffff;
     }
 
-    /* SELETTORE COLORI */
+    /* SELETTORE COLORI (PALLINE) */
     .color-picker {
       display: flex;
       gap: 12px;
@@ -242,7 +214,7 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* ADATTAMENTO PER SCURO DEL DISPOSITIVO */
+    /* ADATTAMENTO PER MODALITÀ SCURA DEL TELEFONO */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -270,7 +242,6 @@
 <body>
 
   <div class="phone-wrapper">
-    <!-- SPLASH SCREEN -->
     <div id="splash">
       <div class="bg-scrolling">
         <div class="col up" id="col1"></div>
@@ -286,7 +257,6 @@
       </div>
     </div>
 
-    <!-- UI PRINCIPALE -->
     <div class="main-ui" id="main-ui">
       <div style="font-weight:800; margin-top:10px; font-size: 1.2rem;">Create Card</div>
       
@@ -419,99 +389,27 @@
       }
     }
 
-    /* DOWNLOAD PIXEL-PERFECT IDENTICO SU TUTTI I DISPOSITIVI */
     function downloadCard() {
       const card = document.getElementById('main-card');
       const editables = card.querySelectorAll('.editable');
       
-      // Nascondi temporaneamente i placeholder non compilati
-      const hiddenPlaceholders = [];
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
-          hiddenPlaceholders.push({ el: el, text: el.innerText });
+          el.dataset.wasPlaceholder = "true";
+          el.style.display = 'none';
           el.innerText = '';
         }
       });
 
-      // 1. Clona la carta in un contenitore nascosto con dimensioni FISSE (1280x720)
-      const cloneContainer = document.createElement('div');
-      cloneContainer.style.position = 'absolute';
-      cloneContainer.style.left = '-9999px';
-      cloneContainer.style.top = '-9999px';
-      cloneContainer.style.width = '1280px';
-      cloneContainer.style.height = '720px';
-      cloneContainer.style.display = 'flex';
-      cloneContainer.style.justifyContent = 'center';
-      cloneContainer.style.alignItems = 'center';
-      cloneContainer.style.backgroundColor = 'transparent';
-
-      const clonedCard = card.cloneNode(true);
-      // Raddoppia in proporzione perfetta la dimensione per l'alta definizione
-      clonedCard.style.width = '1280px';
-      clonedCard.style.height = '720px';
-      clonedCard.style.borderRadius = '80px';
-      clonedCard.style.borderWidth = '12px';
-      clonedCard.style.padding = '48px';
-      clonedCard.style.gap = '48px';
-
-      // Scala gli elementi interni del clone
-      const photoBox = clonedCard.querySelector('.card-photo-box');
-      if (photoBox) {
-        photoBox.style.width = '440px';
-        photoBox.style.height = '624px';
-        photoBox.style.maxHeight = '624px';
-      }
-
-      const photoImg = clonedCard.querySelector('.card-photo-box img');
-      if (photoImg) {
-        photoImg.style.maxHeight = '624px';
-        photoImg.style.maxWidth = '440px';
-        photoImg.style.borderWidth = '8px';
-        photoImg.style.borderRadius = '32px';
-      }
-
-      const infoBox = clonedCard.querySelector('.card-info-box');
-      if (infoBox) {
-        infoBox.style.height = '624px';
-      }
-
-      const title = clonedCard.querySelector('.card-title');
-      if (title) {
-        title.style.fontSize = '60px';
-        title.style.lineHeight = '72px';
-        title.style.maxHeight = '144px';
-      }
-
-      const voto = clonedCard.querySelector('.card-voto');
-      if (voto) {
-        voto.style.fontSize = '48px';
-        voto.style.lineHeight = '60px';
-        voto.style.maxHeight = '120px';
-      }
-
-      const review = clonedCard.querySelector('.card-review');
-      if (review) {
-        review.style.fontSize = '44px';
-        review.style.lineHeight = '56px';
-        review.style.maxHeight = '280px';
-      }
-
-      cloneContainer.appendChild(clonedCard);
-      document.body.appendChild(cloneContainer);
-
-      // 2. Cattura il clone fisso
-      html2canvas(clonedCard, { 
-        backgroundColor: null, 
-        useCORS: true,
-        scale: 1 
-      }).then(canvas => {
-        // Ripristina la carta sullo schermo
-        hiddenPlaceholders.forEach(item => {
-          item.el.innerText = item.text;
+      html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
+        editables.forEach(el => {
+          if (el.dataset.wasPlaceholder) {
+            el.innerText = el.getAttribute('data-placeholder');
+            el.style.display = '';
+            delete el.dataset.wasPlaceholder;
+          }
         });
-        document.body.removeChild(cloneContainer);
 
-        // Scarica la carta
         const link = document.createElement('a');
         link.download = 'card.png';
         link.href = canvas.toDataURL('image/png');
