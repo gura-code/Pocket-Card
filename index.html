@@ -140,7 +140,7 @@
       position: relative;
     }
 
-    /* CARD BASE (Stile Bianco di default all'avvio) */
+    /* CARD BASE */
     .card { 
       width: 320px; 
       height: 180px; 
@@ -212,7 +212,7 @@
 
     /* --- TEMI DELLA CARTA --- */
 
-    /* 1. Tema Carta Bianca (Pallina Bianca) */
+    /* 1. Tema Carta Bianca */
     .card.light-card {
       background-color: #ffffff;
       border: 3px solid #000000;
@@ -223,16 +223,14 @@
     .card.light-card .placeholder-box { border-color: #000000; color: #666666; background-color: #f0f0f0; }
     .card.light-card img { border-color: #000000; }
 
-    /* Ombra bianca specifica se siamo in modalità scura sulla carta bianca */
     .dark-mode-env .card.light-card {
       box-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
     }
-    /* Sulla modalità chiara, la carta bianca non ha bisogno di ombre particolari */
     .light-mode-env .card.light-card {
       box-shadow: none;
     }
 
-    /* 2. Tema Carta Nera (Pallina Nera) */
+    /* 2. Tema Carta Nera */
     .card.dark-card {
       background-color: #000000;
       border: 3px solid #ffffff;
@@ -243,11 +241,9 @@
     .card.dark-card .placeholder-box { border-color: #ffffff; color: #cccccc; background-color: #222222; }
     .card.dark-card img { border-color: #ffffff; }
 
-    /* Ombra scura se siamo in modalità chiara sulla carta nera (perché il bordo bianco non si vedrebbe sul fondo bianco) */
     .light-mode-env .card.dark-card {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
-    /* Sulla modalità scura, la carta nera sul fondo nero non richiede ombre scure */
     .dark-mode-env .card.dark-card {
       box-shadow: none;
     }
@@ -298,14 +294,14 @@
       gap: 6px;
     }
 
+    /* Icona aggiornata con una linea / trattino pulito */
     .menu-btn svg {
       width: 14px;
       height: 14px;
       fill: none;
       stroke: #ffffff;
-      stroke-width: 2;
+      stroke-width: 2.5;
       stroke-linecap: round;
-      stroke-linejoin: round;
     }
     
     .btn-download { 
@@ -448,7 +444,7 @@
     }
   </style>
 </head>
-<body class="light-mode-env"> <!-- Verrà aggiornato dinamicamente via JS se dark mode attiva -->
+<body class="light-mode-env">
 
   <div class="phone-wrapper">
     <!-- SPLASH SCREEN -->
@@ -472,7 +468,6 @@
       <div style="font-weight:800; margin-top:10px; font-size: 1.2rem;">Create Card</div>
       
       <div class="card-canvas-area">
-        <!-- Di default parte con la carta bianca (light-card) -->
         <div class="card light-card" id="main-card">
           <div class="card-photo-box" onclick="document.getElementById('file-input').click()">
             <div id="placeholder" class="placeholder-box">+ Photo</div>
@@ -485,20 +480,20 @@
           </div>
         </div>
 
-        <!-- PALLINE BIANCO / NERO (Pallina bianca attiva di default) -->
+        <!-- PALLINE BIANCO / NERO -->
         <div class="color-picker">
           <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
           <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
         </div>
 
-        <!-- MENU SUB-OPTIONS -->
+        <!-- MENU SUB-OPTIONS CON ICONA A TRATTINO PULITO -->
         <div class="color-sub-menu" id="color-sub-menu">
           <button class="menu-btn" onclick="openCustomPicker('bg')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect></svg>
             Card Color
           </button>
           <button class="menu-btn" onclick="openCustomPicker('line')">
-            <svg viewBox="0 0 24 24"><path d="M12 19l7-7-3-3-7-7-3 3z"></path><path d="M18 13l-1.5-1.5"></path></svg>
+            <svg viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"></line></svg>
             Borders & Text
           </button>
         </div>
@@ -508,13 +503,11 @@
       <div class="btn-download" onclick="downloadCard()">Download Card</div>
     </div>
 
-    <!-- MODALE SELETTORE COLORE (TUTTI I QUADRATINI DELLA GRIGLIA) -->
+    <!-- MODALE SELETTORE COLORE -->
     <div class="picker-modal-overlay" id="picker-modal">
       <div class="picker-container">
-        <!-- VISTA GRIGLIA -->
         <div class="grid-view" id="picker-grid"></div>
 
-        <!-- INFORMAZIONI E INPUT -->
         <div class="picker-info">
           <div class="color-preview-box" id="preview-box"></div>
           <div class="info-inputs">
@@ -525,7 +518,6 @@
           </div>
         </div>
 
-        <!-- PULSANTI ANNULLA / FATTO -->
         <div class="picker-actions">
           <div class="btn-action cancel" onclick="closePicker()">Cancel</div>
           <div class="btn-action done" onclick="applyPickerColor()">Done</div>
@@ -536,7 +528,6 @@
   </div>
 
   <script>
-    // Rileva e imposta la classe ambientale corretta (dark o light mode del sistema)
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       document.body.className = 'dark-mode-env';
     }
@@ -633,12 +624,10 @@
       reader.readAsDataURL(file);
     }
 
-    // Gestione della selezione tramite le palline Bianco / Nero
     function setCardTheme(theme) {
       const card = document.getElementById('main-card');
       const dots = document.querySelectorAll('.color-dot');
       
-      // Rimuoviamo eventuali stili inline precedenti applicati dal selettore custom
       card.style.backgroundColor = '';
       card.style.borderColor = '';
       document.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = '');
@@ -760,7 +749,7 @@
       let b = parseInt(document.getElementById('b-input').value) || 0;
 
       r = Math.min(255, Math.max(0, r));
-      g = Math.min(255, Math.max(0, r)); // correzione indice g
+      g = Math.min(255, Math.max(0, g));
       b = Math.min(255, Math.max(0, b));
 
       let hex = '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -771,7 +760,6 @@
 
     function applyPickerColor() {
       const card = document.getElementById('main-card');
-      // Se l'utente usa il selettore custom, rimuoviamo le classi predefinite per lasciare spazio al colore scelto
       if (currentTarget === 'bg') {
         card.classList.remove('light-card', 'dark-card');
         card.style.backgroundColor = selectedColor;
