@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   
   <title>Pocket Card</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
-  <!-- Libreria per screenshot HTML -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <!-- Libreria per creare vere GIF animate -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js"></script>
   
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-text-size-adjust: 100%; }
@@ -217,10 +214,9 @@
 
     async function downloadCard() {
       const card = document.getElementById('main-card');
-      const btn = document.getElementById('download-btn');
       const editables = card.querySelectorAll('.editable');
       
-      // Salva e nascondi i testi placeholder prima di generare l'immagine
+      // Nascondi testo placeholder vuoto
       const hiddenPlaceholders = [];
       editables.forEach(el => {
         if (el.classList.contains('placeholder-active')) {
@@ -230,40 +226,49 @@
       });
 
       if (isGifLoaded) {
-        btn.innerText = "Creating Animated GIF...";
+        // CATTURA ANIMATA (VIDEO MP4/WEBM)
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = card.offsetWidth * 2;
+          canvas.height = card.offsetHeight * 2;
+          const ctx = canvas.getContext('2d');
 
-        const frameImages = [];
-        const totalFrames = 12; // Scatta 12 fotogrammi consecutivi per catturare l'animazione della GIF
+          const stream = canvas.captureStream(30);
+          const mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+          const chunks = [];
 
-        for (let i = 0; i < totalFrames; i++) {
-          const canvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
-          frameImages.push(canvas.toDataURL('image/png'));
-          // Piccola pausa per far avanzare l'animazione GIF
-          await new Promise(r => setTimeout(r, 80));
+          mediaRecorder.ondataavailable = e => chunks.push(e.data);
+          mediaRecorder.onstop = () => {
+            const blob = new Blob(chunks, { type: 'video/mp4' });
+            const link = document.createElement('a');
+            link.download = 'card-animated.mp4';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            restorePlaceholders();
+          };
+
+          mediaRecorder.start();
+
+          // Registra per 2.5 secondi
+          const startTime = Date.now();
+          const interval = setInterval(async () => {
+            if (Date.now() - startTime > 2500) {
+              clearInterval(interval);
+              mediaRecorder.stop();
+            } else {
+              const cardCanvas = await html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true });
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(cardCanvas, 0, 0);
+            }
+          }, 40);
+
+        } catch (e) {
+          alert("Errore nella registrazione video.");
+          restorePlaceholders();
         }
 
-        // Compila i fotogrammi in una VERA GIF animata
-        gifshot.createGIF({
-          images: frameImages,
-          gifWidth: card.offsetWidth * 2,
-          gifHeight: card.offsetHeight * 2,
-          interval: 0.08,
-          numFrames: totalFrames
-        }, function(obj) {
-          if (!obj.error) {
-            const link = document.createElement('a');
-            link.download = 'card-animated.gif';
-            link.href = obj.image; // Questo è un file .gif reale
-            link.click();
-          } else {
-            alert("Errore nella creazione della GIF.");
-          }
-          restorePlaceholders();
-          btn.innerText = "Download Card";
-        });
-
       } else {
-        // Scaricamento classico in PNG per le foto normali
+        // FOTO PARANTE NORMALE (PNG)
         html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
           restorePlaceholders();
           const link = document.createElement('a');
