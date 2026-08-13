@@ -120,9 +120,16 @@
     .card-info-box { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; }
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
-    .card-title { font-size: 1.1rem; font-weight: 800; color: #000000; word-break: break-word; }
-    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
-    .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
+    /* PLACEHOLDER NATIVO CON CSS: scompare quando si clicca e riappare se vuoto */
+    .editable:empty:not(:focus):before {
+      content: attr(data-placeholder);
+      color: inherit;
+      opacity: 0.8;
+    }
+
+    .card-title { font-size: 1.1rem; font-weight: 800; color: #000000; word-break: break-word; min-height: 1.3em; }
+    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; min-height: 1.2em; }
+    .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; min-height: 1.2em; }
 
     /* CARD - VARIANTE NERA */
     .card.dark-theme {
@@ -212,9 +219,9 @@
             <img id="card-photo-img" style="display:none;" alt="Photo">
           </div>
           <div class="card-info-box">
-            <div class="card-title editable" contenteditable="true" data-placeholder="Name">Name</div>
-            <div class="card-voto editable" contenteditable="true" data-placeholder="Rating">Rating</div>
-            <div class="card-review editable" contenteditable="true" data-placeholder="Review...">Review...</div>
+            <div class="card-title editable" contenteditable="true" data-placeholder="Name"></div>
+            <div class="card-voto editable" contenteditable="true" data-placeholder="Rating"></div>
+            <div class="card-review editable" contenteditable="true" data-placeholder="Review..."></div>
           </div>
         </div>
 
@@ -240,30 +247,6 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
-
-    // GESTIONE SELEZIONE AL SINGOLO TOCCO (FLUIDITÀ TASTIERA)
-    document.querySelectorAll('.editable').forEach(el => {
-      el.addEventListener('focus', function() {
-        const ph = this.getAttribute('data-placeholder');
-        // Se c'è ancora il valore di default, seleziona tutto immediatamente col primo tocco
-        if (this.innerText.trim() === ph) {
-          setTimeout(() => {
-            const range = document.createRange();
-            range.selectNodeContents(this);
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }, 0);
-        }
-      });
-
-      // Ripristina il valore di default se abbandonato vuoto
-      el.addEventListener('blur', function() {
-        if (this.innerText.trim() === '') {
-          this.innerText = this.getAttribute('data-placeholder');
-        }
-      });
-    });
 
     function shuffleArray(array) {
       const arr = [...array];
@@ -316,24 +299,8 @@
 
     function downloadCard() {
       const card = document.getElementById('main-card');
-      const editables = card.querySelectorAll('.editable');
-      
-      editables.forEach(el => {
-        const ph = el.getAttribute('data-placeholder');
-        if (el.innerText.trim() === ph) {
-          el.dataset.wasPlaceholder = "true";
-          el.innerText = '';
-        }
-      });
 
       html2canvas(card, { scale: 3, backgroundColor: null, useCORS: true }).then(canvas => {
-        editables.forEach(el => {
-          if (el.dataset.wasPlaceholder) {
-            el.innerText = el.getAttribute('data-placeholder');
-            delete el.dataset.wasPlaceholder;
-          }
-        });
-
         const link = document.createElement('a');
         link.download = 'card.png';
         link.href = canvas.toDataURL('image/png');
@@ -343,4 +310,3 @@
   </script>
 </body>
 </html>
-
