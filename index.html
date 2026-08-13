@@ -13,6 +13,7 @@
       box-sizing: border-box; 
       margin: 0; 
       padding: 0; 
+      -webkit-text-size-adjust: 100%; /* Impedisce ai browser di ingrandire il testo su TV/Mobile */
     }
 
     html, body { 
@@ -93,32 +94,68 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD BIANCA */
+    /* CARD CON DIMENSIONI RIGIDE ED IDENTICHE OVUNQUE */
     .card { 
-      width: 320px; height: 180px; 
+      width: 320px !important; 
+      height: 180px !important; 
+      min-width: 320px !important;
+      min-height: 180px !important;
+      max-width: 320px !important;
+      max-height: 180px !important;
       background-color: #ffffff; 
       border: 3px solid #000000; 
       border-radius: 20px; 
-      padding: 12px; display: flex; gap: 12px; 
+      padding: 12px; 
+      display: flex; 
+      gap: 12px; 
       align-items: center;
-      box-sizing: border-box;
+      box-sizing: border-box !important;
       transition: all 0.2s ease;
     }
 
-    .card-photo-box { height: 100%; max-width: 130px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-    
-    .placeholder-box { 
-      width: 100px; height: 100%; 
-      border: 2px dashed #000000; 
-      border-radius: 10px; 
-      display: flex; align-items: center; justify-content: center; 
-      background-color: #f0f0f0; 
-      font-size: 0.75rem; color: #666666; font-weight: 700; 
+    .card-photo-box { 
+      width: 100px !important;
+      height: 156px !important; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      cursor: pointer; 
+      flex-shrink: 0; 
     }
     
-    .card-photo-box img { max-height: 156px; max-width: 130px; border: 2px solid #000000; border-radius: 8px; }
+    .placeholder-box { 
+      width: 100px !important; 
+      height: 156px !important; 
+      border: 2px dashed #000000; 
+      border-radius: 10px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      background-color: #f0f0f0; 
+      font-size: 12px !important; 
+      color: #666666; 
+      font-weight: 700; 
+    }
     
-    .card-info-box { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: center; overflow: hidden; gap: 4px; }
+    .card-photo-box img { 
+      width: 100px !important;
+      height: 156px !important; 
+      border: 2px solid #000000; 
+      border-radius: 8px; 
+      object-fit: cover;
+    }
+    
+    .card-info-box { 
+      width: 172px !important; /* Dimensione fissa per garantire identica larghezza del testo */
+      height: 156px !important; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      overflow: hidden; 
+      gap: 4px;
+      margin-left: 6px;
+    }
+
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
     /* STILE TESTO GUIDA */
@@ -127,9 +164,29 @@
       opacity: 0.6;
     }
 
-    .card-title { font-size: 1.1rem; font-weight: 800; color: #000000; word-break: break-word; }
-    .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
-    .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
+    /* TESTI CON DIMENSIONI ASSOLUTE IN PIXEL */
+    .card-title { 
+      font-size: 16px !important; 
+      line-height: 20px !important; 
+      font-weight: 800; 
+      color: #000000; 
+      word-break: break-word; 
+    }
+    
+    .card-voto { 
+      font-size: 13px !important; 
+      line-height: 16px !important; 
+      font-weight: 800; 
+      color: #555555; 
+    }
+    
+    .card-review { 
+      font-size: 11px !important; 
+      line-height: 14px !important; 
+      color: #333333; 
+      font-style: italic; 
+      word-break: break-word; 
+    }
 
     /* CARD NERA */
     .card.dark-theme {
