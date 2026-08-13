@@ -155,7 +155,7 @@
       transition: all 0.2s ease;
     }
 
-    /* CONTENITORE FOTO CON BORDO TRATTEGGIATO */
+    /* CONTENITORE FOTO */
     .card-photo-box { 
       height: 100%; 
       max-height: 156px; 
@@ -273,18 +273,20 @@
     /* MENU SUB-OPTIONS */
     .color-sub-menu {
       display: flex;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 6px;
       background: #111111;
       padding: 6px;
       border-radius: 14px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      justify-content: center;
     }
 
     .menu-btn {
       background: #222222;
       color: #ffffff;
       border: 1px solid #333333;
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 10px;
       font-size: 11px;
       font-weight: 700;
@@ -495,6 +497,10 @@
             <svg viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"></line></svg>
             Borders & Text
           </button>
+          <button class="menu-btn" onclick="openCustomPicker('photo-border')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="3 3"></rect></svg>
+            Photo Border
+          </button>
         </div>
       </div>
 
@@ -505,6 +511,14 @@
     <!-- MODALE SELETTORE COLORE -->
     <div class="picker-modal-overlay" id="picker-modal">
       <div class="picker-container">
+        <!-- Sezione extra opzioni solo per il bordo foto -->
+        <div id="photo-border-options" style="display: none; flex-direction: column; gap: 8px; border-bottom: 1px solid #2c2c2e; padding-bottom: 10px;">
+          <div style="font-size: 11px; font-weight: 700; color: #aaaaaa;">Mostra bordo foto:</div>
+          <div style="display: flex; gap: 10px;">
+            <button class="menu-btn" id="btn-toggle-border" onclick="togglePhotoBorder()" style="flex:1; justify-content:center; background:#2c2c2e;">Attivo (Tratteggiato)</button>
+          </div>
+        </div>
+
         <div class="grid-view" id="picker-grid"></div>
 
         <div class="picker-info">
@@ -547,6 +561,7 @@
 
     let currentTarget = 'bg';
     let selectedColor = '#FFFFFF';
+    let photoBorderEnabled = true;
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -619,8 +634,35 @@
         img.src = event.target.result;
         img.style.display = 'block';
         document.getElementById('placeholder').style.display = 'none';
+        updatePhotoBorderStyles();
       }
       reader.readAsDataURL(file);
+    }
+
+    function togglePhotoBorder() {
+      photoBorderEnabled = !photoBorderEnabled;
+      const btn = document.getElementById('btn-toggle-border');
+      if (photoBorderEnabled) {
+        btn.innerText = "Attivo (Tratteggiato)";
+        btn.style.color = "#ffffff";
+      } else {
+        btn.innerText = "Disattivato (Nessuno)";
+        btn.style.color = "#8e8e93";
+      }
+      updatePhotoBorderStyles();
+    }
+
+    function updatePhotoBorderStyles() {
+      const placeholder = document.getElementById('placeholder');
+      const photoImg = document.getElementById('card-photo-img');
+      
+      if (!photoBorderEnabled) {
+        placeholder.style.borderStyle = 'none';
+        if (photoImg) photoImg.style.borderStyle = 'none';
+      } else {
+        placeholder.style.borderStyle = 'dashed';
+        if (photoImg) photoImg.style.borderStyle = 'dashed';
+      }
     }
 
     function setCardTheme(theme) {
@@ -689,15 +731,22 @@
       initGridColors();
       document.getElementById('picker-modal').style.display = 'flex';
       
+      const extraOptions = document.getElementById('photo-border-options');
       const card = document.getElementById('main-card');
       let currentHex = '#FFFFFF';
       
       if (target === 'bg') {
+        extraOptions.style.display = 'none';
         let bg = window.getComputedStyle(card).backgroundColor;
         currentHex = rgbToHex(bg);
       } else if (target === 'line') {
+        extraOptions.style.display = 'none';
         let borderCol = window.getComputedStyle(card).borderColor;
         currentHex = rgbToHex(borderCol);
+      } else if (target === 'photo-border') {
+        extraOptions.style.display = 'flex';
+        let phBorderCol = window.getComputedStyle(document.getElementById('placeholder')).borderColor;
+        currentHex = rgbToHex(phBorderCol);
       }
       
       selectColor(currentHex);
@@ -767,6 +816,10 @@
         card.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = selectedColor);
         document.getElementById('placeholder').style.borderColor = selectedColor;
         document.getElementById('placeholder').style.color = selectedColor;
+        const photoImg = document.getElementById('card-photo-img');
+        if (photoImg) photoImg.style.borderColor = selectedColor;
+      } else if (currentTarget === 'photo-border') {
+        document.getElementById('placeholder').style.borderColor = selectedColor;
         const photoImg = document.getElementById('card-photo-img');
         if (photoImg) photoImg.style.borderColor = selectedColor;
       }
