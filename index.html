@@ -92,9 +92,9 @@
       background-color: #ffffff; position: relative;
     }
 
-    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
+    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; position: relative; }
 
-    /* CARD BASE */
+    /* CARD BASE CON OMBRA BIANCA/NERA DINAMICA */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -105,7 +105,8 @@
       gap: 12px; 
       align-items: center;
       box-sizing: border-box;
-      transition: background-color 0.2s ease, border-color 0.2s ease;
+      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12); /* Ombra nera di default in modalità chiara */
     }
 
     .card-photo-box { 
@@ -206,11 +207,11 @@
       box-shadow: 0 0 0 3px #000000;
     }
 
-    /* MENU IN BASSO SOTTO L'ARCOBALENO */
+    /* SUB-MENU COMPAIONO AL CLICK DELL'ARCOBALENO */
     .color-sub-menu {
       display: none;
       position: absolute;
-      bottom: 70px;
+      bottom: 50px;
       background: #232429;
       color: #ffffff;
       border-radius: 20px;
@@ -239,7 +240,7 @@
 
     .sub-menu-btn:active { background: #454854; }
 
-    /* POPUP/MODAL STYLE GALLERIA (STILE GALLERY / IBIS) */
+    /* MODAL PICKER GALLERIA */
     .gallery-modal {
       display: none;
       position: absolute;
@@ -287,7 +288,6 @@
       color: #ffffff;
     }
 
-    /* TAVOLO CAMPIONI COLORI */
     .swatch-grid {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
@@ -303,7 +303,6 @@
       cursor: pointer;
     }
 
-    /* VISTA SPETTRO COLORI */
     .spectrum-container {
       display: none;
       flex-direction: column;
@@ -319,25 +318,6 @@
       cursor: pointer;
     }
 
-    .spectrum-slider {
-      width: 100%;
-      -webkit-appearance: none;
-      height: 12px;
-      border-radius: 6px;
-      background: linear-gradient(to right, black, green, white);
-      outline: none;
-    }
-
-    .spectrum-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 2px solid #000000;
-      cursor: pointer;
-    }
-
-    /* BARRA VALORI RGB / HEX */
     .color-info-bar {
       display: flex;
       align-items: center;
@@ -384,7 +364,6 @@
       font-family: inherit;
     }
 
-    /* BOTTONI ANNULLA / FATTO */
     .modal-actions {
       display: flex;
       justify-content: space-between;
@@ -403,7 +382,7 @@
 
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* DARK MODE SCURA TELEFONO */
+    /* MODALITÀ SCURA DEL TELEFONO - OMBRA BIANCA PER LA CARTA */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -415,6 +394,11 @@
       .sticker img { filter: invert(1); }
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
+
+      /* OMBRA BIANCA DI SFONDO IN MODALITA NOTTE */
+      .card {
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.25) !important;
+      }
     }
   </style>
 </head>
@@ -452,14 +436,13 @@
           </div>
         </div>
 
-        <!-- SELETTORE COLORI CON MENU POPUP IN BASSO -->
+        <!-- SELETTORE COLORI CON SOTTO-MENU PER CARTA, TESTO E LINEE -->
         <div class="color-picker">
           <div class="color-dot dot-white active" id="dot-w" onclick="setPresetTheme('light')"></div>
           <div class="color-dot dot-black" id="dot-b" onclick="setPresetTheme('dark')"></div>
           <div class="color-dot dot-custom" id="dot-c" onclick="toggleSubMenu()"></div>
         </div>
 
-        <!-- SUB-MENU SCELTA ELEMENTO -->
         <div class="color-sub-menu" id="sub-menu">
           <button class="sub-menu-btn" onclick="openGalleryPicker('card')">🎍 Carta</button>
           <button class="sub-menu-btn" onclick="openGalleryPicker('text')">✍️ Testo</button>
@@ -470,7 +453,7 @@
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
       <div class="btn-download" onclick="downloadCard()">Download Card</div>
 
-      <!-- MODAL STILE GALLERY / IBIS -->
+      <!-- MODAL PICKER SCURO IDENTICO ALLA GALLERIA -->
       <div class="gallery-modal" id="gallery-modal">
         <div class="gallery-modal-box">
           
@@ -479,18 +462,14 @@
             <div class="tab-btn" id="tab-spettro" onclick="switchTab('spettro')">Spettro</div>
           </div>
 
-          <!-- SCHEDA CAMPIONI -->
           <div id="view-campion">
             <div class="swatch-grid" id="swatch-grid"></div>
           </div>
 
-          <!-- SCHEDA SPETTRO -->
           <div class="spectrum-container" id="view-spettro">
             <div class="spectrum-map" onclick="pickSpectrumColor(event)"></div>
-            <input type="range" class="spectrum-slider" min="0" max="100" value="78" oninput="updateSpectrumValue(this.value)">
           </div>
 
-          <!-- BARRA CONTEGGI RGB E ANTEPRIMA -->
           <div class="color-info-bar">
             <div class="color-preview-box" id="info-preview" style="background-color: #55C772;"></div>
             <div class="info-fields">
@@ -536,8 +515,8 @@
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
 
-    let currentTarget = 'card'; // 'card', 'text', o 'lines'
-    let selectedHex = '#55C772'; // Il primo colore parte dal verde standard come negli screenshot
+    let currentTarget = 'card';
+    let selectedHex = '#55C772';
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -601,6 +580,7 @@
     function startApp() { 
       document.getElementById('splash').style.display = 'none'; 
       document.getElementById('main-ui').style.display = 'flex'; 
+      updateCardShadow();
     }
     
     function loadPhoto(e) {
@@ -616,7 +596,19 @@
       reader.readAsDataURL(file);
     }
 
-    /* PRESET LIGHT / DARK */
+    /* GESTIONE OMBRE INTELLIGENTE PER CARTA */
+    function updateCardShadow() {
+      const card = document.getElementById('main-card');
+      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (isDarkMode) {
+        card.style.boxShadow = '0 0 25px rgba(255, 255, 255, 0.25)';
+      } else {
+        card.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.12)';
+      }
+    }
+
+    /* PRESET TEMI BIANCO / NERO */
     function setPresetTheme(mode) {
       document.getElementById('sub-menu').style.display = 'none';
       const card = document.getElementById('main-card');
@@ -636,6 +628,7 @@
         updateCardTextColor('#ffffff');
         updateCardLinesColor('#ffffff');
       }
+      updateCardShadow();
     }
 
     function toggleSubMenu() {
@@ -657,7 +650,6 @@
       document.getElementById('gallery-modal').style.display = 'none';
     }
 
-    /* COSTRUZIONE GRIGLIA MATTONELLE COLORI */
     function buildSwatchGrid() {
       const grid = document.getElementById('swatch-grid');
       grid.innerHTML = '';
@@ -704,11 +696,6 @@
       updateInfoDisplay(selectedHex);
     }
 
-    function updateSpectrumValue(val) {
-      // Regola la luminosità del colore scelto dallo spettro
-      updateInfoDisplay(selectedHex);
-    }
-
     function updateInfoDisplay(hex) {
       if(!hex.startsWith('#')) hex = '#' + hex;
       selectedHex = hex;
@@ -733,6 +720,7 @@
       const card = document.getElementById('main-card');
       if (currentTarget === 'card') {
         card.style.backgroundColor = selectedHex;
+        updateCardShadow();
       } else if (currentTarget === 'text') {
         updateCardTextColor(selectedHex);
       } else if (currentTarget === 'lines') {
@@ -758,7 +746,6 @@
       }
     }
 
-    /* HELPER UTILS */
     function hexToRgb(hex) {
       let c = hex.replace('#', '');
       if (c.length === 3) c = c.split('').map(x => x + x).join('');
@@ -807,4 +794,3 @@
   </script>
 </body>
 </html>
-
