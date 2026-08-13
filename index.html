@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -89,12 +89,12 @@
     .main-ui { 
       display: none; width: 100%; height: 100%; flex-direction: column; 
       padding: 20px; justify-content: space-between; align-items: center; 
-      background-color: #ffffff;
+      background-color: #ffffff; position: relative;
     }
 
-    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
+    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; }
 
-    /* CARD BIANCA */
+    /* CARD BASE */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -105,10 +105,9 @@
       gap: 12px; 
       align-items: center;
       box-sizing: border-box;
-      transition: all 0.2s ease;
+      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
-    /* CONTENITORE FOTO - Aderisce perfettamente all'immagine caricata */
     .card-photo-box { 
       height: 100%; 
       max-height: 156px; 
@@ -133,7 +132,6 @@
       font-weight: 700; 
     }
     
-    /* L'immagine prende il bordo ed è incollata alle sue reali dimensioni */
     .card-photo-box img { 
       max-height: 156px; 
       max-width: 140px;
@@ -157,64 +155,171 @@
 
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
-    /* STILE TESTO GUIDA */
     .editable.placeholder-active {
       color: #a0a0a0 !important;
-      opacity: 0.6;
+      opacity: 0.65;
     }
 
     .card-title { font-size: 16px; line-height: 20px; font-weight: 800; color: #000000; word-break: break-word; }
-    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
+    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #444444; }
     .card-review { font-size: 11px; line-height: 14px; color: #333333; font-style: italic; word-break: break-word; }
 
-    /* CARD NERA */
-    .card.dark-theme {
-      background-color: #000000;
-      border: 3px solid #ffffff !important;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-    }
-    .card.dark-theme .card-title { color: #ffffff; }
-    .card.dark-theme .card-voto { color: #cccccc; }
-    .card.dark-theme .card-review { color: #aaaaaa; }
-    .card.dark-theme .editable.placeholder-active { color: #666666 !important; }
-    .card.dark-theme .placeholder-box {
-      border-color: #ffffff;
-      background-color: #1a1a1a;
-      color: #aaaaaa;
-    }
-    .card.dark-theme .card-photo-box img {
-      border-color: #ffffff;
-    }
-
-    /* SELETTORE COLORI (PALLINE) */
+    /* SELETTORE COLORI */
     .color-picker {
       display: flex;
-      gap: 12px;
+      gap: 16px;
       align-items: center;
       justify-content: center;
     }
 
     .color-dot {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid #000000;
-      transition: transform 0.15s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .color-dot:active { transform: scale(0.9); }
 
     .dot-white { background-color: #ffffff; }
     .dot-black { background-color: #000000; border-color: #000000; }
+    
+    /* PALLINO CUSTOM ARCOBALENO */
+    .dot-custom {
+      background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+      border-color: #000000;
+      overflow: hidden;
+    }
+    .dot-custom::after {
+      content: '✦';
+      font-size: 12px;
+      color: #ffffff;
+      text-shadow: 0 0 2px #000000, 0 0 4px #000000;
+      font-weight: 800;
+    }
 
     .color-dot.active {
       box-shadow: 0 0 0 3px #000000;
     }
-    
+
+    /* MODAL COLOR PICKER IBIS STYLE */
+    .color-modal {
+      display: none;
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal-box {
+      width: 88%;
+      max-width: 310px;
+      background: #ffffff;
+      border: 3px solid #000000;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .close-modal {
+      cursor: pointer;
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .picker-preview-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .color-preview-circle {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 2px solid #000000;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    }
+
+    .hex-input-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      border: 2px solid #000000;
+      border-radius: 12px;
+      padding: 4px 10px;
+      background: #f8f8f8;
+      font-weight: 700;
+    }
+
+    .hex-input-wrapper span {
+      color: #888888;
+      margin-right: 4px;
+    }
+
+    .hex-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    .native-color-picker {
+      width: 100%;
+      height: 50px;
+      border: 2px solid #000000;
+      border-radius: 12px;
+      cursor: pointer;
+      background: transparent;
+      padding: 0;
+      outline: none;
+    }
+    .native-color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+    .native-color-picker::-webkit-color-swatch { border: none; border-radius: 10px; }
+
+    .btn-apply-color {
+      background-color: #000000;
+      color: #ffffff;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      font-size: 1rem;
+    }
+
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* ADATTAMENTO PER MODALITÀ SCURA DEL TELEFONO */
+    /* DARK MODE TELEFONO */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -222,20 +327,27 @@
       }
       .content-overlay { background: rgba(0, 0, 0, 0.75) !important; }
       .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
-      .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
+      .btn-start, .btn-download, .btn-apply-color { background-color: #ffffff !important; color: #000000 !important; }
       .sticker img { filter: invert(1); }
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
 
       .card {
-        border: 3px solid #000000 !important;
-        box-shadow: 0 0 35px rgba(255, 255, 255, 0.6); 
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.15); 
       }
 
-      .card.dark-theme {
-        border: 3px solid #ffffff !important;
-        box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
+      .modal-box {
+        background: #111111;
+        border-color: #ffffff;
+        color: #ffffff;
       }
+      .hex-input-wrapper {
+        border-color: #ffffff;
+        background: #222222;
+        color: #ffffff;
+      }
+      .hex-input { color: #ffffff; }
+      .native-color-picker { border-color: #ffffff; }
     }
   </style>
 </head>
@@ -274,13 +386,37 @@
         </div>
 
         <div class="color-picker">
-          <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
-          <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
+          <div class="color-dot dot-white active" id="dot-w" onclick="setCardColor('#ffffff', '#000000', 'white')"></div>
+          <div class="color-dot dot-black" id="dot-b" onclick="setCardColor('#000000', '#ffffff', 'black')"></div>
+          <div class="color-dot dot-custom" id="dot-c" onclick="openColorModal()"></div>
         </div>
       </div>
 
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
       <div class="btn-download" onclick="downloadCard()">Download Card</div>
+
+      <!-- MODAL IBIS PAINT PALETTE -->
+      <div class="color-modal" id="color-modal">
+        <div class="modal-box">
+          <div class="modal-header">
+            <span>Choose Color</span>
+            <span class="close-modal" onclick="closeColorModal()">✕</span>
+          </div>
+          
+          <input type="color" id="native-picker" class="native-color-picker" value="#9b59b6" oninput="syncColorFromPicker(this.value)">
+
+          <div class="picker-preview-row">
+            <div class="color-preview-circle" id="preview-circle" style="background-color: #9b59b6;"></div>
+            <div class="hex-input-wrapper">
+              <span>#</span>
+              <input type="text" id="hex-input" class="hex-input" value="9B59B6" maxlength="6" oninput="syncColorFromHex(this.value)">
+            </div>
+          </div>
+
+          <button class="btn-apply-color" onclick="applyCustomColor()">Apply Color</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -295,6 +431,8 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
+
+    let currentCustomBg = "#9b59b6";
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -313,7 +451,6 @@
       el.addEventListener('input', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
-        
         if (text !== '' && text !== ph) {
           this.classList.remove('placeholder-active');
         } else {
@@ -324,7 +461,6 @@
       el.addEventListener('blur', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
-
         if (text === '' || text === ph) {
           this.innerText = ph;
           this.classList.add('placeholder-active');
@@ -375,18 +511,78 @@
       reader.readAsDataURL(file);
     }
 
-    function setCardTheme(theme) {
+    /* GESTIONE COLORI INTELLIGENTE */
+    function setCardColor(bgColor, borderColor, mode) {
       const card = document.getElementById('main-card');
       const dots = document.querySelectorAll('.color-dot');
-      if (theme === 'dark') {
-        card.classList.add('dark-theme');
-        dots[0].classList.remove('active');
-        dots[1].classList.add('active');
-      } else {
-        card.classList.remove('dark-theme');
-        dots[0].classList.add('active');
-        dots[1].classList.remove('active');
+      const photoImg = document.getElementById('card-photo-img');
+      const placeholder = document.getElementById('placeholder');
+      
+      dots.forEach(d => d.classList.remove('active'));
+
+      card.style.backgroundColor = bgColor;
+      card.style.borderColor = borderColor;
+
+      if (photoImg) photoImg.style.borderColor = borderColor;
+      if (placeholder) {
+        placeholder.style.borderColor = borderColor;
+        placeholder.style.color = borderColor;
       }
+
+      // Calcola contrasto testo automaticamente
+      const textColor = getContrastColor(bgColor);
+      card.querySelectorAll('.card-title').forEach(el => el.style.color = textColor);
+      card.querySelectorAll('.card-voto').forEach(el => el.style.color = textColor === '#ffffff' ? '#dddddd' : '#444444');
+      card.querySelectorAll('.card-review').forEach(el => el.style.color = textColor === '#ffffff' ? '#cccccc' : '#333333');
+
+      if (mode === 'white') {
+        document.getElementById('dot-w').classList.add('active');
+      } else if (mode === 'black') {
+        document.getElementById('dot-b').classList.add('active');
+      } else {
+        document.getElementById('dot-c').classList.add('active');
+        document.getElementById('dot-c').style.background = bgColor;
+      }
+    }
+
+    function getContrastColor(hexColor) {
+      let hex = hexColor.replace('#', '');
+      if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+      const r = parseInt(hex.substring(0, 2), 16);
+      const g = parseInt(hex.substring(2, 4), 16);
+      const b = parseInt(hex.substring(4, 6), 16);
+      const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+      return (yiq >= 128) ? '#000000' : '#ffffff';
+    }
+
+    /* MODAL COLOR PICKER LOGIC */
+    function openColorModal() {
+      document.getElementById('color-modal').style.display = 'flex';
+    }
+
+    function closeColorModal() {
+      document.getElementById('color-modal').style.display = 'none';
+    }
+
+    function syncColorFromPicker(val) {
+      currentCustomBg = val;
+      document.getElementById('preview-circle').style.backgroundColor = val;
+      document.getElementById('hex-input').value = val.replace('#', '').toUpperCase();
+    }
+
+    function syncColorFromHex(val) {
+      if (val.length === 6) {
+        const fullHex = '#' + val;
+        currentCustomBg = fullHex;
+        document.getElementById('preview-circle').style.backgroundColor = fullHex;
+        document.getElementById('native-picker').value = fullHex;
+      }
+    }
+
+    function applyCustomColor() {
+      const textColor = getContrastColor(currentCustomBg);
+      setCardColor(currentCustomBg, textColor, 'custom');
+      closeColorModal();
     }
 
     function downloadCard() {
