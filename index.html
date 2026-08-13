@@ -93,7 +93,7 @@
 
     .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD BIANCA */
+    /* CARD BIANCA (Modalità Chiara) */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -131,10 +131,11 @@
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
     .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
 
-    /* CARD NERA */
+    /* CARD NERA (Modalità Chiara: Ombra scura sotto per risaltare sul fondo bianco) */
     .card.dark-theme {
       background-color: #000000;
       border: 3px solid #ffffff !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
@@ -177,7 +178,7 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* ADATTAMENTO AUTOMATICO PER MODALITÀ SCURA DEL TELEFONO */
+    /* ADATTAMENTO PER MODALITÀ SCURA DEL TELEFONO (SFONDO NERO) */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -190,15 +191,16 @@
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
 
-      /* CARTA BIANCA: Mantiene il bordo nero ma aggiungiamo un bagliore bianco per staccare dal fondo nero */
+      /* CARTA BIANCA: Bordo nero + Ombra bianca per risaltare sul fondo nero */
       .card {
         border: 3px solid #000000 !important;
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.35); 
       }
 
-      /* LA CARTA NERA MANTIENE IL SUO STILE */
+      /* CARTA NERA: Bordo bianco + Ombra bianca per staccare dal fondo nero */
       .card.dark-theme {
         border: 3px solid #ffffff !important;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
       }
     }
   </style>
