@@ -221,7 +221,7 @@
       box-shadow: 0 0 0 3px #000000;
     }
 
-    /* MENU SUB-OPTIONS CON ICONE MINIMAL */
+    /* MENU SUB-OPTIONS */
     .color-sub-menu {
       display: flex;
       gap: 8px;
@@ -252,9 +252,7 @@
       transition: background 0.15s ease;
     }
 
-    .menu-btn:active {
-      background: #444444;
-    }
+    .menu-btn:active { background: #444444; }
 
     .menu-btn svg {
       width: 14px;
@@ -268,7 +266,144 @@
     
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* ADATTAMENTO PER MODALITÀ SCURA DEL TELEFONO */
+    /* MODALE COLOR PICKER STILE iOS/SAMSUNG */
+    .picker-modal-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 200;
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 20px;
+    }
+
+    .picker-container {
+      width: 340px;
+      background: #1c1c1e;
+      border-radius: 28px;
+      padding: 16px;
+      color: #ffffff;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .picker-tabs {
+      display: flex;
+      background: #2c2c2e;
+      border-radius: 12px;
+      padding: 3px;
+    }
+
+    .picker-tab {
+      flex: 1;
+      text-align: center;
+      padding: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 9px;
+      cursor: pointer;
+      color: #8e8e93;
+    }
+
+    .picker-tab.active {
+      background: #3a3a3c;
+      color: #ffffff;
+    }
+
+    .grid-view {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      width: 100%;
+      height: 200px;
+    }
+
+    .grid-cell {
+      border-radius: 3px;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .grid-cell:active { transform: scale(1.2); }
+
+    .spectrum-view {
+      display: none;
+      width: 100%;
+      height: 200px;
+      border-radius: 12px;
+      position: relative;
+      background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+      cursor: pointer;
+    }
+
+    .spectrum-overlay {
+      width: 100%; height: 100%;
+      border-radius: 12px;
+      background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0) 50%, rgba(0,0,0,1) 100%);
+    }
+
+    .picker-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #2c2c2e;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 11px;
+    }
+
+    .color-preview-box {
+      width: 44px; height: 26px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .info-labels {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      color: #aaaaaa;
+      font-weight: 700;
+    }
+
+    .info-labels span { color: #ffffff; display: block; margin-top: 2px; font-weight: 800; }
+
+    .quick-swatches {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .swatch-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid #3a3a3c;
+      cursor: pointer;
+    }
+
+    .picker-actions {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #2c2c2e;
+      padding-top: 12px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .btn-action { cursor: pointer; padding: 4px 10px; }
+    .btn-action.cancel { color: #8e8e93; }
+    .btn-action.done { color: #ffffff; }
+
+    /* ADATTAMENTO DARK MODE TELEFONO */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -335,25 +470,66 @@
 
         <!-- MENU SUB-OPTIONS -->
         <div class="color-sub-menu" id="color-sub-menu">
-          <button class="menu-btn" onclick="document.getElementById('bg-color-picker').click()">
+          <button class="menu-btn" onclick="openCustomPicker('bg')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect></svg>
             Card Color
           </button>
-          <button class="menu-btn" onclick="document.getElementById('line-color-picker').click()">
+          <button class="menu-btn" onclick="openCustomPicker('line')">
             <svg viewBox="0 0 24 24"><path d="M12 19l7-73-3 3-7-7-3 3z"></path><path d="M18 13l-1.5-1.5"></path></svg>
             Borders & Text
           </button>
         </div>
-
-        <!-- SELETTORI COLORE NASCOSTI -->
-        <input type="color" id="bg-color-picker" style="display:none;" onchange="changeBgColor(this.value)">
-        <input type="color" id="line-color-picker" style="display:none;" onchange="changeLineAndTextColor(this.value)">
 
       </div>
 
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
       <div class="btn-download" onclick="downloadCard()">Download Card</div>
     </div>
+
+    <!-- MODALE SELETTORE COLORE PERSONALIZZATO -->
+    <div class="picker-modal-overlay" id="picker-modal">
+      <div class="picker-container">
+        <div class="picker-tabs">
+          <div class="picker-tab active" id="tab-swatches" onclick="switchPickerTab('grid')">Swatches</div>
+          <div class="picker-tab" id="tab-spectrum" onclick="switchPickerTab('spectrum')">Spectrum</div>
+        </div>
+
+        <!-- VISTA GRIGLIA / CAMPIONI -->
+        <div class="grid-view" id="picker-grid"></div>
+
+        <!-- VISTA SPETTRO -->
+        <div class="spectrum-view" id="picker-spectrum" onclick="pickSpectrumColor(event)">
+          <div class="spectrum-overlay"></div>
+        </div>
+
+        <!-- INFORMAZIONI VALORI RGB E HEX -->
+        <div class="picker-info">
+          <div class="color-preview-box" id="preview-box" style="background-color: #55c772;"></div>
+          <div class="info-labels">
+            <div>Hex<span id="hex-val">#55C772</span></div>
+            <div>R<span id="r-val">85</span></div>
+            <div>G<span id="g-val">199</span></div>
+            <div>B<span id="b-val">114</span></div>
+          </div>
+        </div>
+
+        <!-- RAPIDI SALVATI -->
+        <div class="quick-swatches">
+          <div class="swatch-circle" style="background:#ff9500" onclick="selectColor('#ff9500')"></div>
+          <div class="swatch-circle" style="background:#ffcc99" onclick="selectColor('#ffcc99')"></div>
+          <div class="swatch-circle" style="background:#e2f0d9" onclick="selectColor('#e2f0d9')"></div>
+          <div class="swatch-circle" style="background:#c6e0f4" onclick="selectColor('#c6e0f4')"></div>
+          <div class="swatch-circle" style="background:#78c0e0" onclick="selectColor('#78c0e0')"></div>
+        </div>
+
+        <!-- PULSANTI ANNULLA / FATTO -->
+        <div class="picker-actions">
+          <div class="btn-action cancel" onclick="closePicker()">Cancel</div>
+          <div class="btn-action done" onclick="applyPickerColor()">Done</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -367,6 +543,9 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
+
+    let currentTarget = 'bg'; // 'bg' oppure 'line'
+    let selectedColor = '#55c772';
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -385,7 +564,6 @@
       el.addEventListener('input', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
-        
         if (text !== '' && text !== ph) {
           this.classList.remove('placeholder-active');
         } else {
@@ -396,7 +574,6 @@
       el.addEventListener('blur', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
-
         if (text === '' || text === ph) {
           this.innerText = ph;
           this.classList.add('placeholder-active');
@@ -410,7 +587,7 @@
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        [arr[i], arr[j]] = [arr[i], arr[j]];
       }
       return arr;
     }
@@ -425,9 +602,7 @@
       colEl.innerHTML = htmlContent;
     }
 
-    renderColumn('col1'); 
-    renderColumn('col2'); 
-    renderColumn('col3');
+    renderColumn('col1'); renderColumn('col2'); renderColumn('col3');
 
     function startApp() { 
       document.getElementById('splash').style.display = 'none'; 
@@ -451,7 +626,6 @@
       const card = document.getElementById('main-card');
       const dots = document.querySelectorAll('.color-dot');
       
-      // Resetta stili personalizzati
       card.style.backgroundColor = '';
       card.style.borderColor = '';
       document.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = '');
@@ -471,33 +645,101 @@
       }
     }
 
-    /* COLORE CARTA (BACKGROUND) */
-    function changeBgColor(color) {
-      const card = document.getElementById('main-card');
-      card.style.backgroundColor = color;
+    /* GENERATORE GRIGLIA CAMPIONI DI COLORE */
+    function initGridColors() {
+      const grid = document.getElementById('picker-grid');
+      grid.innerHTML = '';
+      
+      const hues = [0, 30, 60, 120, 180, 210, 240, 280, 320, 0];
+      const rows = 10;
+      const cols = 10;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          let cell = document.createElement('div');
+          cell.className = 'grid-cell';
+          let hexColor = '';
+
+          if (c === 0) {
+            // Colonna Scala di Grigi
+            let lightness = 100 - (r * 10);
+            hexColor = hslToHex(0, 0, lightness);
+          } else {
+            let hue = hues[c - 1];
+            let lightness = 90 - (r * 8);
+            hexColor = hslToHex(hue, 85, lightness);
+          }
+
+          cell.style.backgroundColor = hexColor;
+          cell.onclick = () => selectColor(hexColor);
+          grid.appendChild(cell);
+        }
+      }
     }
 
-    /* COLORE BORDI (INCLUSO BORDO CARTA ESTERNO) E TESTO */
-    function changeLineAndTextColor(color) {
-      const card = document.getElementById('main-card');
-      
-      // Imposta il bordo della carta principale
-      card.style.setProperty('border-color', color, 'important');
-      
-      // Testi
-      card.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => {
-        el.style.color = color;
-      });
+    function hslToHex(h, s, l) {
+      l /= 100;
+      const a = s * Math.min(l, 1 - l) / 100;
+      const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+      };
+      return `#${f(0)}${f(8)}${f(4)}`;
+    }
 
-      // Bordo foto e placeholder
-      const placeholder = document.getElementById('placeholder');
-      placeholder.style.borderColor = color;
-      placeholder.style.color = color;
+    function openCustomPicker(target) {
+      currentTarget = target;
+      initGridColors();
+      document.getElementById('picker-modal').style.display = 'flex';
+      selectColor('#55c772');
+    }
 
-      const photoImg = document.getElementById('card-photo-img');
-      if (photoImg) {
-        photoImg.style.borderColor = color;
+    function closePicker() {
+      document.getElementById('picker-modal').style.display = 'none';
+    }
+
+    function switchPickerTab(tab) {
+      if (tab === 'grid') {
+        document.getElementById('picker-grid').style.display = 'grid';
+        document.getElementById('picker-spectrum').style.display = 'none';
+        document.getElementById('tab-swatches').classList.add('active');
+        document.getElementById('tab-spectrum').classList.remove('active');
+      } else {
+        document.getElementById('picker-grid').style.display = 'none';
+        document.getElementById('picker-spectrum').style.display = 'block';
+        document.getElementById('tab-swatches').classList.remove('active');
+        document.getElementById('tab-spectrum').classList.add('active');
       }
+    }
+
+    function selectColor(hex) {
+      selectedColor = hex;
+      document.getElementById('preview-box').style.backgroundColor = hex;
+      document.getElementById('hex-val').innerText = hex.toUpperCase();
+
+      let r = parseInt(hex.slice(1,3), 16) || 0;
+      let g = parseInt(hex.slice(3,5), 16) || 0;
+      let b = parseInt(hex.slice(5,7), 16) || 0;
+
+      document.getElementById('r-val').innerText = r;
+      document.getElementById('g-val').innerText = g;
+      document.getElementById('b-val').innerText = b;
+    }
+
+    function applyPickerColor() {
+      if (currentTarget === 'bg') {
+        document.getElementById('main-card').style.backgroundColor = selectedColor;
+      } else if (currentTarget === 'line') {
+        const card = document.getElementById('main-card');
+        card.style.setProperty('border-color', selectedColor, 'important');
+        card.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = selectedColor);
+        document.getElementById('placeholder').style.borderColor = selectedColor;
+        document.getElementById('placeholder').style.color = selectedColor;
+        const photoImg = document.getElementById('card-photo-img');
+        if (photoImg) photoImg.style.borderColor = selectedColor;
+      }
+      closePicker();
     }
 
     function downloadCard() {
