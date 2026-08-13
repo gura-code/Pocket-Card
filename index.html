@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -89,12 +89,12 @@
     .main-ui { 
       display: none; width: 100%; height: 100%; flex-direction: column; 
       padding: 20px; justify-content: space-between; align-items: center; 
-      background-color: #ffffff; position: relative;
+      background-color: #ffffff;
     }
 
-    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; position: relative; }
+    .card-canvas-area { width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
 
-    /* CARD BASE CON OMBRA BIANCA/NERA DINAMICA */
+    /* CARD BIANCA */
     .card { 
       width: 320px; height: 180px; 
       background-color: #ffffff; 
@@ -105,10 +105,10 @@
       gap: 12px; 
       align-items: center;
       box-sizing: border-box;
-      transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12); /* Ombra nera di default in modalità chiara */
+      transition: all 0.2s ease;
     }
 
+    /* CONTENITORE FOTO - Aderisce perfettamente all'immagine caricata */
     .card-photo-box { 
       height: 100%; 
       max-height: 156px; 
@@ -133,6 +133,7 @@
       font-weight: 700; 
     }
     
+    /* L'immagine prende il bordo ed è incollata alle sue reali dimensioni */
     .card-photo-box img { 
       max-height: 156px; 
       max-width: 140px;
@@ -156,233 +157,64 @@
 
     .editable { outline: none; -webkit-tap-highlight-color: transparent; }
 
+    /* STILE TESTO GUIDA */
     .editable.placeholder-active {
+      color: #a0a0a0 !important;
       opacity: 0.6;
     }
 
     .card-title { font-size: 16px; line-height: 20px; font-weight: 800; color: #000000; word-break: break-word; }
-    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #444444; }
+    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
     .card-review { font-size: 11px; line-height: 14px; color: #333333; font-style: italic; word-break: break-word; }
 
-    /* SELETTORE COLORI */
+    /* CARD NERA */
+    .card.dark-theme {
+      background-color: #000000;
+      border: 3px solid #ffffff !important;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+    .card.dark-theme .card-title { color: #ffffff; }
+    .card.dark-theme .card-voto { color: #cccccc; }
+    .card.dark-theme .card-review { color: #aaaaaa; }
+    .card.dark-theme .editable.placeholder-active { color: #666666 !important; }
+    .card.dark-theme .placeholder-box {
+      border-color: #ffffff;
+      background-color: #1a1a1a;
+      color: #aaaaaa;
+    }
+    .card.dark-theme .card-photo-box img {
+      border-color: #ffffff;
+    }
+
+    /* SELETTORE COLORI (PALLINE) */
     .color-picker {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: center;
       justify-content: center;
     }
 
     .color-dot {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       cursor: pointer;
       border: 2px solid #000000;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      transition: transform 0.15s ease;
     }
 
     .color-dot:active { transform: scale(0.9); }
 
     .dot-white { background-color: #ffffff; }
     .dot-black { background-color: #000000; border-color: #000000; }
-    
-    .dot-custom {
-      background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
-      border-color: #000000;
-      overflow: hidden;
-    }
-    .dot-custom::after {
-      content: '✦';
-      font-size: 12px;
-      color: #ffffff;
-      text-shadow: 0 0 2px #000000, 0 0 4px #000000;
-      font-weight: 800;
-    }
 
     .color-dot.active {
       box-shadow: 0 0 0 3px #000000;
     }
-
-    /* SUB-MENU COMPAIONO AL CLICK DELL'ARCOBALENO */
-    .color-sub-menu {
-      display: none;
-      position: absolute;
-      bottom: 50px;
-      background: #232429;
-      color: #ffffff;
-      border-radius: 20px;
-      padding: 10px 14px;
-      gap: 10px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      z-index: 50;
-      animation: slideUp 0.2s ease;
-    }
-
-    @keyframes slideUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-    .sub-menu-btn {
-      background: #32343c;
-      border: 1px solid #444752;
-      color: #ffffff;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .sub-menu-btn:active { background: #454854; }
-
-    /* MODAL PICKER GALLERIA */
-    .gallery-modal {
-      display: none;
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(5px);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .gallery-modal-box {
-      width: 90%;
-      max-width: 330px;
-      background: #2b2c30;
-      color: #ffffff;
-      border-radius: 28px;
-      padding: 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .tab-header {
-      display: flex;
-      background: #1e1f23;
-      border-radius: 18px;
-      padding: 3px;
-    }
-
-    .tab-btn {
-      flex: 1;
-      text-align: center;
-      padding: 8px 0;
-      font-size: 13px;
-      font-weight: 700;
-      color: #aaaaaa;
-      cursor: pointer;
-      border-radius: 15px;
-    }
-
-    .tab-btn.active {
-      background: #41434c;
-      color: #ffffff;
-    }
-
-    .swatch-grid {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      gap: 2px;
-      background: #1e1f23;
-      padding: 6px;
-      border-radius: 10px;
-    }
-
-    .swatch-cell {
-      aspect-ratio: 1;
-      border-radius: 2px;
-      cursor: pointer;
-    }
-
-    .spectrum-container {
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .spectrum-map {
-      width: 100%;
-      height: 130px;
-      border-radius: 10px;
-      background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
-      position: relative;
-      cursor: pointer;
-    }
-
-    .color-info-bar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #1e1f23;
-      padding: 8px 12px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .color-preview-box {
-      width: 36px; height: 36px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .info-fields {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      color: #cccccc;
-    }
-
-    .info-fields div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .info-fields span {
-      color: #888888;
-      font-size: 9px;
-      margin-bottom: 2px;
-    }
-
-    .hex-input-edit {
-      background: transparent;
-      border: none;
-      color: #ffffff;
-      font-weight: 800;
-      font-size: 12px;
-      width: 65px;
-      font-family: inherit;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 5px;
-    }
-
-    .action-btn {
-      font-size: 15px;
-      font-weight: 800;
-      color: #ffffff;
-      cursor: pointer;
-      background: none;
-      border: none;
-    }
-
+    
     .btn-download { width: 100%; background-color: #000000; color: #ffffff; padding: 14px; border-radius: 12px; font-weight: 800; text-align: center; margin-bottom: 10px; cursor: pointer; }
 
-    /* MODALITÀ SCURA DEL TELEFONO - OMBRA BIANCA PER LA CARTA */
+    /* ADATTAMENTO PER MODALITÀ SCURA DEL TELEFONO */
     @media (prefers-color-scheme: dark) {
       html, body, .phone-wrapper, #splash, .main-ui {
         background-color: #000000 !important;
@@ -395,9 +227,14 @@
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
 
-      /* OMBRA BIANCA DI SFONDO IN MODALITA NOTTE */
       .card {
-        box-shadow: 0 0 25px rgba(255, 255, 255, 0.25) !important;
+        border: 3px solid #000000 !important;
+        box-shadow: 0 0 35px rgba(255, 255, 255, 0.6); 
+      }
+
+      .card.dark-theme {
+        border: 3px solid #ffffff !important;
+        box-shadow: 0 0 35px rgba(255, 255, 255, 0.5);
       }
     }
   </style>
@@ -436,70 +273,14 @@
           </div>
         </div>
 
-        <!-- SELETTORE COLORI CON SOTTO-MENU PER CARTA, TESTO E LINEE -->
         <div class="color-picker">
-          <div class="color-dot dot-white active" id="dot-w" onclick="setPresetTheme('light')"></div>
-          <div class="color-dot dot-black" id="dot-b" onclick="setPresetTheme('dark')"></div>
-          <div class="color-dot dot-custom" id="dot-c" onclick="toggleSubMenu()"></div>
-        </div>
-
-        <div class="color-sub-menu" id="sub-menu">
-          <button class="sub-menu-btn" onclick="openGalleryPicker('card')">🎍 Carta</button>
-          <button class="sub-menu-btn" onclick="openGalleryPicker('text')">✍️ Testo</button>
-          <button class="sub-menu-btn" onclick="openGalleryPicker('lines')">✏️ Linee</button>
+          <div class="color-dot dot-white active" onclick="setCardTheme('light')"></div>
+          <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
         </div>
       </div>
 
       <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="loadPhoto(event)">
       <div class="btn-download" onclick="downloadCard()">Download Card</div>
-
-      <!-- MODAL PICKER SCURO IDENTICO ALLA GALLERIA -->
-      <div class="gallery-modal" id="gallery-modal">
-        <div class="gallery-modal-box">
-          
-          <div class="tab-header">
-            <div class="tab-btn active" id="tab-campion" onclick="switchTab('campion')">Campioni</div>
-            <div class="tab-btn" id="tab-spettro" onclick="switchTab('spettro')">Spettro</div>
-          </div>
-
-          <div id="view-campion">
-            <div class="swatch-grid" id="swatch-grid"></div>
-          </div>
-
-          <div class="spectrum-container" id="view-spettro">
-            <div class="spectrum-map" onclick="pickSpectrumColor(event)"></div>
-          </div>
-
-          <div class="color-info-bar">
-            <div class="color-preview-box" id="info-preview" style="background-color: #55C772;"></div>
-            <div class="info-fields">
-              <div>
-                <span>Esadecimale</span>
-                <input type="text" class="hex-input-edit" id="info-hex" value="#55C772" onchange="updateFromHexInput(this.value)">
-              </div>
-              <div>
-                <span>Rosso</span>
-                <strong id="info-r">85</strong>
-              </div>
-              <div>
-                <span>Verde</span>
-                <strong id="info-g">199</strong>
-              </div>
-              <div>
-                <span>Blu</span>
-                <strong id="info-b">114</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-actions">
-            <button class="action-btn" onclick="closeGalleryPicker()">Annulla</button>
-            <button class="action-btn" onclick="applyGalleryColor()">Fatto</button>
-          </div>
-
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -514,9 +295,6 @@
       "1000072987-removebg-preview.png", "1000072988-removebg-preview.png",
       "1000072989-removebg-preview.png", "1000072990-removebg-preview.png"
     ];
-
-    let currentTarget = 'card';
-    let selectedHex = '#55C772';
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -535,6 +313,7 @@
       el.addEventListener('input', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
+        
         if (text !== '' && text !== ph) {
           this.classList.remove('placeholder-active');
         } else {
@@ -545,6 +324,7 @@
       el.addEventListener('blur', function() {
         const ph = this.getAttribute('data-placeholder');
         const text = this.innerText.trim();
+
         if (text === '' || text === ph) {
           this.innerText = ph;
           this.classList.add('placeholder-active');
@@ -580,7 +360,6 @@
     function startApp() { 
       document.getElementById('splash').style.display = 'none'; 
       document.getElementById('main-ui').style.display = 'flex'; 
-      updateCardShadow();
     }
     
     function loadPhoto(e) {
@@ -596,172 +375,18 @@
       reader.readAsDataURL(file);
     }
 
-    /* GESTIONE OMBRE INTELLIGENTE PER CARTA */
-    function updateCardShadow() {
-      const card = document.getElementById('main-card');
-      const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (isDarkMode) {
-        card.style.boxShadow = '0 0 25px rgba(255, 255, 255, 0.25)';
-      } else {
-        card.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.12)';
-      }
-    }
-
-    /* PRESET TEMI BIANCO / NERO */
-    function setPresetTheme(mode) {
-      document.getElementById('sub-menu').style.display = 'none';
+    function setCardTheme(theme) {
       const card = document.getElementById('main-card');
       const dots = document.querySelectorAll('.color-dot');
-      dots.forEach(d => d.classList.remove('active'));
-
-      if (mode === 'light') {
-        document.getElementById('dot-w').classList.add('active');
-        card.style.backgroundColor = '#ffffff';
-        card.style.borderColor = '#000000';
-        updateCardTextColor('#000000');
-        updateCardLinesColor('#000000');
+      if (theme === 'dark') {
+        card.classList.add('dark-theme');
+        dots[0].classList.remove('active');
+        dots[1].classList.add('active');
       } else {
-        document.getElementById('dot-b').classList.add('active');
-        card.style.backgroundColor = '#000000';
-        card.style.borderColor = '#ffffff';
-        updateCardTextColor('#ffffff');
-        updateCardLinesColor('#ffffff');
+        card.classList.remove('dark-theme');
+        dots[0].classList.add('active');
+        dots[1].classList.remove('active');
       }
-      updateCardShadow();
-    }
-
-    function toggleSubMenu() {
-      const sm = document.getElementById('sub-menu');
-      sm.style.display = (sm.style.display === 'flex') ? 'none' : 'flex';
-      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-      document.getElementById('dot-c').classList.add('active');
-    }
-
-    function openGalleryPicker(target) {
-      currentTarget = target;
-      document.getElementById('sub-menu').style.display = 'none';
-      document.getElementById('gallery-modal').style.display = 'flex';
-      buildSwatchGrid();
-      updateInfoDisplay(selectedHex);
-    }
-
-    function closeGalleryPicker() {
-      document.getElementById('gallery-modal').style.display = 'none';
-    }
-
-    function buildSwatchGrid() {
-      const grid = document.getElementById('swatch-grid');
-      grid.innerHTML = '';
-      
-      const colors = [
-        "#FFFFFF","#E0E0E0","#C0C0C0","#A0A0A0","#808080","#606060","#404040","#202020","#101010","#000000",
-        "#FFC0CB","#FF69B4","#FF1493","#C71585","#800080","#4B0082","#483D8B","#00008B","#0000FF","#1E90FF",
-        "#00BFFF","#87CEEB","#00FFFF","#00FA9A","#00FF00","#32CD32","#228B22","#008000","#006400","#55C772",
-        "#9ACD32","#32CD32","#FFFF00","#FFD700","#FFA500","#FF8C00","#FF4500","#FF0000","#8B0000","#800000"
-      ];
-
-      colors.forEach(hex => {
-        const cell = document.createElement('div');
-        cell.className = 'swatch-cell';
-        cell.style.backgroundColor = hex;
-        cell.onclick = () => {
-          selectedHex = hex;
-          updateInfoDisplay(hex);
-        };
-        grid.appendChild(cell);
-      });
-    }
-
-    function switchTab(tab) {
-      if (tab === 'campion') {
-        document.getElementById('tab-campion').classList.add('active');
-        document.getElementById('tab-spettro').classList.remove('active');
-        document.getElementById('view-campion').style.display = 'block';
-        document.getElementById('view-spettro').style.display = 'none';
-      } else {
-        document.getElementById('tab-spettro').classList.add('active');
-        document.getElementById('tab-campion').classList.remove('active');
-        document.getElementById('view-campion').style.display = 'none';
-        document.getElementById('view-spettro').style.display = 'flex';
-      }
-    }
-
-    function pickSpectrumColor(e) {
-      const rect = e.target.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const pct = x / rect.width;
-      const hue = Math.floor(pct * 360);
-      selectedHex = hslToHex(hue, 100, 50);
-      updateInfoDisplay(selectedHex);
-    }
-
-    function updateInfoDisplay(hex) {
-      if(!hex.startsWith('#')) hex = '#' + hex;
-      selectedHex = hex;
-      document.getElementById('info-preview').style.backgroundColor = hex;
-      document.getElementById('info-hex').value = hex.toUpperCase();
-
-      const rgb = hexToRgb(hex);
-      if (rgb) {
-        document.getElementById('info-r').innerText = rgb.r;
-        document.getElementById('info-g').innerText = rgb.g;
-        document.getElementById('info-b').innerText = rgb.b;
-      }
-    }
-
-    function updateFromHexInput(val) {
-      if (val.length >= 6) {
-        updateInfoDisplay(val);
-      }
-    }
-
-    function applyGalleryColor() {
-      const card = document.getElementById('main-card');
-      if (currentTarget === 'card') {
-        card.style.backgroundColor = selectedHex;
-        updateCardShadow();
-      } else if (currentTarget === 'text') {
-        updateCardTextColor(selectedHex);
-      } else if (currentTarget === 'lines') {
-        updateCardLinesColor(selectedHex);
-      }
-      closeGalleryPicker();
-    }
-
-    function updateCardTextColor(color) {
-      const card = document.getElementById('main-card');
-      card.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = color);
-    }
-
-    function updateCardLinesColor(color) {
-      const card = document.getElementById('main-card');
-      card.style.borderColor = color;
-      const photoImg = document.getElementById('card-photo-img');
-      const placeholder = document.getElementById('placeholder');
-      if (photoImg) photoImg.style.borderColor = color;
-      if (placeholder) {
-        placeholder.style.borderColor = color;
-        placeholder.style.color = color;
-      }
-    }
-
-    function hexToRgb(hex) {
-      let c = hex.replace('#', '');
-      if (c.length === 3) c = c.split('').map(x => x + x).join('');
-      const num = parseInt(c, 16);
-      return c.length === 6 ? { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 } : null;
-    }
-
-    function hslToHex(h, s, l) {
-      l /= 100;
-      const a = s * Math.min(l, 1 - l) / 100;
-      const f = n => {
-        const k = (n + h / 30) % 12;
-        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-        return Math.round(255 * color).toString(16).padStart(2, '0');
-      };
-      return `#${f(0)}${f(8)}${f(4)}`;
     }
 
     function downloadCard() {
@@ -794,3 +419,4 @@
   </script>
 </body>
 </html>
+
