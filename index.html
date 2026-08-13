@@ -131,11 +131,10 @@
     .card-voto { font-size: 0.85rem; font-weight: 800; color: #555555; }
     .card-review { font-size: 0.75rem; color: #333333; font-style: italic; line-height: 1.2; word-break: break-word; }
 
-    /* CARD NERA CON BORDINO BIANCO E OMBRA */
+    /* CARD NERA */
     .card.dark-theme {
       background-color: #000000;
       border: 3px solid #ffffff !important;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
@@ -191,16 +190,15 @@
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
 
-      /* CORREZIONE BORDO CARTA BIANCA SU SFONDO NERO */
+      /* CARTA BIANCA: Mantiene il bordo nero ma aggiungiamo un bagliore bianco per staccare dal fondo nero */
       .card {
-        border: 3px solid #ffffff !important;
-        box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        border: 3px solid #000000 !important;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.35); 
       }
 
-      /* CORREZIONE CARTA NERA SU SFONDO NERO */
+      /* LA CARTA NERA MANTIENE IL SUO STILE */
       .card.dark-theme {
         border: 3px solid #ffffff !important;
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
       }
     }
   </style>
