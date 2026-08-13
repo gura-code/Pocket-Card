@@ -215,7 +215,7 @@
     .card.dark-theme {
       background-color: #000000;
       border: 3px solid #ffffff !important;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.25), 0 15px 35px rgba(0, 0, 0, 0.5);
     }
     .card.dark-theme .card-title { color: #ffffff; }
     .card.dark-theme .card-voto { color: #cccccc; }
@@ -387,20 +387,6 @@
     .hex-input { width: 68px; }
     .rgb-input { width: 36px; }
 
-    .quick-swatches {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 4px;
-    }
-
-    .swatch-circle {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      border: 2px solid #3a3a3c;
-      cursor: pointer;
-    }
-
     .picker-actions {
       display: flex;
       justify-content: space-between;
@@ -516,15 +502,6 @@
           </div>
         </div>
 
-        <!-- RAPIDI SALVATI -->
-        <div class="quick-swatches">
-          <div class="swatch-circle" style="background:#ff9500" onclick="selectColor('#ff9500')"></div>
-          <div class="swatch-circle" style="background:#ffcc99" onclick="selectColor('#ffcc99')"></div>
-          <div class="swatch-circle" style="background:#e2f0d9" onclick="selectColor('#e2f0d9')"></div>
-          <div class="swatch-circle" style="background:#c6e0f4" onclick="selectColor('#c6e0f4')"></div>
-          <div class="swatch-circle" style="background:#78c0e0" onclick="selectColor('#78c0e0')"></div>
-        </div>
-
         <!-- PULSANTI ANNULLA / FATTO -->
         <div class="picker-actions">
           <div class="btn-action cancel" onclick="closePicker()">Cancel</div>
@@ -548,7 +525,7 @@
     ];
 
     let currentTarget = 'bg';
-    let selectedColor = '#55c772';
+    let selectedColor = '#FFFFFF';
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -690,7 +667,26 @@
       currentTarget = target;
       initGridColors();
       document.getElementById('picker-modal').style.display = 'flex';
-      selectColor('#55c772');
+      
+      const card = document.getElementById('main-card');
+      let currentHex = '#FFFFFF';
+      
+      if (target === 'bg') {
+        let bg = window.getComputedStyle(card).backgroundColor;
+        currentHex = rgbToHex(bg);
+      } else if (target === 'line') {
+        let borderCol = window.getComputedStyle(card).borderColor;
+        currentHex = rgbToHex(borderCol);
+      }
+      
+      selectColor(currentHex);
+    }
+
+    function rgbToHex(rgb) {
+      if (rgb.startsWith('#')) return rgb;
+      const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+      if (!match) return '#FFFFFF';
+      return '#' + match.slice(1, 4).map(x => parseInt(x).toString(16).padStart(2, '0')).join('').toUpperCase();
     }
 
     function closePicker() {
