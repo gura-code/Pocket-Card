@@ -206,9 +206,9 @@
       opacity: 0.6;
     }
 
-    .card-title { font-size: 16px; line-height: 20px; font-weight: 800; word-break: break-word; }
-    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; }
-    .card-review { font-size: 11px; line-height: 14px; word-break: break-word; }
+    .card-title { font-size: 16px; line-height: 20px; font-weight: 800; word-break: break-word; color: #000000; }
+    .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
+    .card-review { font-size: 11px; line-height: 14px; word-break: break-word; color: #333333; }
 
     /* --- TEMI DELLA CARTA --- */
 
@@ -217,9 +217,6 @@
       background-color: #ffffff;
       border: 3px solid #000000;
     }
-    .card.light-card .card-title { color: #000000; }
-    .card.light-card .card-voto { color: #555555; }
-    .card.light-card .card-review { color: #333333; }
     .card.light-card .placeholder-box { border-color: #000000; color: #666666; background-color: #f0f0f0; }
     .card.light-card img { border-color: #000000; }
 
@@ -270,27 +267,31 @@
     .dot-black { background-color: #000000; border-color: #000000; }
     .color-dot.active { box-shadow: 0 0 0 3px #000000; }
 
-    /* MENU SUB-OPTIONS */
+    /* MENU SUB-OPTIONS GRIGLIA AGGIORNATA */
     .color-sub-menu {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
       background: #111111;
-      padding: 6px;
-      border-radius: 14px;
+      padding: 10px;
+      border-radius: 16px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 320px;
     }
 
     .menu-btn {
       background: #222222;
       color: #ffffff;
       border: 1px solid #333333;
-      padding: 8px 12px;
+      padding: 8px 10px;
       border-radius: 10px;
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
     }
 
@@ -485,7 +486,7 @@
           <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
         </div>
 
-        <!-- MENU SUB-OPTIONS -->
+        <!-- MENU SUB-OPTIONS AGGIORNATO (OPZIONI SEPARATE) -->
         <div class="color-sub-menu" id="color-sub-menu">
           <button class="menu-btn" onclick="openCustomPicker('bg')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect></svg>
@@ -493,7 +494,11 @@
           </button>
           <button class="menu-btn" onclick="openCustomPicker('line')">
             <svg viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"></line></svg>
-            Borders & Text
+            Borders
+          </button>
+          <button class="menu-btn" onclick="openCustomPicker('text')" style="grid-column: span 2;">
+            <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg>
+            Text Color
           </button>
         </div>
       </div>
@@ -629,7 +634,9 @@
       
       card.style.backgroundColor = '';
       card.style.borderColor = '';
-      document.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = '');
+      document.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => {
+        el.style.color = '';
+      });
       document.getElementById('placeholder').style.borderColor = '';
       document.getElementById('placeholder').style.color = '';
       const photoImg = document.getElementById('card-photo-img');
@@ -646,7 +653,6 @@
       }
     }
 
-    /* INIZIALIZZAZIONE GRIGLIA COLORI 13x13 ESATTA DALL'IMMAGINE */
     function initGridColors() {
       const grid = document.getElementById('picker-grid');
       grid.innerHTML = '';
@@ -692,6 +698,9 @@
       } else if (target === 'line') {
         let borderCol = window.getComputedStyle(card).borderColor;
         currentHex = rgbToHex(borderCol);
+      } else if (target === 'text') {
+        let textCol = window.getComputedStyle(card.querySelector('.card-title')).color;
+        currentHex = rgbToHex(textCol);
       }
       
       selectColor(currentHex);
@@ -758,11 +767,14 @@
         card.style.backgroundColor = selectedColor;
       } else if (currentTarget === 'line') {
         card.style.setProperty('border-color', selectedColor, 'important');
-        card.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => el.style.color = selectedColor);
         document.getElementById('placeholder').style.borderColor = selectedColor;
-        document.getElementById('placeholder').style.color = selectedColor;
         const photoImg = document.getElementById('card-photo-img');
         if (photoImg) photoImg.style.borderColor = selectedColor;
+      } else if (currentTarget === 'text') {
+        card.querySelectorAll('.card-title, .card-voto, .card-review').forEach(el => {
+          el.style.color = selectedColor;
+        });
+        document.getElementById('placeholder').style.color = selectedColor;
       }
       closePicker();
     }
