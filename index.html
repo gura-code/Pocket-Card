@@ -156,7 +156,12 @@
       transition: all 0.2s ease;
     }
 
-    /* CONTENITORE FOTO CON BORDO TRATTEGGIATO */
+    /* FOTO A SINISTRA (DEFAULT) / DESTRA */
+    .card.photo-right {
+      flex-direction: row-reverse;
+    }
+
+    /* CONTENITORE FOTO */
     .card-photo-box { 
       height: 100%; 
       max-height: 156px; 
@@ -201,50 +206,25 @@
       margin-left: 4px;
     }
 
-    .editable { outline: none; -webkit-tap-highlight-color: transparent; }
-
-    .editable.placeholder-active {
-      opacity: 0.6;
+    .card.photo-right .card-info-box {
+      margin-left: 0;
+      margin-right: 4px;
     }
+
+    .editable { outline: none; -webkit-tap-highlight-color: transparent; }
+    .editable.placeholder-active { opacity: 0.6; }
 
     .card-title { font-size: 16px; line-height: 20px; font-weight: 800; word-break: break-word; color: #000000; }
     .card-voto { font-size: 13px; line-height: 16px; font-weight: 800; color: #555555; }
     .card-review { font-size: 11px; line-height: 14px; word-break: break-word; color: #333333; }
 
-    /* --- TEMI DELLA CARTA --- */
-
-    /* 1. Tema Carta Bianca */
-    .card.light-card {
-      background-color: #ffffff;
-      border: 3px solid #000000;
-    }
-    .card.light-card .placeholder-box { border-color: #000000; color: #666666; background-color: #f0f0f0; }
-    .card.light-card img { border-color: #000000; }
-
-    .dark-mode-env .card.light-card {
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-    .light-mode-env .card.light-card {
-      box-shadow: none;
-    }
-
-    /* 2. Tema Carta Nera */
-    .card.dark-card {
-      background-color: #000000;
-      border: 3px solid #ffffff;
-    }
+    /* TEMI CARTA */
+    .card.light-card { background-color: #ffffff; border: 3px solid #000000; }
+    .card.dark-card { background-color: #000000; border: 3px solid #ffffff; }
     .card.dark-card .card-title { color: #ffffff; }
     .card.dark-card .card-voto { color: #aaaaaa; }
     .card.dark-card .card-review { color: #dddddd; }
     .card.dark-card .placeholder-box { border-color: #ffffff; color: #cccccc; background-color: #222222; }
-    .card.dark-card img { border-color: #ffffff; }
-
-    .light-mode-env .card.dark-card {
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-    }
-    .dark-mode-env .card.dark-card {
-      box-shadow: none;
-    }
 
     /* PALLINE BIANCO / NERO */
     .color-picker {
@@ -262,13 +242,12 @@
       border: 2px solid #000000;
       transition: transform 0.15s ease;
     }
-
     .color-dot:active { transform: scale(0.9); }
     .dot-white { background-color: #ffffff; }
-    .dot-black { background-color: #000000; border-color: #000000; }
+    .dot-black { background-color: #000000; }
     .color-dot.active { box-shadow: 0 0 0 3px #000000; }
 
-    /* MENU SUB-OPTIONS GRIGLIA AGGIORNATA */
+    /* MENU SUB-OPTIONS GRIGLIA */
     .color-sub-menu {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -350,10 +329,7 @@
       height: 220px;
     }
 
-    .grid-cell {
-      border-radius: 2px;
-      cursor: pointer;
-    }
+    .grid-cell { border-radius: 2px; cursor: pointer; }
 
     .picker-info {
       display: flex;
@@ -365,84 +341,35 @@
       font-size: 11px;
     }
 
-    .color-preview-box {
-      width: 40px; height: 26px;
-      border-radius: 6px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .info-inputs {
-      display: flex;
-      flex: 1;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      color: #aaaaaa;
-      font-weight: 700;
-      font-size: 10px;
-    }
-
+    .color-preview-box { width: 40px; height: 26px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); }
+    .info-inputs { display: flex; flex: 1; justify-content: space-between; gap: 6px; }
+    .input-group { display: flex; flex-direction: column; color: #aaaaaa; font-weight: 700; font-size: 10px; }
     .input-group input {
-      background: #1c1c1e;
-      border: 1px solid #3a3a3c;
-      border-radius: 6px;
-      color: #ffffff;
-      font-family: 'Quicksand', sans-serif;
-      font-weight: 800;
-      font-size: 11px;
-      padding: 3px 4px;
-      text-align: center;
-      margin-top: 2px;
+      background: #1c1c1e; border: 1px solid #3a3a3c; border-radius: 6px;
+      color: #ffffff; font-family: 'Quicksand', sans-serif; font-weight: 800;
+      font-size: 11px; padding: 3px 4px; text-align: center; margin-top: 2px;
     }
-
-    .input-group input:focus {
-      border-color: #0a84ff;
-      outline: none;
-    }
-
+    .input-group input:focus { border-color: #0a84ff; outline: none; }
     .hex-input { width: 68px; }
     .rgb-input { width: 36px; }
 
     .picker-actions {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid #2c2c2e;
-      padding-top: 10px;
-      font-weight: 800;
-      font-size: 14px;
+      display: flex; justify-content: space-between; border-top: 1px solid #2c2c2e;
+      padding-top: 10px; font-weight: 800; font-size: 14px;
     }
-
     .btn-action { cursor: pointer; padding: 4px 10px; }
     .btn-action.cancel { color: #8e8e93; }
     .btn-action.done { color: #ffffff; }
 
-    /* ADATTAMENTO DARK/LIGHT MODE GLOBALE */
+    /* DARK/LIGHT MODE */
     @media (prefers-color-scheme: dark) {
-      html, body, .phone-wrapper, #splash, .main-ui {
-        background-color: #000000 !important;
-        color: #ffffff !important;
-      }
+      html, body, .phone-wrapper, #splash, .main-ui { background-color: #000000 !important; color: #ffffff !important; }
       .content-overlay { background: rgba(0, 0, 0, 0.75) !important; }
-      .logo-main, div[style*="font-weight:800"] { color: #ffffff !important; }
+      .logo-main { color: #ffffff !important; }
       .btn-start, .btn-download { background-color: #ffffff !important; color: #000000 !important; }
       .sticker img { filter: invert(1); }
       .color-dot { border-color: #ffffff; }
       .color-dot.active { box-shadow: 0 0 0 3px #ffffff; }
-    }
-
-    @media (prefers-color-scheme: light) {
-      html, body, .phone-wrapper, #splash, .main-ui {
-        background-color: #ffffff !important;
-        color: #000000 !important;
-      }
-      .content-overlay { background: rgba(255, 255, 255, 0.75) !important; }
-      .logo-main { color: #000000 !important; }
-      .btn-start, .btn-download { background-color: #000000 !important; color: #ffffff !important; }
-      .sticker img { filter: none; }
     }
   </style>
 </head>
@@ -488,7 +415,7 @@
           <div class="color-dot dot-black" onclick="setCardTheme('dark')"></div>
         </div>
 
-        <!-- MENU SUB-OPTIONS AGGIORNATO (OPZIONI SEPARATE) -->
+        <!-- MENU SUB-OPTIONS -->
         <div class="color-sub-menu" id="color-sub-menu">
           <button class="menu-btn" onclick="openCustomPicker('bg')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"></rect></svg>
@@ -498,9 +425,13 @@
             <svg viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"></line></svg>
             Borders
           </button>
-          <button class="menu-btn" onclick="openCustomPicker('text')" style="grid-column: span 2;">
+          <button class="menu-btn" onclick="openCustomPicker('text')">
             <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg>
             Text Color
+          </button>
+          <button class="menu-btn" onclick="toggleAvatarPos()" id="pos-btn">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            Photo: Left
           </button>
         </div>
       </div>
@@ -534,13 +465,6 @@
   </div>
 
   <script>
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.className = 'dark-mode-env';
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-      document.body.className = event.matches ? 'dark-mode-env' : 'light-mode-env';
-    });
-
     const images = [
       "1000072971-removebg-preview.png", "1000072972-removebg-preview.png",
       "1000072974-removebg-preview.png", "1000072977-removebg-preview.png",
@@ -554,6 +478,7 @@
 
     let currentTarget = 'bg';
     let selectedColor = '#FFFFFF';
+    let isPhotoRight = false;
 
     document.querySelectorAll('.editable').forEach(el => {
       el.addEventListener('focus', function() {
@@ -645,13 +570,26 @@
       if (photoImg) photoImg.style.borderColor = '';
 
       if (theme === 'dark') {
-        card.className = 'card dark-card';
+        card.className = isPhotoRight ? 'card dark-card photo-right' : 'card dark-card';
         dots[0].classList.remove('active');
         dots[1].classList.add('active');
       } else {
-        card.className = 'card light-card';
+        card.className = isPhotoRight ? 'card light-card photo-right' : 'card light-card';
         dots[0].classList.add('active');
         dots[1].classList.remove('active');
+      }
+    }
+
+    function toggleAvatarPos() {
+      isPhotoRight = !isPhotoRight;
+      const card = document.getElementById('main-card');
+      const btn = document.getElementById('pos-btn');
+      if (isPhotoRight) {
+        card.classList.add('photo-right');
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg> Photo: Right`;
+      } else {
+        card.classList.remove('photo-right');
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg> Photo: Left`;
       }
     }
 
